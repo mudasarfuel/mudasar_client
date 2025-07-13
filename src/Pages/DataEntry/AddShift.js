@@ -17,7 +17,7 @@ import {
   cleardata,
   getAllActiveCustomers,
   getAllEmployees,
-  getAllProducts,
+  getAllProducts, 
   getCurrentReadings,
 } from "../../redux/completeDataSlice/completeDataSlice";
 import {

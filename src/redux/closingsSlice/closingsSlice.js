@@ -3,46 +3,47 @@ import axios from "axios";
 import { ENDPOINTS } from "../../backend/API";
 import { toast } from "react-toastify";
 
-
 //GET ALL CLOSINGS AXIOS CALL USING ASYNC THUNK
-export const getSaleClosings = createAsyncThunk("getSaleClosings", async (initData) => {
-  try {
-    const { field, operator, sort, page, searchInput, startDate, endDate } = initData;
+export const getSaleClosings = createAsyncThunk(
+  "getSaleClosings",
+  async (initData) => {
+    try {
+      const { field, operator, sort, page, searchInput, startDate, endDate } =
+        initData;
 
-    //Creating API call using ENDPOINTS as Base URL (/api/products)
-    console.log(
-      "Field => ",
-      field,
-      "Operator =>",
-      operator,
-      "sort => ",
-      sort,
-      "Page =>",
-      page,
-      "Search Input =>",
-      searchInput
-    );
-    return await axios
-      .get(
-        `${ENDPOINTS.CLOSE}?field=${field}&operator=${operator}&searchInput=${searchInput}&page=${page}&sort=${sort}&startDate=${startDate}&endDate=${endDate}`
-      )
-      .then((res) => res.data);
-  } catch (error) {
-    //Incase of error catch error
-    return error.response.data.error[0];
+      //Creating API call using ENDPOINTS as Base URL (/api/products)
+      console.log(
+        "Field => ",
+        field,
+        "Operator =>",
+        operator,
+        "sort => ",
+        sort,
+        "Page =>",
+        page,
+        "Search Input =>",
+        searchInput
+      );
+      return await axios
+        .get(
+          `${ENDPOINTS.CLOSE}?field=${field}&operator=${operator}&searchInput=${searchInput}&page=${page}&sort=${sort}&startDate=${startDate}&endDate=${endDate}`
+        )
+        .then((res) => res.data);
+    } catch (error) {
+      //Incase of error catch error
+      return error.response.data.error[0];
+    }
   }
-});
+);
 
 //GET SINGLE SALE AXIOS CALL USING ASYNC THUNK
 export const getSingleSale = createAsyncThunk(
   "getSingleProduct",
   async (id) => {
     try {
-      console.log(id)
+      console.log(id);
       //Creating API Call using base url (/api/sales/:id)
-      return await axios
-        .get(`${ENDPOINTS.SALE}/${id}`)
-        .then((res) => res.data);
+      return await axios.get(`${ENDPOINTS.SALE}/${id}`).then((res) => res.data);
     } catch (error) {
       //In case of error
       return error.response.data.error[0];
@@ -55,11 +56,9 @@ export const getTodaysClosing = createAsyncThunk(
   "getTodaysClosing",
   async () => {
     try {
-      console.log()
+      console.log();
       //Creating API Call using base url (/api/checkClosing)
-      return await axios
-        .get(`${ENDPOINTS.TODAYCLOSE}`)
-        .then((res) => res.data);
+      return await axios.get(`${ENDPOINTS.TODAYCLOSE}`).then((res) => res.data);
     } catch (error) {
       //In case of error
       return error.response.data.error[0];
@@ -71,7 +70,7 @@ export const getPrintClosingReport = createAsyncThunk(
   "getPrintClosingReport",
   async (id) => {
     try {
-      console.log(id)
+      console.log(id);
       //Creating API Call using base url (/api/printClosing/:id)
       return await axios
         .get(`${ENDPOINTS.PRINTCLOSE}/${id}`)
@@ -194,7 +193,6 @@ export const closingSlice = createSlice({
       }
     });
 
-
     //@CaseNo       03
     //@Request      GET
     //@Status       Success
@@ -221,25 +219,25 @@ export const closingSlice = createSlice({
     builder.addCase(getPrintClosingReport.fulfilled, (state, action) => {
       //Checking for success
       if (action.payload.success === true) {
-
-        const url = action.payload.url
-
+        const url = action.payload.url;
 
         const serverUrl = "http://localhost:5000";
+        // Normalize backslashes and use RegExp to find exact /backend/ folder
+        const normalizedUrl = url.replace(/\\/g, "/");
 
-        // Extract relative path after "backend"
-        const relativePath = url.split("backend")[1].replace(/\\/g, "/");
+        // Match everything after "/backend/"
+        const match = normalizedUrl.match(/\/backend\/(.+)$/);
 
-        
-        console.log("Check for url => ", relativePath)
-        // Construct the final URL
-        const fileUrl = `${serverUrl}${relativePath}`;
+        const relativePath = match ? `/${match[1]}` : "";
+
+        const fullUrl = serverUrl + relativePath;
+
+
         // Open the new PDF in a new tab
-        window.open(fileUrl, '_blank');
+        window.open(fullUrl, "_blank");
 
         // Optionally, revoke the object URL after use (for memory cleanup)
-        window.URL.revokeObjectURL(fileUrl);
-
+        window.URL.revokeObjectURL(fullUrl);
       }
     });
     //@CaseNo       02
@@ -249,7 +247,6 @@ export const closingSlice = createSlice({
     //@used for     Add Closing
     //@Response     Success Alert
     builder.addCase(addClosing.fulfilled, (state, action) => {
-
       //Check for errors
       if (action.payload?.errors?.length > 0) {
         return {
@@ -268,8 +265,8 @@ export const closingSlice = createSlice({
           errors: [],
         };
       }
-    })
-    //  
+    });
+    //
     //@CaseNo       05
     //@Request      DELETE
     //@Status       Success
