@@ -38,7 +38,17 @@ const DetailsPaper = ({ inputs }) => {
                 <Typography>{capitalizeEachWord(key)}</Typography> :
                 {value === "active" || value === "deactive" ? <div style={{ background: value === "active" ? "#02bf2e" : "#777", color: "white", width: 70, textAlign: "center", borderRadius: 4 }}>
                 {capitalizeEachWord(String(value))}
-                </div> : key === "salary" ?<Typography>{`Rs. ${capitalizeEachWord(String(value))}`}</Typography> : key === "email"? <Typography>{String(value)}</Typography>:<Typography>{capitalizeEachWord(String(value))}</Typography>}
+                </div> : key === "salary" ?<Typography>{value?.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "PKR",
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}</Typography> : key === "email"? <Typography>{String(value)}</Typography>: key === "balance" ? <Typography>{value?.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "PKR",
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}</Typography> : <Typography>{capitalizeEachWord(String(value))}</Typography>}
               </Box>
             </Grid>
           )

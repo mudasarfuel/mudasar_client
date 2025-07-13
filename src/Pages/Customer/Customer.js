@@ -416,7 +416,7 @@ const handleOnSubmit = async (e) => {
         {/* Customer Details Dialog box  */}
         {Object.keys(currentCustomer).length !== 0 && <DetailsDialog
           openDetailsDialog={openDetailsDialog}
-          heading={"Kashif's Detail"}
+          heading={`${currentCustomer.name}'s Detail` }
           inputs={currentCustomer}
           handleOnCloseDetails={()=>setOpenDetailsDialog(false)}
           icon={<AssignmentInd style={{ marginRight: "10px" }} />}

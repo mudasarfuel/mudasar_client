@@ -5,7 +5,11 @@ import { DOMAIN } from "../../backend/API";
 
 // SAMPLE DATA FOR USERS
 //Export Customer Columns
-export const customerColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFormDialog) => [
+export const customerColumns = (
+  setOpenDeleteDialog,
+  setDetailsDialog,
+  setOpenFormDialog
+) => [
   // { field: "id", headerName: "ID", width: 70 },
   {
     field: "name",
@@ -28,8 +32,24 @@ export const customerColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFo
       );
     },
   },
-  // { field: "email", headerName: "Email", width: 230 },
-  { field: "balance", headerName: "Receivable", width: 150 },
+
+  {
+    field: "balance",
+    headerName: "Receivable",
+    width: 150,
+    renderCell: (params) => {
+      return (
+        <div className={`cellWithStatus ${params.row.status}`}>
+          {params.row.balance?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
+        </div>
+      );
+    },
+  },
   { field: "contact", headerName: "Contact", width: 150 },
   { field: "address", headerName: "Address", width: 200 },
   {
@@ -38,9 +58,9 @@ export const customerColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFo
     width: 100,
     renderCell: (params) => {
       return (
-        <div className={`cellWithStatus ${params.row.status}`}>
-          {params.row.status}
-        </div>
+       <div style={{ background: params.row.status === "Active" ? "#02bf2e" : "#777", color: "white", width: 65, textAlign: "center", borderRadius: 4 }}>
+        {params.row.status}
+      </div>
       );
     },
   },
@@ -54,13 +74,16 @@ export const customerColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFo
           <IconButton
             className="viewButton"
             onClick={() => {
-              setOpenFormDialog(true)
+              setOpenFormDialog(true);
             }}
           >
             <Edit style={{ fontSize: "20px" }} />
           </IconButton>
 
-          <IconButton className="viewButton" onClick={()=>setDetailsDialog(true)}>
+          <IconButton
+            className="viewButton"
+            onClick={() => setDetailsDialog(true)}
+          >
             <Info style={{ fontSize: "20px" }} />
           </IconButton>
 
