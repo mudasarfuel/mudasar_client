@@ -1,0 +1,97 @@
+import { Link } from "react-router-dom";
+import { Delete, Edit, Info, Style } from "@mui/icons-material";
+import { IconButton, Chip } from "@mui/material";
+import { DOMAIN } from "../../backend/API";
+
+// SAMPLE DATA FOR USERS
+//Export User Columns
+export const userColumns = (setOpenFormDialog, setDetailsDialog, setOpenDeleteDialog ) => [
+  // { field: "id", headerName: "ID", width: 70 },
+  {
+    field: "user",
+    headerName: "User",
+    width: 230,
+    renderCell: (params) => {
+      return (
+        <div className="cellWithImg">
+          <img src={
+              // console.log("Check for user iMage", params.row)
+              params.row.pic
+                ? `${DOMAIN}/public/users/images/${params.row.pic}`
+                : "avatarfile.png"
+            }
+            alt=""
+            className="cellImg"/>
+          {params.row.name}
+        </div>
+      );
+    },
+  },
+  { field: "email", headerName: "Email", width: 230 },
+  { field: "contact", headerName: "Contact", width: 150 },
+  { field: "access", headerName: "Role", width: 120 },
+  {
+    field: "status",
+    headerName: "Status",
+    width: 100,
+    renderCell: (params) => {
+      return (
+        <div className={`cellWithStatus ${params.row.status}`}>
+          {params.row.status}
+        </div>
+      );
+    },
+  },
+  {
+    field: "action",
+    headerName: "Action",
+    width: 160,
+    renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          <IconButton
+            className="viewButton"
+            onClick={() => {
+              setOpenFormDialog(true)
+            }}
+          >
+            <Edit style={{ fontSize: "20px" }} />
+          </IconButton>
+
+          <IconButton className="viewButton" onClick={()=>setDetailsDialog(true)}>
+            <Info style={{ fontSize: "20px" }} />
+          </IconButton>
+
+          <IconButton
+            className="viewButton"
+            onClick={() => setOpenDeleteDialog(true)}
+          >
+            <Delete style={{ fontSize: "20px" }} />
+          </IconButton>
+        </div>
+      );
+    },
+  },
+];
+//DATA TABLE FORMATE FOR TENANTS
+export const tenantsRows = [
+  {
+    id: 1,
+    name: "Kashif Hussain",
+    image: "img/blackberry.png",
+    email: "kashif@gmail.com",
+    tenantName: "Saimon Technologies",
+    contact: "0302-2365926",
+    address: "Qaim colony Naushahro feroze",
+  },
+  {
+    id: 2,
+    name: "Kashif Hussain",
+    image: "img/blackberry.png",
+    // username: "kashif",
+    email: "kashif@gmail.com",
+    tenantName: "Saimon Technologies",
+    contact: "0302-2365926",
+    address: "Qaim colony Naushahro feroze",
+  },
+];

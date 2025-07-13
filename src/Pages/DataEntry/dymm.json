@@ -1,0 +1,134 @@
+[
+  {
+    "date": "04-07-2025",
+    "userId": "685f5e0523b79169c5d066dd",
+    "bankAmount": 0,
+    "dips": [
+      {
+        "petrol": {
+          "dip": "34",
+          "litres": "47.20"
+        },
+        "diesel": {
+          "dip": "34",
+          "litres": "68.40"
+        }
+      }
+    ],
+    "products": [
+      {
+        "petrol": [
+          {
+            "machineId": "685fdf00e20b296215886e86",
+            "newReading": 496995.67
+          },
+          {
+            "machineId": "685fdf10e20b296215886e8c",
+            "newReading": 818785.59
+          },
+          {
+            "machineId": "685fdf21e20b296215886e92",
+            "newReading": 93747.44
+          },
+          {
+            "machineId": "685fdf32e20b296215886e98",
+            "newReading": 93661.21
+          }
+        ],
+        "diesel": [
+          {
+            "machineId": "685fdf42e20b296215886e9e",
+            "newReading": 929074.01
+          },
+          {
+            "machineId": "685fdf51e20b296215886ea4",
+            "newReading": 114009.13
+          },
+          {
+            "machineId": "685fdf61e20b296215886eaa",
+            "newReading": 75733.53
+          },
+          {
+            "machineId": "685fdf72e20b296215886eb0",
+            "newReading": 102561.79
+          }
+        ],
+	 "lubricant": [
+      {
+        "productId": "685ff28cce25f2ddaf89e239",
+        "quantity": "2"
+      },
+      {
+        "productId": "685ff2a5ce25f2ddaf89e240",
+        "quantity": "2"
+      },
+      {
+        "productId": "685ff2bdce25f2ddaf89e247",
+        "quantity": "2"
+      },
+      {
+        "productId": "6862741b4697424d1df23edd",
+        "quantity": "2.5"
+      }
+    ],
+    "lubricantTotalAmount": 5527.5,
+	 "petrolMachines": 4,
+    "dieselMachines": 4,
+    "petrolTestEntry": "20.00",
+    "dieselTestEntry": "25.00",
+    "petrolTotalAmount": 233604.17,
+    "dieselTotalAmount": 129999.9,
+      }
+    ],
+   
+   
+    "customer": [
+      {
+        "credits": [
+          {
+            "customerId": "686250dcdac508e0e54636ab",
+		"products": [{
+			  "amount": "1000",
+            		"description": "Waseem Drive",
+            		"productId": "685fd4cfe20b296215886e47"
+
+		}]
+          
+          }
+        ],
+        "debits": [
+          {
+            "uId": "4a7083bd-c72a-41c2-8a04-1be461ad78a6",
+            "customerId": "686250dcdac508e0e54636ab",
+            "amount": 1000
+          }
+        ]
+      }
+    ],
+    "employees": [
+      {
+        "credits": [
+          {
+            "employeeId": "6864b465b7e79a693b376af9",
+            "amount": "1000",
+            "description": "Haji ali purchased"
+          }
+        ],
+        "debits": [
+          {
+            "employeeId": "6864b465b7e79a693b376af9",
+            "amount": "1000"
+          }
+        ]
+      }
+    ],
+    "expenses": [
+      {
+        "id": "278dc919-a643-49ad-b57a-cd53bf90afe8",
+        "name": "Machine 4",
+        "amount": "1500",
+        "description": "Repair"
+      }
+    ]
+  }
+]

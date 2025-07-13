@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/static/css/main.3f98cc99.css",
+    "main.js": "/static/js/main.25335fcd.js",
+    "static/css/883.aa0043fc.chunk.css": "/static/css/883.aa0043fc.chunk.css",
+    "static/js/883.e7c6a7fd.chunk.js": "/static/js/883.e7c6a7fd.chunk.js",
+    "static/css/703.3e52b9cb.chunk.css": "/static/css/703.3e52b9cb.chunk.css",
+    "static/js/703.125cd378.chunk.js": "/static/js/703.125cd378.chunk.js",
+    "static/css/106.6abccfb9.chunk.css": "/static/css/106.6abccfb9.chunk.css",
+    "static/js/106.c963b9a4.chunk.js": "/static/js/106.c963b9a4.chunk.js",
+    "static/js/741.1d626c54.chunk.js": "/static/js/741.1d626c54.chunk.js",
+    "static/js/23.48e3bf7e.chunk.js": "/static/js/23.48e3bf7e.chunk.js",
+    "static/media/petrol.jpg": "/static/media/petrol.0bf86c4e06a2c3e4911f.jpg",
+    "static/media/profile_user.jpg": "/static/media/profile_user.f92e5ecc7edfd2ea035e.jpg",
+    "static/media/DieselCane.jpg": "/static/media/DieselCane.7615a3f16853e9dc69d6.jpg",
+    "static/media/petrolCane.webp": "/static/media/petrolCane.f614d26be51a9379c94c.webp",
+    "index.html": "/index.html",
+    "main.3f98cc99.css.map": "/static/css/main.3f98cc99.css.map",
+    "main.25335fcd.js.map": "/static/js/main.25335fcd.js.map",
+    "883.aa0043fc.chunk.css.map": "/static/css/883.aa0043fc.chunk.css.map",
+    "883.e7c6a7fd.chunk.js.map": "/static/js/883.e7c6a7fd.chunk.js.map",
+    "703.3e52b9cb.chunk.css.map": "/static/css/703.3e52b9cb.chunk.css.map",
+    "703.125cd378.chunk.js.map": "/static/js/703.125cd378.chunk.js.map",
+    "106.6abccfb9.chunk.css.map": "/static/css/106.6abccfb9.chunk.css.map",
+    "106.c963b9a4.chunk.js.map": "/static/js/106.c963b9a4.chunk.js.map",
+    "741.1d626c54.chunk.js.map": "/static/js/741.1d626c54.chunk.js.map",
+    "23.48e3bf7e.chunk.js.map": "/static/js/23.48e3bf7e.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3f98cc99.css",
+    "static/js/main.25335fcd.js"
+  ]
+}
