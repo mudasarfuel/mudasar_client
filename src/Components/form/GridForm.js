@@ -471,6 +471,7 @@ export default function Form({
                 format="DD-MM-YYYY"
                 tabIndex={input.tabIndex}
                 disabled={input.disabled}
+                maxDate={dayjs()}  
                 value={
                   state[input.name] !== ""
                     ? dayjs(state[input.name], "DD-MM-YYYY")

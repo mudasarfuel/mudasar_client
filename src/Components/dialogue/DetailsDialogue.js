@@ -74,10 +74,7 @@ const DetailsDialog = ({
          
         </DialogTitle>
         <DialogContent>
-          {/* <DialogContentText id="alert-dialog-description">
-            {message}
-          </DialogContentText> */}
-         {/* Add New Tenant Form  */}
+         
          <div
           style={{
             display: "flex",
@@ -86,9 +83,18 @@ const DetailsDialog = ({
             paddingBottom: "8px",
           }}
         >
-          
-          <Avatar src={inputs && inputs.pic !== "" ? `http://localhost:5000/public/${inputs.designation ? "employees":"customers"}/images/${inputs.pic}`
-                            : "./img/avatarfile.png"} />
+          {console.log("Checking the Avatar => ", inputs.designation)}
+          {inputs && (
+  <Avatar
+    src={
+      inputs.pic 
+        ? `http://localhost:5000/public/${inputs.designation ? "employees" : "customers"}/images/${inputs.pic}`
+        : "./img/avatarfile.png"
+    }
+    size={120}
+    round={true}
+  />
+)}
         </div>
           <DetailsPaper inputs={inputs} />
         </DialogContent>

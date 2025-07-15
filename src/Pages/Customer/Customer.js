@@ -9,10 +9,7 @@ import { FileUpload } from "../../backend/uploadFile";
 import Dialogue from "../../Components/dialogue/Dialogue";
 import FormDialog from "../../Components/dialogue/FormDialogue";
 import DangerousIcon from "@mui/icons-material/Dangerous";
-import {
-  AssignmentInd,
-  SwitchAccount,
-} from "@mui/icons-material";
+import { AssignmentInd, SwitchAccount } from "@mui/icons-material";
 import Search from "../../Components/search/Search";
 import { toast } from "react-toastify";
 import {
@@ -62,7 +59,7 @@ const Customer = () => {
     searchInput: "",
   });
 
-  console.log("Checking the searh => ", search, filters)
+  console.log("Checking the searh => ", search, filters);
   //Setup state for values
   const [state, setState] = useState({
     name: "",
@@ -79,20 +76,25 @@ const Customer = () => {
   //Use State for manage filters panel
   const [openFiltersPanel, setOpenFiltersPanel] = useState(false);
   //Handle mobile screen
-  const [isMobile, setIsMobile] = useState(window.matchMedia("(max-width: 768px)").matches);
-  
-    useEffect(() => {
-      const mediaQuery = window.matchMedia("(max-width: 768px)");
-      
-      const handleResize = () => setIsMobile(mediaQuery.matches);
-      
-      mediaQuery.addEventListener("change", handleResize);
-  
-      return () => mediaQuery.removeEventListener("change", handleResize);
-    }, []);
+  const [isMobile, setIsMobile] = useState(
+    window.matchMedia("(max-width: 768px)").matches
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+
+    const handleResize = () => setIsMobile(mediaQuery.matches);
+
+    mediaQuery.addEventListener("change", handleResize);
+
+    return () => mediaQuery.removeEventListener("change", handleResize);
+  }, []);
   //Use Effect to get Single Customer API Hit
   useEffect(() => {
-    if ((selectedRowId !== undefined && openFormDialog === true) || (selectedRowId !== undefined && openDetailsDialog === true) ) {
+    if (
+      (selectedRowId !== undefined && openFormDialog === true) ||
+      (selectedRowId !== undefined && openDetailsDialog === true)
+    ) {
       //Dispatch current customer
       dispatch(getSingleCustomer(selectedRowId));
     }
@@ -163,88 +165,88 @@ const Customer = () => {
     // eslint-disable-next-line
   }, [filters.field]);
 
-//useEffect to Iterate submit Errors
-useEffect(() => {
-  if (submitErrors?.length > 0) {
-    //iterate submit errors
-    submitErrors.forEach((item) => {
-      toast(item.msg, { position: "top-right", type: "error" });
-    });
-  } else {
-    handleOnFormDialogClose();
-  }
-}, [submitErrors]);
+  //useEffect to Iterate submit Errors
+  useEffect(() => {
+    if (submitErrors?.length > 0) {
+      //iterate submit errors
+      submitErrors.forEach((item) => {
+        toast(item.msg, { position: "top-right", type: "error" });
+      });
+    } else {
+      handleOnFormDialogClose();
+    }
+  }, [submitErrors]);
 
-//Handle Delete Tenant func
-const handleOnDelete = () => {
-  //Calling delete function
-  dispatch(deleteCustomer(selectedRowId));
-  //after delete clear row id
-  setSelectedRowId(null);
-};
-
-//Load The Data
-const loadData = () => {
-  const initialData = { page: 0, sort: -1 };
-  //Call getCustomers using dispatch
-  dispatch(getCustomers(initialData));
-};
-//Handle On submit
-const handleOnSubmit = async (e) => {
-  e.preventDefault();
-  //Destructuring values from state
-  const { startDate, endDate, searchInput, contact } = search;
-  //Destructuring values from filters
-  const { field, operator, sort } = filters;
-  //Organizing data from filters and search Input
-  let newState = {
-    field: field === "" ? undefined : field,
-    operator: operator,
-    sort: sort,
-    page: 0,
-    searchInput: searchInput,
-    startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-    endDate: endDate === "" && startDate !== "" ? startDate : endDate,
+  //Handle Delete Tenant func
+  const handleOnDelete = () => {
+    //Calling delete function
+    dispatch(deleteCustomer(selectedRowId));
+    //after delete clear row id
+    setSelectedRowId(null);
   };
-  if (field === "date") {
-    if (startDate === "" && endDate === "") {
-      toast("Please Select Date", { position: "top-right", type: "error" });
-    } else {
+
+  //Load The Data
+  const loadData = () => {
+    const initialData = { page: 0, sort: -1 };
+    //Call getCustomers using dispatch
+    dispatch(getCustomers(initialData));
+  };
+  //Handle On submit
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    //Destructuring values from state
+    const { startDate, endDate, searchInput } = search;
+    //Destructuring values from filters
+    const { field, operator, sort } = filters;
+    //Organizing data from filters and search Input
+    let newState = {
+      field: field === "" ? undefined : field,
+      operator: operator,
+      sort: sort,
+      page: 0,
+      searchInput: searchInput,
+      startDate: endDate !== "" && startDate === "" ? endDate : startDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
+    };
+    if (field === "date") {
+      if (startDate === "" && endDate === "") {
+        toast("Please Select Date", { position: "top-right", type: "error" });
+      } else {
+        //Calling dispatch function to hit API Call
+        dispatch(getCustomers(newState));
+        //After search results close the filters panel
+        setOpenFiltersPanel(!openFiltersPanel);
+        //Set Page to Zero
+        setCurrentPage(0);
+      }
+    } else if (field === "") {
       //Calling dispatch function to hit API Call
       dispatch(getCustomers(newState));
       //After search results close the filters panel
       setOpenFiltersPanel(!openFiltersPanel);
       //Set Page to Zero
       setCurrentPage(0);
-    }
-  } else if (field === "") {
-    //Calling dispatch function to hit API Call
-    dispatch(getCustomers(newState));
-    //After search results close the filters panel
-    setOpenFiltersPanel(!openFiltersPanel);
-    //Set Page to Zero
-    setCurrentPage(0);
-  } else {
-    if (field !== "" && searchInput === "") {
-      toast("Please Enter to search..", {
-        position: "top-right",
-        type: "error",
-      });
-    } else if (field !== "" && searchInput !== "" && operator === "") {
-      toast("Please select condition", {
-        position: "top-right",
-        type: "error",
-      });
     } else {
-      //Calling dispatch function to hit API Call
-      dispatch(getCustomers(newState));
-      //After search results close the filters panel
-      setOpenFiltersPanel(!openFiltersPanel);
-      //Set Page to Zero
-      setCurrentPage(0);
+      if (field !== "" && searchInput === "") {
+        toast("Please Enter to search..", {
+          position: "top-right",
+          type: "error",
+        });
+      } else if (field !== "" && searchInput !== "" && operator === "") {
+        toast("Please select condition", {
+          position: "top-right",
+          type: "error",
+        });
+      } else {
+        //Calling dispatch function to hit API Call
+        dispatch(getCustomers(newState));
+        //After search results close the filters panel
+        setOpenFiltersPanel(!openFiltersPanel);
+        //Set Page to Zero
+        setCurrentPage(0);
+      }
     }
-  }
-};
+  };
 
   //Handle On Form Dialog Close
   const handleOnFormDialogClose = () => {
@@ -270,12 +272,12 @@ const handleOnSubmit = async (e) => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
     let newState = {
-      field: field === "" ? "" : field,
+      field: field === "" ? undefined : field,
       operator: operator,
       sort: sort,
       page: e,
@@ -322,7 +324,7 @@ const handleOnSubmit = async (e) => {
     status: row.status && capitalizeEachWord(row.status),
   }));
   //Destructure values from the state
-  const { name,  balance, status } = state;
+  const { name, balance, status } = state;
   //Handle on submit function
   const handleOnAddUpdateFormSubmit = async (e) => {
     e.preventDefault();
@@ -380,7 +382,7 @@ const handleOnSubmit = async (e) => {
       }
     }
   };
- 
+
   return (
     <Box m="0px 20px 15px 20px">
       {/* Header for Tenants Page  */}
@@ -416,13 +418,30 @@ const handleOnSubmit = async (e) => {
           icon={<SwitchAccount style={{ marginRight: "10px" }} />}
         />
         {/* Customer Details Dialog box  */}
-        {Object.keys(currentCustomer).length !== 0 && <DetailsDialog
-          openDetailsDialog={openDetailsDialog}
-          heading={`${currentCustomer.name}'s Detail` }
-          inputs={currentCustomer}
-          handleOnCloseDetails={()=>setOpenDetailsDialog(false)}
-          icon={<AssignmentInd style={{ marginRight: "10px" }} />}
-        />}
+        {Object.keys(currentCustomer).length !== 0 && (
+          <DetailsDialog
+            openDetailsDialog={openDetailsDialog}
+            heading={`${capitalizeEachWord(currentCustomer.name)}'s Detail`}
+            inputs={currentCustomer}
+            handleOnCloseDetails={() => {
+              setOpenDetailsDialog(false);
+              //Clear selected Row Id
+              setSelectedRowId(null);
+              //Clear State and remove previous data
+              setState({
+                name: "",
+                email: "",
+                contact: "",
+                address: "",
+                balance: "",
+                status: "",
+              });
+              //Clear File loaded in file state
+              setFile("");
+            }}
+            icon={<AssignmentInd style={{ marginRight: "10px" }} />}
+          />
+        )}
         {/* Delete Content Dialog box  */}
         <Dialogue
           openDeleteDialog={openDeleteDialog}

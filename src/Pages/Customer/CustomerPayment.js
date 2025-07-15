@@ -73,7 +73,7 @@ const CustomerPayment = () => {
   
   //Setup state for values
   const [state, setState] = useState({
-    cashierId: user._id,
+    userId: user._id,
     customerId: "",
     amount: "",
     date: ""
@@ -222,7 +222,7 @@ const handleOnSubmit = async (e) => {
     setSelectedRowId(null);
     //Clear State and remove previous data
     setState({
-      cashierId: user._id,
+      userId: user._id,
       customerId: "",
       amount: "",
       date: ""
@@ -286,16 +286,18 @@ const handleOnSubmit = async (e) => {
     
   }));
   //Destructure values from the state
-  const { cashierId, customerId,  amount, date } = state;
+  const { userId, customerId,  amount, date } = state;
+
+  console.log("Checking the state => ", state)
   //Handle on submit function
   const handleOnAddUpdateFormSubmit = async (e) => {
     e.preventDefault();
-    if (cashierId === "") {
+    if (userId === "") {
       toast("Please re-login", { position: "top-right", type: "error" });
     } else if (customerId === "") {
       toast("Select Customer", { position: "top-right", type: "error" });
-    } else if (amount === "") {
-      toast("Please enter amount", { position: "top-right", type: "error" });
+    } else if (amount === "" || amount <= 0) {
+      toast("Amount must not be zero", { position: "top-right", type: "error" });
     } else if (date === "") {
       toast("Select date", { position: "top-right", type: "error" });
     } else {

@@ -4,63 +4,81 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 //GET ALL CUSTOMERS AXIOS CALL USING ASYNC THUNK
-export const getCustomers = createAsyncThunk("getCustomers", async (initData) => {
-  try {
-    const { field, operator, sort, page, searchInput } =
-      initData;
-     
-    //Creating API call using ENDPOINTS as Base URL (/api/customers)
-    // field=${field}&operator=${operator}&searchInput=${searchInput}&
-    console.log("Field => ", field, "Operator =>", operator, "sort => ", sort, "Page =>", page, "Search Input =>", searchInput)
-    return await axios
-      .get(
-        `${ENDPOINTS.CUSTOMER}?field=${field}&operator=${operator}&searchInput=${searchInput}&page=${page}&sort=${sort}`
-      )
-      .then((res) => res.data);
-  } catch (error) {
-    //Incase of error catch error
-    return error.response.data.error[0];
+export const getCustomers = createAsyncThunk(
+  "getCustomers",
+  async (initData) => {
+    try {
+      const { field, operator, sort, page, searchInput } = initData;
+
+      //Creating API call using ENDPOINTS as Base URL (/api/customers)
+      // field=${field}&operator=${operator}&searchInput=${searchInput}&
+      console.log(
+        "Field => ",
+        field,
+        "Operator =>",
+        operator,
+        "sort => ",
+        sort,
+        "Page =>",
+        page,
+        "Search Input =>",
+        searchInput
+      );
+      return await axios
+        .get(
+          `${ENDPOINTS.CUSTOMER}?field=${field}&operator=${operator}&searchInput=${searchInput}&page=${page}&sort=${sort}`
+        )
+        .then((res) => res.data);
+    } catch (error) {
+      //Incase of error catch error
+      return error.response.data.error[0];
+    }
   }
-});
+);
 
 //GET SINGLE CUSTOMER AXIOS CALL USING ASYNC THUNK
-export const getSingleCustomer = createAsyncThunk("getSingleCustomer", async (id) => {
-  try {
-    //Creating API Call using base url (/api/customers/:id)
-    return await axios.get(`${ENDPOINTS.CUSTOMER}/${id}`).then(res => res.data)
-  } catch (error) {
-    //In case of error
-    return error.response.data.error[0]
+export const getSingleCustomer = createAsyncThunk(
+  "getSingleCustomer",
+  async (id) => {
+    try {
+      //Creating API Call using base url (/api/customers/:id)
+      return await axios
+        .get(`${ENDPOINTS.CUSTOMER}/${id}`)
+        .then((res) => res.data);
+    } catch (error) {
+      //In case of error
+      return error.response.data.error[0];
+    }
   }
-})
+);
 //ADD CUSTOMER AXIOS CALL USING ASYNC THUNK
 export const addCustomer = createAsyncThunk("addCustomer", async (Data) => {
   try {
     //Creating API call using ENDPOINTS as Base URL (/api/webadmin/tenants)
-    return await axios
-      .post(ENDPOINTS.CUSTOMER, Data)
-      .then((res) => res.data);
+    return await axios.post(ENDPOINTS.CUSTOMER, Data).then((res) => res.data);
   } catch (error) {
-      //Incase of error catch error
-      return error.response.data
+    //Incase of error catch error
+    return error.response.data;
   }
 });
 //UPDATE CUSTOMER AXIOS CALL USING ASYNC THUNK
-export const updateCustomer = createAsyncThunk("updateCustomer", async (initData) => {
-  try {
-    //De Structuring data
-    const {id, Data} = initData
-  
-    //Creating API call using ENDPOINTS as Base URL (/api/customers/:id)
-    return await axios.put(`${ENDPOINTS.CUSTOMER}/${id}`, Data).then(res => res.data)
-  } catch (error) {
-   
+export const updateCustomer = createAsyncThunk(
+  "updateCustomer",
+  async (initData) => {
+    try {
+      //De Structuring data
+      const { id, Data } = initData;
 
-    //Incase of error catch error
-    return error.response.data
-    
+      //Creating API call using ENDPOINTS as Base URL (/api/customers/:id)
+      return await axios
+        .put(`${ENDPOINTS.CUSTOMER}/${id}`, Data)
+        .then((res) => res.data);
+    } catch (error) {
+      //Incase of error catch error
+      return error.response.data;
+    }
   }
-})
+);
 //DELETE CUSTOMER AXIOS CALL USING ASYNC THUNK
 export const deleteCustomer = createAsyncThunk("deleteCustomer", async (id) => {
   try {
@@ -76,10 +94,10 @@ export const deleteCustomer = createAsyncThunk("deleteCustomer", async (id) => {
 export const customerSlice = createSlice({
   name: "customers",
   initialState: {
-    current: {}, 
+    current: {},
     data: [],
     totalRecord: 0,
-    errors: []
+    errors: [],
   },
   reducers: {
     clearCustomers() {
@@ -87,7 +105,7 @@ export const customerSlice = createSlice({
         current: {},
         data: [],
         totalRecord: 0,
-        errors: []
+        errors: [],
       };
     },
   },
@@ -114,52 +132,76 @@ export const customerSlice = createSlice({
         state.totalRecord = actions.payload.totalRecords;
       }
     });
-    
+
     //@CaseNo       03
     //@Request      GET
     //@Status       Success
     //@Loading      False
     //@used For     GET SINGLE CUSTOMER
     //@Response     Date Stored in State current
-    builder.addCase(getSingleCustomer.fulfilled, (state, action)=> {
+    builder.addCase(getSingleCustomer.fulfilled, (state, action) => {
       //Checking for success
-      if(action.payload.success === true){
+      if (action.payload.success === true) {
         //Set state
-       return {
-        ...state,
-        current: action.payload.data
-       }
+        return {
+          ...state,
+          current: action.payload.data,
+        };
       }
-    })
+    });
 
     //@CaseNo       04
     //@Request      POST
     //@Status       Success
     //@Loading      False
-    //@used for     Add Customer 
+    //@used for     Add Customer
     //@Response     Success Alert
     builder.addCase(addCustomer.fulfilled, (state, action) => {
-      console.log(action.payload)
+      console.log(action.payload);
       //Check for errors
-      if(action.payload?.errors?.length > 0){
+      if (action.payload?.errors?.length > 0) {
         return {
           ...state,
-          errors: action.payload.errors
-        }
+          errors: action.payload.errors,
+        };
       }
+
+      
       //Check for success status
-      if(action.payload?.success === true){
+      if (action.payload?.success === true) {
         //toast
-        toast(action.payload.msg, {position: "top-right", type: "success"})
+        toast(action.payload.msg, { position: "top-right", type: "success" });
+      
         //Modifying id
-        const customer = {...action.payload.customer, id: action.payload.customer._id}
-        return {
-          ...state,
-          data: [...state.data, customer],
-          errors: []
+        const customer = {
+          ...action.payload.customer,
+          id: action.payload.customer._id,
+        };
+
+        //If items are 5 then remove one item from screen and add ne item
+        if (state.data.length === 5) {
+          let popedState = []; // Creating empty array
+          //Inserting all items except last one
+          state.data.forEach(
+            (item, index) => index < 4 && popedState.push(item)
+          );
+          return {
+            ...state,
+            data: [customer, ...popedState],
+            errors: [],
+            totalRecord: action.payload.totalRecord
+          };
+        } else {
+          return {
+            ...state,
+            data: [customer, ...state.data],
+            errors: [],
+            totalRecord: action.payload.totalRecord
+          };
         }
       }
-    })
+
+    });
 
     //@CaseNo       05
     //@Request      PUT
@@ -167,29 +209,30 @@ export const customerSlice = createSlice({
     //@Loading      False
     //@used For     Update Customer
     //@Response     Success Alert
-    builder.addCase(updateCustomer.fulfilled, (state, action)=> {
-      
-      if(action.payload?.errors?.length > 0){
+    builder.addCase(updateCustomer.fulfilled, (state, action) => {
+      if (action.payload?.errors?.length > 0) {
         return {
           ...state,
-          errors: action.payload.errors
-        }
+          errors: action.payload.errors,
+        };
       }
       //Check for Success
-      if(action.payload.success === true){
-       
-        const updatedCustomer = {...action.payload.updated, id: action.payload.updated._id}
+      if (action.payload.success === true) {
+        const updatedCustomer = {
+          ...action.payload.updated,
+          id: action.payload.updated._id,
+        };
         //Show Alert
-        toast(action.payload.msg, {position: "top-right", type: "success"})
+        toast(action.payload.msg, { position: "top-right", type: "success" });
         return {
           ...state,
-          data: state.data.map(item => 
+          data: state.data.map((item) =>
             item.id === action.payload.updated._id ? updatedCustomer : item
           ),
-          errors: []
-        }
+          errors: [],
+        };
       }
-    })
+    });
     //@CaseNo       05
     //@Request      DELETE
     //@Status       Success
@@ -203,15 +246,11 @@ export const customerSlice = createSlice({
         toast(action.payload.msg, { position: "bottom-right", type: "error" });
         return {
           ...state,
-          data: [...state.data.filter(
-            (item) => item.id !== action.payload.id
-          )],
+          data: [...state.data.filter((item) => item.id !== action.payload.id)],
           totalRecord: action.payload.totalRecords,
         };
       }
     });
-
-    
   },
 });
 
