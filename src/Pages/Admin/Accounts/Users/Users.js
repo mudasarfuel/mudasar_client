@@ -374,27 +374,7 @@ const handleOnSubmit = async (e) => {
       }
     }
   };
-  //Short Cut for add new customer
-  // window.addEventListener("keydown", (event) => {
-  //   // event.ctrlKey.preventDefault()
-  //   if (event.ctrlKey && event.key === "a") {
-  //     event.preventDefault();
-  //     setOpenFormDialog(true);
-  //   } else if (event.key === "Delete") {
-  //     if (selectedRowId === null || selectedRowId === "") {
-  //       toast("Select Customer first", {
-  //         position: "top-right",
-  //         type: "error",
-  //       });
-  //     } else {
-  //       setOpenDeleteDialog(true);
-  //     }
-  //   }
-    // else if(event.ctrlKey && event.key === 'e'){
-    //   event.preventDefault()
-    //   dispatch(getSingleCustomer(selectedRowId))
-    // }
-  // });
+  
   return (
     <Box m="0px 20px 15px 20px">
       {/* Header for Tenants Page  */}

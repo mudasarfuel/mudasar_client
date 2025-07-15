@@ -103,21 +103,10 @@ const Dashboard = () => {
                 )
             )}
 
-            {/* <Grid item sm={12} xs={12} display={{ xs: "block", sm:"none", md: "none", lg: "block" }} md={4} lg={4}> */}
-            {/* Calling Featured from components/featured  */}
-            {/* <Featured />
-            </Grid>
-           
-            <Grid item xs={12} sm={6} md={6} lg={6}> */}
-            {/* Calling chart from components/chart  */}
-            {/* <Chart title="Last 6 (Revenue)" startColor="#8884d8" endColor="#8884d8" aspect={2 / 1} />
-            </Grid> */}
+          
           </Grid>
         </div>
-        {/* <div className="listContainer">
-          <div className="listTitle">Latest Transactions</div>
-          <Table />
-        </div> */}
+    
       </div>
     </div>
   );

@@ -451,7 +451,7 @@ export default function Form({
             lg={input.grid.lg}
             key={input.id}
           >
-            <CellInput state={state} setState={setState} />
+            <CellInput state={state} name={input.name} setState={setState} />
           </Grid>
         );
       case "date":

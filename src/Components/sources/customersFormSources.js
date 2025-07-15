@@ -148,10 +148,8 @@ export const searchCustomerFilters = (filter) => {
       options: [
         { id: 1, name: "Name", value: "name" },
         { id: 2, name: "Email", value: "email" },
-        { id: 3, name: "Contact", value: "contact" },
-        { id: 4, name: "Balance", value: "balance" },
-        { id: 5, name: "Address", value: "address" },
-        { id: 6, name: "Status", value: "status" },
+        { id: 3, name: "Contact", value: "contact" },   
+        { id: 4, name: "Status", value: "status" },
       ]
     },
     {

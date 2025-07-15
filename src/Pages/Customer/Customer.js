@@ -61,6 +61,8 @@ const Customer = () => {
   const [search, setSearch] = useState({
     searchInput: "",
   });
+
+  console.log("Checking the searh => ", search, filters)
   //Setup state for values
   const [state, setState] = useState({
     name: "",
@@ -191,7 +193,7 @@ const loadData = () => {
 const handleOnSubmit = async (e) => {
   e.preventDefault();
   //Destructuring values from state
-  const { startDate, endDate, searchInput } = search;
+  const { startDate, endDate, searchInput, contact } = search;
   //Destructuring values from filters
   const { field, operator, sort } = filters;
   //Organizing data from filters and search Input
