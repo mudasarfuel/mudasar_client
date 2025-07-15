@@ -55,22 +55,17 @@ export const dailyCashColumns = (
     width: 150,
     renderCell: (params) => {
       return (
-        <Chip
-          label={
-            <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              <span style={{ fontSize: 13, fontWeight: "bold" }}>
-                {params.row.status}
-              </span>
-            </span>
-          }
+        <div
           style={{
-            background:
-              params.row.status.toLowerCase() === "pending"
-                ? "#03a0f5"
-                : "#999",
+            background: params.row.status.toLowerCase() === "pending" ? "#03a0f5" : "#999",
             color: "white",
+            width: 70,
+            textAlign: "center",
+            borderRadius: 4,
           }}
-        />
+        >
+          {params.row.status}
+        </div>
       );
     },
   },
@@ -86,7 +81,6 @@ export const dailyCashColumns = (
             className="viewButton"
             onClick={() => {
               setOpenFormDialog(true);
-
             }}
           >
             <Paid style={{ fontSize: "20px" }} />
@@ -96,4 +90,3 @@ export const dailyCashColumns = (
     },
   },
 ];
-

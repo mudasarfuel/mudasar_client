@@ -43,24 +43,11 @@ export const salesClosingsColumns = (
     width: 250,
     renderCell: (params) => {
       return (
-        <Chip
-          label={
-            <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              {params.row.status === "open" ? (
-                <NoEncryption style={{ height: 20, width: 20 }} />
-              ) : (
-                <LockIcon style={{ height: 20, width: 20 }} />
-              )}
-              <span style={{ fontSize: 13, fontWeight: "bold" }}>
-                {params.row.status}
-              </span>
-            </span>
-          }
-          style={{
-            background: params.row.status === "open" ? "#07bc58" : "#999",
-            color: "white",
-          }}
-        />
+
+         <div style={{ background: params.row.status === "open" ? "#02bf2e" : "#999", color: "white", width: 75, display: "flex", justifyContent:"center", alignItems: "center", borderRadius: 4 }}>
+       {params.row.status === "open" ? <NoEncryption style={{ height: 15, width: 15, marginRight:5 }} /> : <LockIcon style={{ height: 15, width: 15, marginRight: 5 }} />} {params.row.status}
+      </div>
+       
       );
     },
   },

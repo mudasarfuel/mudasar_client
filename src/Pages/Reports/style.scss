@@ -76,6 +76,16 @@
   color: #333;
 }
 
+/* Center alignment for product names */
+.product-header {
+  text-align: center !important;
+}
+
+.product-cell {
+  text-align: center;
+  font-weight: 600;
+}
+
 .styled-table tr:nth-child(even) {
   background-color: #fafafa;
 }

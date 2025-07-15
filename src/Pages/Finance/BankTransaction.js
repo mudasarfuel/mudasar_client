@@ -31,19 +31,23 @@ import {
 } from "../../Components/sources/customersFormSources";
 import DetailsDialog from "../../Components/dialogue/DetailsDialogue";
 import { bankTransactionsColumns } from "../../Components/datatable/bankTransactionsTableSources";
-import { getBankTransactions } from "../../redux/bankSlice/bankSlice";
+import {
+  getBankTransactions,
+  getSingleBank,
+} from "../../redux/bankSlice/bankSlice";
+import { bankInputFields } from "../../Components/sources/bankFormSources";
 
 const BankTransaction = () => {
   //Initializing dispatch function to call redux functions
   const dispatch = useDispatch();
   //Initializing useSelector to get data from redux store
   const customers = useSelector((state) => state.banks.data);
-  //Initializing the current customer
-  const currentCustomer = useSelector((state) => state.customers.current);
+  //Initializing the current cash
+  const currentCash = useSelector((state) => state.banks.current);
   //Initiaizing useSelector to get total records
-  const totalRecords = useSelector((state) => state.customers.totalRecord);
+  const totalRecords = useSelector((state) => state.banks.totalRecord);
   //Initializing UseSelector to get errors
-  const submitErrors = useSelector((state) => state.customers.errors);
+  const submitErrors = useSelector((state) => state.banks.errors);
   //Use State for Handle Open and close of form dialog
   const [openFormDialog, setOpenFormDialog] = useState(false);
   //Use State for handle Open and close of Details Dialog
@@ -66,78 +70,59 @@ const BankTransaction = () => {
   });
   //Setup state for values
   const [state, setState] = useState({
-    name: "",
-    email: "",
-    contact: "",
-    address: "",
-    balance: "",
+    username: "",
+    totalCash: "",
+    description: "",
+    depositAmount: "",
+    date: "",
+    depositDate: "",
     status: "",
-    pic: "",
   });
-  //Use State for search inputs
-  const [file, setFile] = useState("");
 
   //Use State for manage filters panel
   const [openFiltersPanel, setOpenFiltersPanel] = useState(false);
   //Handle mobile screen
-  const [isMobile, setIsMobile] = useState(window.matchMedia("(max-width: 768px)").matches);
-  
-    useEffect(() => {
-      const mediaQuery = window.matchMedia("(max-width: 768px)");
-      
-      const handleResize = () => setIsMobile(mediaQuery.matches);
-      
-      mediaQuery.addEventListener("change", handleResize);
-  
-      return () => mediaQuery.removeEventListener("change", handleResize);
-    }, []);
+  const [isMobile, setIsMobile] = useState(
+    window.matchMedia("(max-width: 768px)").matches
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+
+    const handleResize = () => setIsMobile(mediaQuery.matches);
+
+    mediaQuery.addEventListener("change", handleResize);
+
+    return () => mediaQuery.removeEventListener("change", handleResize);
+  }, []);
   //Use Effect to get Single Customer API Hit
   useEffect(() => {
-    if ((selectedRowId !== undefined && openFormDialog === true) || (selectedRowId !== undefined && openDetailsDialog === true) ) {
+    if (
+      (selectedRowId !== undefined && openFormDialog === true) ||
+      (selectedRowId !== undefined && openDetailsDialog === true)
+    ) {
       //Dispatch current customer
-      dispatch(getSingleCustomer(selectedRowId));
+      dispatch(getSingleBank(selectedRowId));
     }
     // eslint-disable-next-line
   }, [selectedRowId]);
 
   //Load Data into state for update Use Effect
   useEffect(() => {
-    if (Object.keys(currentCustomer).length !== 0) {
-      // Set the state when currentCustomer is updated
+    if (Object.keys(currentCash).length !== 0) {
+      // Set the state when currentCash is updated
       setState({
-        name: currentCustomer.name,
-        email: currentCustomer.email,
-        contact: currentCustomer.contact,
-        balance: currentCustomer.balance,
-        address: currentCustomer.address,
-        status: currentCustomer.status,
+        username: currentCash.username,
+
+        totalCash: currentCash.totalCash,
+        description: currentCash.description,
+        depositAmount: currentCash.depositAmount,
+        date: currentCash.date,
+        depositDate: currentCash.depositDate,
+        status: currentCash.status,
       });
-      async function urlToFile(url) {
-        // Fetch the file
-        let response = await fetch(url);
-        let data = await response.blob();
-        let metadata = {
-          type: "image/jpeg",
-        };
-        let file = new File([data], "test.jpg", metadata);
-        // Return the file object
-        return file;
-      }
-
-      async function loadFile() {
-        const fileGenerated = await urlToFile(
-          `http://localhost:5000/public/customers/images/${currentCustomer.pic}`
-        );
-
-        //Set file
-        setFile(fileGenerated);
-      }
-
-      if (currentCustomer.pic) {
-        loadFile();
-      }
     }
-  }, [currentCustomer]);
+  }, [currentCash]);
 
   //useEffect to dispatch all customers
   useEffect(() => {
@@ -165,88 +150,88 @@ const BankTransaction = () => {
     // eslint-disable-next-line
   }, [filters.field]);
 
-//useEffect to Iterate submit Errors
-useEffect(() => {
-  if (submitErrors?.length > 0) {
-    //iterate submit errors
-    submitErrors.forEach((item) => {
-      toast(item.msg, { position: "top-right", type: "error" });
-    });
-  } else {
-    handleOnFormDialogClose();
-  }
-}, [submitErrors]);
+  //useEffect to Iterate submit Errors
+  useEffect(() => {
+    if (submitErrors?.length > 0) {
+      //iterate submit errors
+      submitErrors.forEach((item) => {
+        toast(item.msg, { position: "top-right", type: "error" });
+      });
+    } else {
+      handleOnFormDialogClose();
+    }
+  }, [submitErrors]);
 
-//Handle Delete Tenant func
-const handleOnDelete = () => {
-  //Calling delete function
-  dispatch(deleteCustomer(selectedRowId));
-  //after delete clear row id
-  setSelectedRowId(null);
-};
-
-//Load The Data
-const loadData = () => {
-  const initialData = { page: 0, sort: -1 };
-  //Call getCustomers using dispatch
-  dispatch(getCustomers(initialData));
-};
-//Handle On submit
-const handleOnSubmit = async (e) => {
-  e.preventDefault();
-  //Destructuring values from state
-  const { startDate, endDate, searchInput } = search;
-  //Destructuring values from filters
-  const { field, operator, sort } = filters;
-  //Organizing data from filters and search Input
-  let newState = {
-    field: field === "" ? undefined : field,
-    operator: operator,
-    sort: sort,
-    page: 0,
-    searchInput: searchInput,
-    startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-    endDate: endDate === "" && startDate !== "" ? startDate : endDate,
+  //Handle Delete Tenant func
+  const handleOnDelete = () => {
+    //Calling delete function
+    dispatch(deleteCustomer(selectedRowId));
+    //after delete clear row id
+    setSelectedRowId(null);
   };
-  if (field === "date") {
-    if (startDate === "" && endDate === "") {
-      toast("Please Select Date", { position: "top-right", type: "error" });
-    } else {
+
+  //Load The Data
+  const loadData = () => {
+    const initialData = { page: 0, sort: -1 };
+    //Call getCustomers using dispatch
+    dispatch(getCustomers(initialData));
+  };
+  //Handle On submit
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    //Destructuring values from state
+    const { startDate, endDate, searchInput } = search;
+    //Destructuring values from filters
+    const { field, operator, sort } = filters;
+    //Organizing data from filters and search Input
+    let newState = {
+      field: field === "" ? undefined : field,
+      operator: operator,
+      sort: sort,
+      page: 0,
+      searchInput: searchInput,
+      startDate: endDate !== "" && startDate === "" ? endDate : startDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
+    };
+    if (field === "date") {
+      if (startDate === "" && endDate === "") {
+        toast("Please Select Date", { position: "top-right", type: "error" });
+      } else {
+        //Calling dispatch function to hit API Call
+        dispatch(getCustomers(newState));
+        //After search results close the filters panel
+        setOpenFiltersPanel(!openFiltersPanel);
+        //Set Page to Zero
+        setCurrentPage(0);
+      }
+    } else if (field === "") {
       //Calling dispatch function to hit API Call
       dispatch(getCustomers(newState));
       //After search results close the filters panel
       setOpenFiltersPanel(!openFiltersPanel);
       //Set Page to Zero
       setCurrentPage(0);
-    }
-  } else if (field === "") {
-    //Calling dispatch function to hit API Call
-    dispatch(getCustomers(newState));
-    //After search results close the filters panel
-    setOpenFiltersPanel(!openFiltersPanel);
-    //Set Page to Zero
-    setCurrentPage(0);
-  } else {
-    if (field !== "" && searchInput === "") {
-      toast("Please Enter to search..", {
-        position: "top-right",
-        type: "error",
-      });
-    } else if (field !== "" && searchInput !== "" && operator === "") {
-      toast("Please select condition", {
-        position: "top-right",
-        type: "error",
-      });
     } else {
-      //Calling dispatch function to hit API Call
-      dispatch(getCustomers(newState));
-      //After search results close the filters panel
-      setOpenFiltersPanel(!openFiltersPanel);
-      //Set Page to Zero
-      setCurrentPage(0);
+      if (field !== "" && searchInput === "") {
+        toast("Please Enter to search..", {
+          position: "top-right",
+          type: "error",
+        });
+      } else if (field !== "" && searchInput !== "" && operator === "") {
+        toast("Please select condition", {
+          position: "top-right",
+          type: "error",
+        });
+      } else {
+        //Calling dispatch function to hit API Call
+        dispatch(getCustomers(newState));
+        //After search results close the filters panel
+        setOpenFiltersPanel(!openFiltersPanel);
+        //Set Page to Zero
+        setCurrentPage(0);
+      }
     }
-  }
-};
+  };
 
   //Handle On Form Dialog Close
   const handleOnFormDialogClose = () => {
@@ -256,15 +241,14 @@ const handleOnSubmit = async (e) => {
     setSelectedRowId(null);
     //Clear State and remove previous data
     setState({
-      name: "",
-      email: "",
-      contact: "",
-      address: "",
-      balance: "",
+      username: "",
+      totalCash: "",
+      description: "",
+      depositAmount: "",
+      date: "",
+      depositDate: "",
       status: "",
     });
-    //Clear File loaded in file state
-    setFile("");
   };
 
   //Handle on Page Change
@@ -324,7 +308,7 @@ const handleOnSubmit = async (e) => {
     status: row.status && capitalizeEachWord(row.status),
   }));
   //Destructure values from the state
-  const { name,  balance, status } = state;
+  const { name, balance, status } = state;
   //Handle on submit function
   const handleOnAddUpdateFormSubmit = async (e) => {
     e.preventDefault();
@@ -335,54 +319,21 @@ const handleOnSubmit = async (e) => {
     } else if (status === "") {
       toast("Please select status", { position: "top-right", type: "error" });
     } else {
-      //Check for image uploaded
-      if (file !== "") {
-        //Function to convert file data in form data for upload
-        function getFormData(object) {
-          const formData = new FormData();
-          formData.append("file", object);
-          return formData;
-        }
-        //File Upload Axios Endpoint function
-        const res = await FileUpload(getFormData(file));
-
-        if (res?.success === true) {
-          //NewState variable
-          const newState = { ...state };
-          newState.pic = res.filename;
-          //Add uploaded file name into the state
-          setState(newState);
-          //After uploading image file submit other fields
-          if (selectedRowId !== null) {
-            const data = {
-              id: selectedRowId[0],
-              Data: newState,
-            };
-
-            //Hit API Call using dispatch to updated customer
-            dispatch(updateCustomer(data));
-          } else {
-            //Hit API Call using dispatch to add tenant
-            dispatch(addCustomer(newState));
-          }
-        }
+      //Upload data if image not selected
+      if (selectedRowId !== null) {
+        const data = {
+          id: selectedRowId[0],
+          Data: state,
+        };
+        //Hit API Call using dispatch to updated tenant
+        dispatch(updateCustomer(data));
       } else {
-        //Upload data if image not selected
-        if (selectedRowId !== null) {
-          const data = {
-            id: selectedRowId[0],
-            Data: state,
-          };
-          //Hit API Call using dispatch to updated tenant
-          dispatch(updateCustomer(data));
-        } else {
-          //Hit API Call using dispatch to add tenant
-          dispatch(addCustomer(state));
-        }
+        //Hit API Call using dispatch to add tenant
+        dispatch(addCustomer(state));
       }
     }
   };
- 
+
   return (
     <Box m="0px 20px 15px 20px">
       {/* Header for Tenants Page  */}
@@ -402,29 +353,29 @@ const handleOnSubmit = async (e) => {
           openFormDialog={openFormDialog}
           setOpenFormDialog={setOpenFormDialog}
           heading={
-            selectedRowId !== null && Object.keys(currentCustomer).length !== 0
-              ? "UPDATE CUSTOMER"
-              : "ADD CUSTOMER"
+            selectedRowId !== null && Object.keys(currentCash).length !== 0
+              && "Update Transaction"
+            
           }
           color="#999999"
           state={state}
           Id={selectedRowId}
           setState={setState}
-          file={file}
-          setFile={setFile}
           handleOnClose={handleOnFormDialogClose}
           handleOnSubmit={handleOnAddUpdateFormSubmit}
-          inputs={customerInputFields(selectedRowId, currentCustomer)}
-          icon={<SwitchAccount style={{ marginRight: "10px" }} />}
+          inputs={bankInputFields(selectedRowId, currentCash)}
+          icon={<AccountBalance style={{ marginRight: "10px" }} />}
         />
         {/* Customer Details Dialog box  */}
-        {Object.keys(currentCustomer).length !== 0 && <DetailsDialog
-          openDetailsDialog={openDetailsDialog}
-          heading={"Kashif's Detail"}
-          inputs={currentCustomer}
-          handleOnCloseDetails={()=>setOpenDetailsDialog(false)}
-          icon={<AssignmentInd style={{ marginRight: "10px" }} />}
-        />}
+        {Object.keys(currentCash).length !== 0 && (
+          <DetailsDialog
+            openDetailsDialog={openDetailsDialog}
+            heading={"Kashif's Detail"}
+            inputs={currentCash}
+            handleOnCloseDetails={() => setOpenDetailsDialog(false)}
+            icon={<AssignmentInd style={{ marginRight: "10px" }} />}
+          />
+        )}
         {/* Delete Content Dialog box  */}
         <Dialogue
           openDeleteDialog={openDeleteDialog}

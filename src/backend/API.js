@@ -106,7 +106,7 @@ export const ENDPOINTS = {
   // ====================================================
   CASH: DOMAIN + "/api/cashes",                // Cash management
   BANK: DOMAIN + "/api/bankTransactions",      // Bank transactions
-  
+  SINGLEBANK: DOMAIN + "bankSingleTransactions",
   // Closing endpoints
   CLOSE: DOMAIN + "/api/closings",             // Cashier closings
   PRINTCLOSE: DOMAIN + "/api/printClosing",    // Print closing report
@@ -116,5 +116,6 @@ export const ENDPOINTS = {
   // 10. REPORTING MODULE ENDPOINTS
   // ====================================================
   REPORT: DOMAIN + "/api/reports",             // Profit/loss reports
-  GENREPORT: DOMAIN + "/api/genReport"         // Report generation
+  GENREPORT: DOMAIN + "/api/genReport",         // Report generation
+  PRINTREPORT: DOMAIN + "/api/printMonthlyReport"         // Report generation
 };

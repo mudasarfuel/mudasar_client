@@ -58,7 +58,7 @@ export const customerColumns = (
     width: 100,
     renderCell: (params) => {
       return (
-       <div style={{ background: params.row.status === "Active" ? "#02bf2e" : "#777", color: "white", width: 65, textAlign: "center", borderRadius: 4 }}>
+       <div style={{ background: params.row.status === "Active" ? "#02bf2e" : "#999", color: "white", width: 65, textAlign: "center", borderRadius: 4 }}>
         {params.row.status}
       </div>
       );
