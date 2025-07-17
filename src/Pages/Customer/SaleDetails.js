@@ -39,9 +39,9 @@ const SaleDetails = ({
   message,
 }) => {
   //Initializing the use Context to get DarkMode state
-  const { darkMode, dispatch } = useContext(ModeContext);
+  const { darkMode } = useContext(ModeContext);
 
-  console.log(darkMode);
+
   const DemoPaper = styled(Paper)(({ theme }) => ({
     width: "100%",
     // height: 120,

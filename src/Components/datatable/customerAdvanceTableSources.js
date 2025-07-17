@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import { Delete, Edit, Info, Style } from "@mui/icons-material";
-import { IconButton, Chip, Tooltip } from "@mui/material";
+
+import { Delete, Edit, Info, } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
 //Export Customer Payment Columns
@@ -16,6 +16,15 @@ export const customerAdvanceColumns = (
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
+           <img
+            src={
+              params.row.pic
+                ? `${DOMAIN}/public/customers/images/${params.row.pic}`
+                : "./img/avatarfile.png"
+            }
+            alt=""
+            className="cellImg"
+          />
           {params.row.name.length > 30
             ? params.row.name.substring(0, 30) + `....`
             : params.row.name}

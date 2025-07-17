@@ -177,7 +177,7 @@ export const customerSlice = createSlice({
           state.data = [customer, ...poppedState];
         } else {
           state.data = [customer, ...state.data];
-        }
+        } 
         
         state.totalRecord = action.payload.totalRecord;
         state.errors = [];

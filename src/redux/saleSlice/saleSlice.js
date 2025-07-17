@@ -9,19 +9,7 @@ export const getSales = createAsyncThunk("getSales", async (initData) => {
   try {
     const { field, operator, sort, page, searchInput, startDate, endDate } = initData;
 
-    //Creating API call using ENDPOINTS as Base URL (/api/products)
-    console.log(
-      "Field => ",
-      field,
-      "Operator =>",
-      operator,
-      "sort => ",
-      sort,
-      "Page =>",
-      page,
-      "Search Input =>",
-      searchInput
-    );
+  
     return await axios
       .get(
         `${ENDPOINTS.SALE}?field=${field}&operator=${operator}&searchInput=${searchInput}&page=${page}&sort=${sort}&startDate=${startDate}&endDate=${endDate}`
@@ -119,7 +107,7 @@ export const saleSlice = createSlice({
     builder.addCase(getSales.fulfilled, (state, actions) => {
       //Check for request success
       if (actions.payload.success === true) {
-        console.log("Checking Payload => ", actions.payload);
+      
         //First Removing all the previous page products
         state.data = [];
         //Using map iterate each item and push into the state

@@ -32,23 +32,23 @@ const DetailsPaper = ({ inputs }) => {
       {
         Object.entries(inputs).map(([key, value], i) => {
           return (
-            key !== "_id" && key !== "pic" && key !== "userId" && key !== "customerId" && key !== "createdOn" && key !== "customerName"&& <Grid item xs={12} sm={6} md={6} lg={6} key={i}>
+            key !== "_id" && key !== "pic" && key !== "userId" && key !== "customerId" && key !== "supplierId" && key !== "createdOn" && key !== "customerName"&& key !== "name"&& <Grid item xs={12} sm={6} md={6} lg={6} key={i}>
               <Box style={{ display: "flex", gap: 10 }} >
 
                 <Typography>{capitalizeEachWord(key)}</Typography> :
                 {value === "active" || value === "deactive" || value === "open" || value === "locked"? <div style={{ background: value === "active" || value === "open" ? "#02bf2e" : "#777", color: "white", width: 70, textAlign: "center", borderRadius: 4 }}>
                 {capitalizeEachWord(String(value))}
-                </div> : key === "salary" ?<Typography>{value?.toLocaleString("en-US", {
+                </div> : key === "salary" ?<Typography style={{fontWeight: "bold", color: "#2a4ea1"}}>{value?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "PKR",
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    })}</Typography> : key === "email"? <Typography>{String(value)}</Typography>: key === "balance" ||  key === "payingAmount" || key === "remAmount" || key === "prevAmount" || key === "amount" ? <Typography>{value?.toLocaleString("en-US", {
+                    })}</Typography> : key === "email"? <Typography style={{fontWeight: "bold", color: "#2a4ea1"}}>{String(value)}</Typography>: key === "balance" ||  key === "payingAmount" || key === "remAmount" || key === "prevAmount" || key === "amount" ? <Typography style={{fontWeight: "bold", color: "#2a4ea1"}}>{value?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "PKR",
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    })}</Typography> : <Typography>{capitalizeEachWord(String(value))}</Typography>}
+                    })}</Typography> : <Typography style={{fontWeight: "bold", color: "#2a4ea1"}}>{capitalizeEachWord(String(value))}</Typography>}
               </Box>
             </Grid>
           )

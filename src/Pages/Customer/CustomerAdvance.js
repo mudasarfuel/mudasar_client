@@ -4,32 +4,18 @@ import React, { useContext, useEffect, useState } from "react";
 import Header from "../../Components/Header/Header";
 import DataTable from "../../Components/datatable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
-import { FileUpload } from "../../backend/uploadFile";
 import Dialogue from "../../Components/dialogue/Dialogue";
 import FormDialog from "../../Components/dialogue/FormDialogue";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import { AssignmentInd, AttachMoney, SwitchAccount } from "@mui/icons-material";
 import Search from "../../Components/search/Search";
 import { toast } from "react-toastify";
+
 import {
-  clearCustomers,
-  getCustomers,
-} from "../../redux/customerSlice/customerSlice";
-import {
-  searchCustomerFilters,
   searchCustomerInput,
 } from "../../Components/sources/customersFormSources";
 import DetailsDialog from "../../Components/dialogue/DetailsDialogue";
-import { customerPaymentColumns } from "../../Components/datatable/customerPaymentTableSources";
 import {
-  addCustomerPayment,
-  deleteCustomerPayment,
-  getCustomerPayments,
-  getSingleCustomerPayment,
-  updateCustomerPayment,
-} from "../../redux/customerPaymentSlice/customerPaymentSlice";
-import {
-  customerPaymentInputFields,
   searchCustomerPaymentFilters,
 } from "../../Components/sources/customerPaymentsFormSources";
 import AuthContext from "../../context/auth/AuthContext";
@@ -111,7 +97,7 @@ const CustomerAdvance = () => {
   }, [selectedRowId]);
 
 
-  console.log("Checking the current Customer => ", currentCustomer)
+ 
   //Load Data into state for update Use Effect
   useEffect(() => {
     if (Object.keys(currentCustomer).length !== 0) {
@@ -145,6 +131,7 @@ const CustomerAdvance = () => {
 
     // We deliberately omit filters.sort from dependencies to avoid infinite loops
     // eslint-disable-next-line react-hooks/exhaustive-deps
+     // eslint-disable-next-line
   }, []);
 
   //useEffect to handle the dates filter
@@ -202,7 +189,7 @@ const CustomerAdvance = () => {
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
       endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
-    console.log(newState);
+
     if (field === "date") {
       if (startDate === "" && endDate === "") {
         toast("Please Select Date", { position: "top-right", type: "error" });
@@ -233,7 +220,7 @@ const CustomerAdvance = () => {
           type: "error",
         });
       } else {
-        console.log("New State => ", newState);
+       
         //Calling dispatch function to hit API Call
         dispatch(getCustomerAdvances(newState));
         //After search results close the filters panel
@@ -260,6 +247,7 @@ const CustomerAdvance = () => {
     });
 
     dispatch(clearCurrentCustomerAdvance())
+     // eslint-disable-next-line
   };
 
   //Handle on Page Change

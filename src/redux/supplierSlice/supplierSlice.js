@@ -10,12 +10,11 @@ export const getSuppliers = createAsyncThunk("getSuppliers", async (initData) =>
       initData;
      
     //Creating API call using ENDPOINTS as Base URL (/api/suppliers)
-    console.log(field, operator, searchInput, sort, page)
     return await axios
       .get(
         `${ENDPOINTS.SUPPLIER}?field=${field}&operator=${operator}&searchInput=${searchInput}&page=${page}&sort=${sort}`
       )
-      .then((res) => res.data);
+      .then((res) => res.data); 
   } catch (error) {
     //Incase of error catch error
     return error.response.data.error[0];
@@ -94,8 +93,8 @@ export const supplierSlice = createSlice({
     //@used For     GET SUPPLIERS
     //@Data         Data stored in state
     builder.addCase(getSuppliers.fulfilled, (state, actions) => {
+
       //Check for request success
-      console.log(actions.payload)
       if (actions.payload.success === true) {
         //First Removing all the previous page suppliers
         state.data = [];
@@ -135,24 +134,31 @@ export const supplierSlice = createSlice({
     //@used for     Add Supplier 
     //@Response     Success Alert
     builder.addCase(addSupplier.fulfilled, (state, action) => {
-      //Check for errors
-      if(action.payload?.errors?.length > 0){
-        return {
-          ...state,
-          errors: action.payload.errors
-        }
+       // Handle errors
+      if (action.payload?.errors?.length > 0) {
+        state.errors = action.payload.errors;
+        return;
       }
-      //Check for success status
-      if(action.payload?.success === true){
-        //toast
-        toast(action.payload.msg, {position: "top-right", type: "success"})
-        //Modifying id
-        const supplier = {...action.payload.supplier, id: action.payload.supplier._id}
-        return {
-          ...state,
-          data: [...state.data, supplier],
-          errors: []
-        }
+
+      // Handle success
+      if (action.payload?.success === true) {
+        toast(action.payload.msg, { position: "top-right", type: "success" });
+        
+        const supplier = {
+          ...action.payload.supplier,
+          id: action.payload.supplier._id,
+        };
+
+        // Maintain maximum 5 items in the list
+        if (state.data.length === 5) {
+          const poppedState = state.data.slice(0, 4);
+          state.data = [supplier, ...poppedState];
+        } else {
+          state.data = [supplier, ...state.data];
+        } 
+        
+        state.totalRecord = action.payload.totalRecord;
+        state.errors = [];
       }
     })
 

@@ -7,17 +7,24 @@ import { FileUpload } from "../../backend/uploadFile";
 import Dialogue from "../../Components/dialogue/Dialogue";
 import FormDialog from "../../Components/dialogue/FormDialogue";
 import DangerousIcon from "@mui/icons-material/Dangerous";
-import {
-  AssignmentInd,
-  People,
-  SwitchAccount,
-} from "@mui/icons-material";
+import { AssignmentInd, People, SwitchAccount } from "@mui/icons-material";
 import Search from "../../Components/search/Search";
 import { toast } from "react-toastify";
 import DetailsDialog from "../../Components/dialogue/DetailsDialogue";
-import { searchSupplierFilters, searchSupplierInput, supplierInputFields } from "../../Components/sources/suppliersFormSources";
+import {
+  searchSupplierFilters,
+  searchSupplierInput,
+  supplierInputFields,
+} from "../../Components/sources/suppliersFormSources";
 import { supplierColumns } from "../../Components/datatable/supplierTableSources";
-import { addSupplier, clearSuppliers, deleteSupplier, getSingleSupplier, getSuppliers, updateSupplier } from "../../redux/supplierSlice/supplierSlice";
+import {
+  addSupplier,
+  clearSuppliers,
+  deleteSupplier,
+  getSingleSupplier,
+  getSuppliers,
+  updateSupplier,
+} from "../../redux/supplierSlice/supplierSlice";
 
 const Supplier = () => {
   //Initializing dispatch function to call redux functions
@@ -25,7 +32,7 @@ const Supplier = () => {
   //Initializing useSelector to get data from redux store
   const suppliers = useSelector((state) => state.suppliers.data);
   //Initializing the current supplier
-  const currentCustomer = useSelector((state) => state.suppliers.current);
+  const currentData = useSelector((state) => state.suppliers.current);
   //Initiaizing useSelector to get total records
   const totalRecords = useSelector((state) => state.suppliers.totalRecord);
   //Initializing UseSelector to get errors
@@ -33,7 +40,7 @@ const Supplier = () => {
   //Use State for Handle Open and close of form dialog
   const [openFormDialog, setOpenFormDialog] = useState(false);
   //Use State for handle Open and close of Details Dialog
-  const [openDetailsDialog, setDetailsDialog] = useState(false);
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   //Use State for Handle Open and close of dialog box
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   //Use State for selected row item id
@@ -61,7 +68,7 @@ const Supplier = () => {
     status: "",
     pic: "",
   });
-  
+
   //Use State for search inputs
   const [file, setFile] = useState("");
 
@@ -69,7 +76,10 @@ const Supplier = () => {
   const [openFiltersPanel, setOpenFiltersPanel] = useState(false);
   //Use Effect to get Single Customer API Hit
   useEffect(() => {
-    if ((selectedRowId !== undefined && openFormDialog === true) || (selectedRowId !== undefined && openDetailsDialog === true) ) {
+    if (
+      (selectedRowId !== undefined && openFormDialog === true) ||
+      (selectedRowId !== undefined && openDetailsDialog === true)
+    ) {
       //Dispatch current supplier
       dispatch(getSingleSupplier(selectedRowId));
     }
@@ -78,16 +88,16 @@ const Supplier = () => {
 
   //Load Data into state for update Use Effect
   useEffect(() => {
-    if (Object.keys(currentCustomer).length !== 0) {
-      // Set the state when currentCustomer is updated
+    if (Object.keys(currentData).length !== 0) {
+      // Set the state when currentData is updated
       setState({
-        name: currentCustomer.name,
-        email: currentCustomer.email,
-        contact: currentCustomer.contact,
-        companyName: currentCustomer.companyName,
-        balance: currentCustomer.balance,
-        address: currentCustomer.address,
-        status: currentCustomer.status,
+        name: currentData.name,
+        email: currentData.email,
+        contact: currentData.contact,
+        companyName: currentData.companyName,
+        balance: currentData.balance,
+        address: currentData.address,
+        status: currentData.status,
       });
       async function urlToFile(url) {
         // Fetch the file
@@ -103,18 +113,18 @@ const Supplier = () => {
 
       async function loadFile() {
         const fileGenerated = await urlToFile(
-          `http://localhost:5000/public/suppliers/images/${currentCustomer.pic}`
+          `http://localhost:5000/public/suppliers/images/${currentData.pic}`
         );
 
         //Set file
         setFile(fileGenerated);
       }
 
-      if (currentCustomer.pic) {
+      if (currentData.pic) {
         loadFile();
       }
     }
-  }, [currentCustomer]);
+  }, [currentData]);
 
   //useEffect to dispatch all customers
   useEffect(() => {
@@ -141,88 +151,88 @@ const Supplier = () => {
     // eslint-disable-next-line
   }, [filters.field]);
 
-//useEffect to Iterate submit Errors
-useEffect(() => {
-  if (submitErrors?.length > 0) {
-    //iterate submit errors
-    submitErrors.forEach((item) => {
-      toast(item.msg, { position: "top-right", type: "error" });
-    });
-  } else {
-    handleOnFormDialogClose();
-  }
-}, [submitErrors]);
+  //useEffect to Iterate submit Errors
+  useEffect(() => {
+    if (submitErrors?.length > 0) {
+      //iterate submit errors
+      submitErrors.forEach((item) => {
+        toast(item.msg, { position: "top-right", type: "error" });
+      });
+    } else {
+      handleOnFormDialogClose();
+    }
+  }, [submitErrors]);
 
-//Handle Delete Tenant func
-const handleOnDelete = () => {
-  //Calling delete function
-  dispatch(deleteSupplier(selectedRowId));
-  //after delete clear row id
-  setSelectedRowId(null);
-};
-
-//Load The Data
-const loadData = () => {
-  const initialData = { page: 0, sort: -1 };
-  //Call getSuppliers using dispatch
-  dispatch(getSuppliers(initialData));
-};
-//Handle On submit
-const handleOnSubmit = async (e) => {
-  e.preventDefault();
-  //Destructuring values from state
-  const { startDate, endDate, searchInput } = search;
-  //Destructuring values from filters
-  const { field, operator, sort } = filters;
-  //Organizing data from filters and search Input
-  let newState = {
-    field: field === "" ? undefined : field,
-    operator: operator,
-    sort: sort,
-    page: 0,
-    searchInput: searchInput,
-    startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-    endDate: endDate === "" && startDate !== "" ? startDate : endDate,
+  //Handle Delete Tenant func
+  const handleOnDelete = () => {
+    //Calling delete function
+    dispatch(deleteSupplier(selectedRowId));
+    //after delete clear row id
+    setSelectedRowId(null);
   };
-  if (field === "date") {
-    if (startDate === "" && endDate === "") {
-      toast("Please Select Date", { position: "top-right", type: "error" });
-    } else {
+
+  //Load The Data
+  const loadData = () => {
+    const initialData = { page: 0, sort: -1 };
+    //Call getSuppliers using dispatch
+    dispatch(getSuppliers(initialData));
+  };
+  //Handle On submit
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    //Destructuring values from state
+    const { startDate, endDate, searchInput } = search;
+    //Destructuring values from filters
+    const { field, operator, sort } = filters;
+    //Organizing data from filters and search Input
+    let newState = {
+      field: field === "" ? undefined : field,
+      operator: operator,
+      sort: sort,
+      page: 0,
+      searchInput: searchInput,
+      startDate: endDate !== "" && startDate === "" ? endDate : startDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
+    };
+    if (field === "date") {
+      if (startDate === "" && endDate === "") {
+        toast("Please Select Date", { position: "top-right", type: "error" });
+      } else {
+        //Calling dispatch function to hit API Call
+        dispatch(getSuppliers(newState));
+        //After search results close the filters panel
+        setOpenFiltersPanel(!openFiltersPanel);
+        //Set Page to Zero
+        setCurrentPage(0);
+      }
+    } else if (field === "") {
       //Calling dispatch function to hit API Call
       dispatch(getSuppliers(newState));
       //After search results close the filters panel
       setOpenFiltersPanel(!openFiltersPanel);
       //Set Page to Zero
       setCurrentPage(0);
-    }
-  } else if (field === "") {
-    //Calling dispatch function to hit API Call
-    dispatch(getSuppliers(newState));
-    //After search results close the filters panel
-    setOpenFiltersPanel(!openFiltersPanel);
-    //Set Page to Zero
-    setCurrentPage(0);
-  } else {
-    if (field !== "" && searchInput === "") {
-      toast("Please Enter to search..", {
-        position: "top-right",
-        type: "error",
-      });
-    } else if (field !== "" && searchInput !== "" && operator === "") {
-      toast("Please select condition", {
-        position: "top-right",
-        type: "error",
-      });
     } else {
-      //Calling dispatch function to hit API Call
-      dispatch(getSuppliers(newState));
-      //After search results close the filters panel
-      setOpenFiltersPanel(!openFiltersPanel);
-      //Set Page to Zero
-      setCurrentPage(0);
+      if (field !== "" && searchInput === "") {
+        toast("Please Enter to search..", {
+          position: "top-right",
+          type: "error",
+        });
+      } else if (field !== "" && searchInput !== "" && operator === "") {
+        toast("Please select condition", {
+          position: "top-right",
+          type: "error",
+        });
+      } else {
+        //Calling dispatch function to hit API Call
+        dispatch(getSuppliers(newState));
+        //After search results close the filters panel
+        setOpenFiltersPanel(!openFiltersPanel);
+        //Set Page to Zero
+        setCurrentPage(0);
+      }
     }
-  }
-};
+  };
 
   //Handle On Form Dialog Close
   const handleOnFormDialogClose = () => {
@@ -250,7 +260,7 @@ const handleOnSubmit = async (e) => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -303,12 +313,12 @@ const handleOnSubmit = async (e) => {
     status: row.status && capitalizeEachWord(row.status),
   }));
   //Destructure values from the state
-  const { name,  balance, status, contact, companyName } = state;
+  const { name, balance, status, contact, companyName } = state;
   //Handle on submit function
   const handleOnAddUpdateFormSubmit = async (e) => {
     e.preventDefault();
     if (name === "") {
-      toast("Enter Supplier name", { position: "top-right", type: "error" });  
+      toast("Enter Supplier name", { position: "top-right", type: "error" });
     } else if (contact === "") {
       toast("Enter contact", { position: "top-right", type: "error" });
     } else if (balance === "") {
@@ -365,27 +375,7 @@ const handleOnSubmit = async (e) => {
       }
     }
   };
-  //Short Cut for add new customer
-//   window.addEventListener("keydown", (event) => {
-//     // event.ctrlKey.preventDefault()
-//     if (event.ctrlKey && event.key === "a") {
-//       event.preventDefault();
-//       setOpenFormDialog(true);
-//     } else if (event.key === "Delete") {
-//       if (selectedRowId === null || selectedRowId === "") {
-//         toast("Select Customer first", {
-//           position: "top-right",
-//           type: "error",
-//         });
-//       } else {
-//         setOpenDeleteDialog(true);
-//       }
-//     }
-//     // else if(event.ctrlKey && event.key === 'e'){
-//     //   event.preventDefault()
-//     //   dispatch(getSingleCustomer(selectedRowId))
-//     // }
-//   });
+
   return (
     <Box m="0px 20px 15px 20px">
       {/* Header for Supplier Page  */}
@@ -404,7 +394,7 @@ const handleOnSubmit = async (e) => {
           openFormDialog={openFormDialog}
           setOpenFormDialog={setOpenFormDialog}
           heading={
-            selectedRowId !== null && Object.keys(currentCustomer).length !== 0
+            selectedRowId !== null && Object.keys(currentData).length !== 0
               ? "UPDATE SUPPLIER"
               : "ADD SUPPLIER"
           }
@@ -416,27 +406,42 @@ const handleOnSubmit = async (e) => {
           setFile={setFile}
           handleOnClose={handleOnFormDialogClose}
           handleOnSubmit={handleOnAddUpdateFormSubmit}
-          inputs={supplierInputFields(selectedRowId, currentCustomer)}
+          inputs={supplierInputFields(selectedRowId, currentData)}
           icon={<SwitchAccount style={{ marginRight: "10px" }} />}
         />
         {/* Customer Details Dialog box  */}
-        <DetailsDialog
-          openDetailsDialog={openDetailsDialog}
-          heading={"Kashif's Detail"}
-          inputs={Object.keys(currentCustomer).length !== 0 && currentCustomer}
-          icon={<AssignmentInd style={{ marginRight: "10px" }} />}
-        />
+        {Object.keys(currentData).length !== 0 && (
+          <DetailsDialog
+            openDetailsDialog={openDetailsDialog}
+            heading={`${capitalizeEachWord(currentData?.name)}'s Details`}
+            inputs={Object.keys(currentData).length !== 0 && currentData}
+            icon={<AssignmentInd style={{ marginRight: "10px" }} />}
+            handleOnCloseDetails={() => {
+              setOpenDetailsDialog(false);
+              setSelectedRowId(null);
+              setState({
+                name: "",
+                email: "",
+                contact: "",
+                companyName: "",
+                address: "",
+                balance: "",
+                status: "",
+                pic: "",
+              });
+              setFile("");
+            }}
+          />
+        )}
         {/* Delete Content Dialog box  */}
         <Dialogue
           openDeleteDialog={openDeleteDialog}
           setOpenDeleteDialog={setOpenDeleteDialog}
           handleOnDelete={handleOnDelete}
-          heading={"DELETE TENANT"}
+          heading={"DELETE SUPPLIER"}
           color="#ff0000"
           icon={<DangerousIcon style={{ marginRight: "10px" }} />}
-          message={
-            "Are sure you want to delete Supplier?."
-          }
+          message={"Are sure you want to delete Supplier?."}
         />
 
         {/* Here we calling Search component in which we 
@@ -457,7 +462,7 @@ const handleOnSubmit = async (e) => {
         <DataTable
           columns={supplierColumns(
             setOpenDeleteDialog,
-            setDetailsDialog,
+            setOpenDetailsDialog,
             setOpenFormDialog
           )}
           rows={capitalizedRows}

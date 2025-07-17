@@ -1,16 +1,35 @@
+import { DOMAIN } from "../../backend/API";
+
 //Add new supplier Payment form fields
-export const supplierPaymentInputFields = (selectedRowId, currentSupplier, suppliers) => [
+export const supplierPaymentInputFields = (
+  selectedRowId,
+  currentSupplier,
+  suppliers
+) => [
   {
     id: 1,
     label: "Supplier",
     type: "select",
     name: "supplierId",
+    disabled: Object.entries(currentSupplier).length > 0 ? true : false,
     options:
-    suppliers.length > 0 &&
-    suppliers.map((item) =>
+      suppliers.length > 0 &&
+      suppliers.map((item) =>
         // Here we are setup the filter operator items
         {
-          return { id: item._id, name: item.name, value: item._id, avatarUrl: `http://localhost:5000/public/suppliers/images/${item.pic}`, avatarAlt: "./img/avatarfile.png" };
+          return {
+            id: item._id,
+            name: item.name,
+            value: item._id,
+            avatarUrl: `${DOMAIN}/public/suppliers/images/${item.pic}`,
+            avatarAlt: "./img/avatarfile.png",
+            salary: item.balance.toLocaleString("en-US", {
+              style: "currency",
+              currency: "PKR",
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }),
+          };
         }
       ),
     grid: {
@@ -132,5 +151,3 @@ export const searchSupplierPaymentFilters = (filter) => {
     },
   ];
 };
-
-

@@ -86,6 +86,19 @@ export const getAllActiveCustomers = createAsyncThunk("getAllActiveCustomers", a
   }
 })
 
+//GET ALL ACTIVE SUPPLIERS AXIOS CALL USING ASYNC THUNK
+export const getAllActiveSuppliers = createAsyncThunk("getAllActiveSuppliers", async () => {
+  try {
+    return await axios
+      .get(
+        `${ENDPOINTS.ALLSUPPLIERS}`
+      )
+      .then((res) => res.data);
+  } catch (error) {
+    //Incase of error catch error
+    return error.response.data.error[0];
+  }
+})
 //GET ALL EMPLOYEE ADVANCES AXIOS CALL USING ASYNC THUNK
 export const getAllActiveAdvances = createAsyncThunk("getAllActiveAdvances", async () => {
   try {
@@ -207,6 +220,27 @@ export const completeDataSlice = createSlice({
             const customer = { ...item, id: item._id };
             //Here we are setting the fetched active customers in redux store
             return state.customers.push(customer);
+          });
+        
+        }
+      }); 
+        //@CaseNo       01
+      //@Request      GET
+      //@Status       Success
+      //@Loading      False
+      //@used For     GET ALL ACTIVE CUSTOMERs
+      //@Data         Data stored in state
+      builder.addCase(getAllActiveSuppliers.fulfilled, (state, actions) => {
+        //Check for request success
+        if (actions.payload.success === true) {
+          //First Removing all the active customers
+          state.suppliers = [];
+          //Using map iterate each item and push into the state
+          actions.payload.data.map((item) => {
+            //Here we are modifying the _id to id of each record
+            const supplier = { ...item, id: item._id };
+            //Here we are setting the fetched active supplier in redux store
+            return state.suppliers.push(supplier);
           });
         
         }

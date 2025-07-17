@@ -1,12 +1,12 @@
 import { Delete, Edit, Info } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
 // SAMPLE DATA FOR USERS
 //Export Supplier Columns
 export const supplierColumns = (
   setOpenDeleteDialog,
-  setDetailsDialog,
+  setOpenDetailsDialog,
   setOpenFormDialog
 ) => [
   // { field: "id", headerName: "ID", width: 70 },
@@ -26,7 +26,7 @@ export const supplierColumns = (
             alt=""
             className="cellImg"
           />
-           {params.row.name.length > 11
+          {params.row.name.length > 11
             ? params.row.name.substring(0, 11) + `....`
             : params.row.name}
         </div>
@@ -81,28 +81,32 @@ export const supplierColumns = (
     renderCell: (params) => {
       return (
         <div className="cellAction">
-          <IconButton
-            className="viewButton"
-            onClick={() => {
-              setOpenFormDialog(true);
-            }}
-          >
-            <Edit style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          <IconButton
-            className="viewButton"
-            onClick={() => setDetailsDialog(true)}
-          >
-            <Info style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          <IconButton
-            className="viewButton"
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            <Delete style={{ fontSize: "20px" }} />
-          </IconButton>
+          <Tooltip title="Supplier Details">
+            <IconButton
+              className="viewButton"
+              onClick={() => setOpenDetailsDialog(true)}
+            >
+              <Info style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Edit Supplier">
+            <IconButton
+              className="viewButton"
+              onClick={() => {
+                setOpenFormDialog(true);
+              }}
+            >
+              <Edit style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete Supplier">
+            <IconButton
+              className="viewButton"
+              onClick={() => setOpenDeleteDialog(true)}
+            >
+              <Delete style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip>
         </div>
       );
     },

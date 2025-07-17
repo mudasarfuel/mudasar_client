@@ -1,42 +1,57 @@
 // import "./customer.scss";
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../../Components/Header/Header";
 import DataTable from "../../Components/datatable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
 import Dialogue from "../../Components/dialogue/Dialogue";
 import FormDialog from "../../Components/dialogue/FormDialogue";
 import DangerousIcon from "@mui/icons-material/Dangerous";
-import {
-  AssignmentInd,
-  AttachMoney,
-  SwitchAccount,
-} from "@mui/icons-material";
+import { AssignmentInd, AttachMoney, SwitchAccount } from "@mui/icons-material";
 import Search from "../../Components/search/Search";
 import { toast } from "react-toastify";
 import DetailsDialog from "../../Components/dialogue/DetailsDialogue";
-import { addSupplierPayment, clearSupplierPayments, deleteSupplierPayment, getSingleSupplierPayment, getSupplierPayments, updateSupplierPayment } from "../../redux/supplierPaymentSlice/supplierPaymentSlice";
+import {
+  addSupplierPayment,
+  clearCurrentSupplierPayment,
+  clearSupplierPayments,
+  deleteSupplierPayment,
+  getSingleSupplierPayment,
+  getSupplierPayments,
+  updateSupplierPayment,
+} from "../../redux/supplierPaymentSlice/supplierPaymentSlice";
 import { getSuppliers } from "../../redux/supplierSlice/supplierSlice";
-import { searchSupplierPaymentFilters, supplierPaymentInputFields } from "../../Components/sources/supplierPaymentsFormSources";
+import {
+  searchSupplierPaymentFilters,
+  supplierPaymentInputFields,
+} from "../../Components/sources/supplierPaymentsFormSources";
 import { supplierPaymentColumns } from "../../Components/datatable/supplierPaymentTableSources";
 import { searchInput } from "../../Components/sources/formSources";
+import { getAllActiveSuppliers } from "../../redux/completeDataSlice/completeDataSlice";
+import AuthContext from "../../context/auth/AuthContext";
 
 const SupplierPayment = () => {
+  //Use Auth Context get user
+  const { user } = useContext(AuthContext);
   //Initializing dispatch function to call redux functions
   const dispatch = useDispatch();
+
   //Initializing useSelector to get data from redux store
-  const suppliers = useSelector((state) => state.suppliers.data);
+  const suppliers = useSelector((state) => state.completeData.suppliers);
+
   const supplierpayments = useSelector((state) => state.supplierpayments.data);
   //Initializing the current customer
   const currentData = useSelector((state) => state.supplierpayments.current);
   //Initiaizing useSelector to get total records
-  const totalRecords = useSelector((state) => state.supplierpayments.totalRecord);
+  const totalRecords = useSelector(
+    (state) => state.supplierpayments.totalRecord
+  );
   //Initializing UseSelector to get errors
   const submitErrors = useSelector((state) => state.supplierpayments.errors);
   //Use State for Handle Open and close of form dialog
   const [openFormDialog, setOpenFormDialog] = useState(false);
   //Use State for handle Open and close of Details Dialog
-  const [openDetailsDialog, setDetailsDialog] = useState(false);
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   //Use State for Handle Open and close of dialog box
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   //Use State for selected row item id
@@ -53,22 +68,25 @@ const SupplierPayment = () => {
   const [search, setSearch] = useState({
     searchInput: "",
     startDate: "",
-    endDate: ""
-  });
-  
-  //Setup state for values
-  const [state, setState] = useState({
-    supplierId: "",
-    amount: "",
-    date: ""
+    endDate: "",
   });
 
+  //Setup state for values
+  const [state, setState] = useState({
+    userId: user._id,
+    supplierId: "",
+    amount: "",
+    date: "",
+  });
 
   //Use State for manage filters panel
   const [openFiltersPanel, setOpenFiltersPanel] = useState(false);
   //Use Effect to get Single Supplier API Hit
   useEffect(() => {
-    if ((selectedRowId !== undefined && openFormDialog === true) || (selectedRowId !== undefined && openDetailsDialog === true) ) {
+    if (
+      (selectedRowId !== undefined && openFormDialog === true) ||
+      (selectedRowId !== undefined && openDetailsDialog === true)
+    ) {
       //Dispatch current supplier
       dispatch(getSingleSupplierPayment(selectedRowId));
     }
@@ -82,8 +100,8 @@ const SupplierPayment = () => {
       setState({
         supplierId: currentData.supplierId,
         amount: currentData.amount,
-        date: currentData.date
-      });     
+        date: currentData.date,
+      });
     }
   }, [currentData]);
 
@@ -91,7 +109,7 @@ const SupplierPayment = () => {
   useEffect(() => {
     const initialData = { page: 0, sort: filters.sort };
     //Call getSuppliers using dispatch
-    dispatch(getSuppliers(initialData))
+    dispatch(getAllActiveSuppliers());
     dispatch(getSupplierPayments(initialData));
 
     //Call clear customers to clear customers from state on unmount
@@ -113,90 +131,90 @@ const SupplierPayment = () => {
     // eslint-disable-next-line
   }, [filters.field]);
 
-//useEffect to Iterate submit Errors
-useEffect(() => {
-  if (submitErrors?.length > 0) {
-    //iterate submit errors
-    submitErrors.forEach((item) => {
-      toast(item.msg, { position: "top-right", type: "error" });
-    });
-  } else {
-    handleOnFormDialogClose();
-  }
-}, [submitErrors]);
+  //useEffect to Iterate submit Errors
+  useEffect(() => {
+    if (submitErrors?.length > 0) {
+      //iterate submit errors
+      submitErrors.forEach((item) => {
+        toast(item.msg, { position: "top-right", type: "error" });
+      });
+    } else {
+      handleOnFormDialogClose();
+    }
+  }, [submitErrors]);
 
-//Handle Delete Tenant func
-const handleOnDelete = () => {
-  //Calling delete function
-  dispatch(deleteSupplierPayment(selectedRowId));
-  //after delete clear row id
-  setSelectedRowId(null);
-};
-
-//Load The Data
-const loadData = () => {
-  const initialData = { page: 0, sort: -1 };
-  //Call getSuppliers Payments using dispatch
-  dispatch(getSupplierPayments(initialData));
-};
-//Handle On submit
-const handleOnSubmit = async (e) => {
-  e.preventDefault();
-  //Destructuring values from state
-  const { startDate, endDate, searchInput } = search;
-  //Destructuring values from filters
-  const { field, operator, sort } = filters;
-  //Organizing data from filters and search Input
-  let newState = {
-    field: field === "" ? undefined : field,
-    operator: operator,
-    sort: sort,
-    page: 0,
-    searchInput: searchInput,
-    startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-    endDate: endDate === "" && startDate !== "" ? startDate : endDate,
+  //Handle Delete Tenant func
+  const handleOnDelete = () => {
+    //Calling delete function
+    dispatch(deleteSupplierPayment(selectedRowId));
+    //after delete clear row id
+    setSelectedRowId(null);
   };
- 
-  if (field === "date") {
-    if (startDate === "" && endDate === "") {
-      toast("Please Select Date", { position: "top-right", type: "error" });
-    } else {
+
+  //Load The Data
+  const loadData = () => {
+    const initialData = { page: 0, sort: -1 };
+    //Call getSuppliers Payments using dispatch
+    dispatch(getSupplierPayments(initialData));
+  };
+  //Handle On submit
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    //Destructuring values from state
+    const { startDate, endDate, searchInput } = search;
+    //Destructuring values from filters
+    const { field, operator, sort } = filters;
+    //Organizing data from filters and search Input
+    let newState = {
+      field: field === "" ? undefined : field,
+      operator: operator,
+      sort: sort,
+      page: 0,
+      searchInput: searchInput,
+      startDate: endDate !== "" && startDate === "" ? endDate : startDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
+    };
+
+    if (field === "date") {
+      if (startDate === "" && endDate === "") {
+        toast("Please Select Date", { position: "top-right", type: "error" });
+      } else {
+        //Calling dispatch function to hit API Call
+        dispatch(getSupplierPayments(newState));
+        //After search results close the filters panel
+        setOpenFiltersPanel(!openFiltersPanel);
+        //Set Page to Zero
+        setCurrentPage(0);
+      }
+    } else if (field === "") {
       //Calling dispatch function to hit API Call
       dispatch(getSupplierPayments(newState));
       //After search results close the filters panel
       setOpenFiltersPanel(!openFiltersPanel);
       //Set Page to Zero
       setCurrentPage(0);
-    }
-  } else if (field === "") {
-    //Calling dispatch function to hit API Call
-    dispatch(getSupplierPayments(newState));
-    //After search results close the filters panel
-    setOpenFiltersPanel(!openFiltersPanel);
-    //Set Page to Zero
-    setCurrentPage(0);
-  } else {
-    if (field !== "" && searchInput === "") {
-      toast("Please Enter to search..", {
-        position: "top-right",
-        type: "error",
-      });
-    } else if (field !== "" && searchInput !== "" && operator === "") {
-      toast("Please select condition", {
-        position: "top-right",
-        type: "error",
-      });
     } else {
-      console.log("New State => ", newState)
-      //Calling dispatch function to hit API Call
-      dispatch(getSupplierPayments(newState));
-      //After search results close the filters panel
-      setOpenFiltersPanel(!openFiltersPanel);
-      //Set Page to Zero
-      setCurrentPage(0);
+      if (field !== "" && searchInput === "") {
+        toast("Please Enter to search..", {
+          position: "top-right",
+          type: "error",
+        });
+      } else if (field !== "" && searchInput !== "" && operator === "") {
+        toast("Please select condition", {
+          position: "top-right",
+          type: "error",
+        });
+      } else {
+        console.log("New State => ", newState);
+        //Calling dispatch function to hit API Call
+        dispatch(getSupplierPayments(newState));
+        //After search results close the filters panel
+        setOpenFiltersPanel(!openFiltersPanel);
+        //Set Page to Zero
+        setCurrentPage(0);
+      }
     }
-  }
-};
+  };
 
   //Handle On Form Dialog Close
   const handleOnFormDialogClose = () => {
@@ -206,10 +224,13 @@ const handleOnSubmit = async (e) => {
     setSelectedRowId(null);
     //Clear State and remove previous data
     setState({
+      userId: user._id,
       supplierId: "",
       amount: "",
-      date: ""
+      date: "",
     });
+
+    dispatch(clearCurrentSupplierPayment());
   };
 
   //Handle on Page Change
@@ -217,7 +238,7 @@ const handleOnSubmit = async (e) => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -264,16 +285,17 @@ const handleOnSubmit = async (e) => {
   //Iterate and capitalizing data of each row
   const capitalizedRows = supplierpayments.map((row) => ({
     ...row,
-    name: row.supplier.name && capitalizeEachWord(row.supplier.name),
+    // name: row.supplier.name && capitalizeEachWord(row.supplier.name),
     remaining: row.supplier.balance ? row.supplier.balance : 0,
-    
   }));
   //Destructure values from the state
-  const { supplierId,  amount, date } = state;
+  const { userId, supplierId, amount, date } = state;
   //Handle on submit function
   const handleOnAddUpdateFormSubmit = async (e) => {
     e.preventDefault();
-    if (supplierId === "") {
+    if (userId === "") {
+      toast("Please re-login ", { position: "top-right", type: "error" });
+    } else if (supplierId === "") {
       toast("Select Supplier ", { position: "top-right", type: "error" });
     } else if (amount === "") {
       toast("Please enter amount", { position: "top-right", type: "error" });
@@ -281,40 +303,23 @@ const handleOnSubmit = async (e) => {
       toast("Select date", { position: "top-right", type: "error" });
     } else {
       //Check for image uploaded
-    
-        //Upload data if image not selected
-        if (selectedRowId !== null) {
-          const data = {
-            id: selectedRowId[0],
-            Data: state,
-          };
-          //Hit API Call using dispatch to updated supplier payment
-          dispatch(updateSupplierPayment(data));
-        } else {
-          //Hit API Call using dispatch to add supplier payment
-          dispatch(addSupplierPayment(state));
-          loadData()
-        }
-      
-    }
-  };
-  //Short Cut for add new customer
-  window.addEventListener("keydown", (event) => {
-    // event.ctrlKey.preventDefault()
-    if (event.ctrlKey && event.key === "a") {
-      event.preventDefault();
-      setOpenFormDialog(true);
-    } else if (event.key === "Delete") {
-      if (selectedRowId === null || selectedRowId === "") {
-        toast("Select Customer first", {
-          position: "top-right",
-          type: "error",
-        });
+
+      //Upload data if image not selected
+      if (selectedRowId !== null) {
+        const data = {
+          id: selectedRowId[0],
+          Data: state,
+        };
+        //Hit API Call using dispatch to updated supplier payment
+        dispatch(updateSupplierPayment(data));
       } else {
-        setOpenDeleteDialog(true);
+        //Hit API Call using dispatch to add supplier payment
+        dispatch(addSupplierPayment(state));
+        loadData();
       }
     }
-  });
+  };
+
   return (
     <Box m="0px 20px 15px 20px">
       {/* Header for Tenants Page  */}
@@ -342,19 +347,39 @@ const handleOnSubmit = async (e) => {
           state={state}
           Id={selectedRowId}
           setState={setState}
-        
           handleOnClose={handleOnFormDialogClose}
           handleOnSubmit={handleOnAddUpdateFormSubmit}
-          inputs={supplierPaymentInputFields(selectedRowId, currentData, suppliers)}
+          inputs={supplierPaymentInputFields(
+            selectedRowId,
+            currentData,
+            suppliers
+          )}
           icon={<SwitchAccount style={{ marginRight: "10px" }} />}
         />
+        
         {/* Customer Details Dialog box  */}
-        {Object.keys(currentData).length !== 0 && <DetailsDialog
-          openDetailsDialog={openDetailsDialog}
-          heading={"Kashif's Detail"}
-          inputs={currentData}
-          icon={<AssignmentInd style={{ marginRight: "10px" }} />}
-        />}
+        {Object.keys(currentData).length !== 0 && (
+          <DetailsDialog
+            openDetailsDialog={openDetailsDialog}
+            heading={`${capitalizeEachWord(currentData.name)}'s Detail`}
+            inputs={currentData}
+            handleOnCloseDetails={() => {
+              setOpenDetailsDialog(false);
+              setSelectedRowId(null);
+              setState({
+                userId: user._id,
+                supplierId: "",
+                pevAmount: "",
+                amount: "",
+                remAmount: "",
+                date: "",
+                status: "",
+              });
+              dispatch(clearCurrentSupplierPayment());
+            }}
+            icon={<AssignmentInd style={{ marginRight: "10px" }} />}
+          />
+        )}
         {/* Delete Content Dialog box  */}
         <Dialogue
           openDeleteDialog={openDeleteDialog}
@@ -363,9 +388,7 @@ const handleOnSubmit = async (e) => {
           heading={"DELETE SUPPLIER PAYMENT"}
           color="#ff0000"
           icon={<DangerousIcon style={{ marginRight: "10px" }} />}
-          message={
-            "Are you sure you want to delete this payment."
-          }
+          message={"Are you sure you want to delete this payment."}
         />
 
         {/* Here we calling Search component in which we 
@@ -386,7 +409,7 @@ const handleOnSubmit = async (e) => {
         <DataTable
           columns={supplierPaymentColumns(
             setOpenDeleteDialog,
-            setDetailsDialog,
+            setOpenDetailsDialog,
             setOpenFormDialog
           )}
           rows={capitalizedRows}

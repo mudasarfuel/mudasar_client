@@ -163,9 +163,7 @@ export const searchSupplierFilters = (filter) => {
         { id: 2, name: "Email", value: "email" },
         { id: 3, name: "Contact", value: "contact" },
         { id: 4, name: "Company Name", value: "companyName" },
-        { id: 5, name: "Balance", value: "balance" },
-        { id: 6, name: "Address", value: "address" },
-        { id: 7, name: "Status", value: "status" },
+        { id: 5, name: "Status", value: "status" },
       ]
     },
     {

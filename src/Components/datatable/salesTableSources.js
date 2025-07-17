@@ -1,5 +1,5 @@
-import { Delete, Edit, Info } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { Delete, Info } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
 //Export sales Columns
@@ -55,7 +55,7 @@ export const salesColumns = (
                     justifyContent: "space-between",
                     width: "100%",
                   }}
-                  key={item._id}
+                  key={item.id}
                 >
                   <div>
                     {item?.productName !== null ? item?.productName : null}
@@ -89,21 +89,23 @@ export const salesColumns = (
     renderCell: (params) => {
       return (
         <div className="cellAction">
-       
+          <Tooltip title="Customer Sale Details">
           <IconButton
             className="viewButton"
             onClick={() => setDetailsDialog(true)}
           >
             <Info style={{ fontSize: "20px" }} />
           </IconButton>
-
+          </Tooltip>
           {params.row.status === "open" && (
+            <Tooltip title="Delete Customer Sale">
             <IconButton
               className="viewButton"
               onClick={() => setOpenDeleteDialog(true)}
             >
               <Delete style={{ fontSize: "20px" }} />
             </IconButton>
+            </Tooltip>
           )}
         </div>
       );

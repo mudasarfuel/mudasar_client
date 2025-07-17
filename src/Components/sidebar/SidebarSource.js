@@ -65,7 +65,7 @@ export const useLocalHook = () => {
       setList: "TOGGLE_CUSTOMER",
       nested: [
         { itemId: 17, label: "Suppliers", icon: <People className="icon" />, url: "/suppliers" },
-        { itemId: 18, label: "Suppliers Balance", icon: <Payment className="icon" />, url: "/supplierpayments" },
+        { itemId: 18, label: "Suppliers Payments", icon: <Payment className="icon" />, url: "/supplierpayments" },
       ],
     },
     {

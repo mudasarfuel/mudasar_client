@@ -11,7 +11,6 @@ import {
 import "./sales.scss";
 import Search from "../../Components/search/Search";
 import { toast } from "react-toastify";
-import { getMachines } from "../../redux/machineSlice/machineSlice";
 import { searchInput } from "../../Components/sources/formSources";
 import { salesColumns } from "../../Components/datatable/salesTableSources";
 import { clearSales, deleteSale, getSales, getSingleSale } from "../../redux/saleSlice/saleSlice";
@@ -51,14 +50,7 @@ const TotalSale = () => {
     startDate: "",
     endDate: ""
   });
-  //Setup state for values
-  const [state, setState] = useState({
-    name: "",
-    type: "",
-    initialReading: "",
-    currentReading: "",
-    status: ""
-  });
+
 
   //Use State for manage filters panel
   const [openFiltersPanel, setOpenFiltersPanel] = useState(false);
@@ -71,20 +63,9 @@ const TotalSale = () => {
     // eslint-disable-next-line
   }, [selectedRowId]);
 
-  console.log("Checking the search State ", search)
+  
   //Load Data into state for update Use Effect
-  useEffect(() => {
-    if (Object.keys(currentData).length !== 0) {
-      // Set the state when currentCustomer is updated
-      setState({
-        name: currentData.name,
-        type: currentData.type,
-        initialReading: currentData.initialReading,
-        currentReading: currentData.currentReading,
-        status: currentData.status,
-      });
-    }
-  }, [currentData]);
+
 
   //useEffect to dispatch all machines
   useEffect(() => {
@@ -120,9 +101,7 @@ const TotalSale = () => {
         toast(item.msg, { position: "top-right", type: "error" });
       });
     }
-    // else {
-    //   // handleOnFormDialogClose();
-    // }
+ 
   }, [submitErrors]);
 
   //Handle Delete Sale func
@@ -239,41 +218,20 @@ const TotalSale = () => {
     }
   };
   // Function for Capitalizing the data
-  function capitalizeEachWord(sentence) {
-    return sentence
-      .split(" ")
-      .map((word) => {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      })
-      .join(" ");
-  } 
+  // function capitalizeEachWord(sentence) {
+  //   return sentence
+  //     .split(" ")
+  //     .map((word) => {
+  //       return word.charAt(0).toUpperCase() + word.slice(1);
+  //     })
+  //     .join(" ");
+  // } 
 
-  function calculateTotalAndDiscount(items) {
-    let totalAmount = 0;
-    let totalDiscount = 0;
 
-    items?.forEach(item => {
-        if (!item.price || !item.price.newSellingPrice) {
-            console.error("Missing price data for item:", item);
-            return;
-        }
-
-        let sellingPrice = item.price.newSellingPrice;
-        let discountAmount = (sellingPrice * item.discount) / 100;
-
-        let itemTotal = sellingPrice  * item.quantity;
-
-        totalAmount += itemTotal;
-        totalDiscount += discountAmount * item.quantity;
-    });
-
-    console.log("Total Amount:", totalAmount, "Total Discount:", totalDiscount);
-    return { totalAmount, totalDiscount };
-}
   //Iterate and capitalizing data of each row
   const capitalizedRows = sales.length > 0 ? sales.map((row) => ({
     ...row,
-    // totalAmount: row.items && calculateTotalAndDiscount(row.items).totalAmount,
+    
     product: row.items
   })) : [];
 

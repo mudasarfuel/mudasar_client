@@ -56,6 +56,7 @@ export const ENDPOINTS = {
   // ====================================================
   SUPPLIER: DOMAIN + "/api/suppliers",          // Supplier CRUD operations
   SUPPLIERPAYMENT: DOMAIN + "/api/supplierPayments", // Supplier payments
+  ALLSUPPLIERS: DOMAIN + "/api/allSuppliers",   // Get all active suppliers
 
   // ====================================================
   // 07. EMPLOYEE MANAGEMENT MODULE ENDPOINTS
