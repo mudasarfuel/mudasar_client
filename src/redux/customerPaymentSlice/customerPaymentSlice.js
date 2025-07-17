@@ -9,8 +9,6 @@ export const getCustomerPayments = createAsyncThunk("getCustomerPayments", async
     const { field, operator, sort, page, startDate, endDate, searchInput } =
       initData;
      
-    //Creating API call using ENDPOINTS as Base URL (/api/customers)
-    console.log("Field => ", field, "Operator =>", operator, "sort => ", sort, "startDate => ", startDate, "EndDate => ",endDate, "Page =>", page, "Search Input =>", searchInput)
     return await axios
       .get(
         `${ENDPOINTS.CUSTOMERPAYMENT}?field=${field}&operator=${operator}&searchInput=${searchInput}&startDate=${startDate}&endDate=${endDate}&page=${page}&sort=${sort}`
@@ -90,6 +88,12 @@ export const customerPaymentSlice = createSlice({
         errors: []
       };
     },
+
+     // ✅ Clear only current selected item
+    clearCurrentCustomerPayment(state) {
+      state.current = {};
+    },
+
   },
   extraReducers: (builder) => {
     //@CaseNo       01
@@ -139,42 +143,32 @@ export const customerPaymentSlice = createSlice({
     //@used for     Add Customer Payment
     //@Response     Success Alert
     builder.addCase(addCustomerPayment.fulfilled, (state, action) => {
-      console.log(action.payload)
-      //Check for errors
-      if(action.payload?.errors?.length > 0){
-        return {
-          ...state,
-          errors: action.payload.errors
-        }
+      
+      // Handle errors
+      if (action.payload?.errors?.length > 0) {
+        state.errors = action.payload.errors;
+        return;
       }
-      //Check for success status
-      if(action.payload?.success === true){
-        //toast
-        toast(action.payload.msg, {position: "top-right", type: "success"})
-        //Modifying id
-        const customerpayment = {...action.payload.customerpayment[0], id: action.payload.customerpayment[0]._id}
-       //Modifying id
-      //  const salary = {...action.payload.salary, id: action.payload.salary._id}
-     
-       //If items are 5 then remove one item from screen and add ne item
-       if(state.data.length === 5){
-         let popedState = [] // Creating empty array
-         //Inserting all items except last one
-         state.data.forEach((item, index) => index < 4 && popedState.push(item))
-         return {
-           ...state,
-           data: [customerpayment, ...popedState ],
-           totalRecord: action.payload.totalRecord,
-           errors: []
-         }
-       } else {
-         return {
-           ...state,
-           data: [customerpayment, ...state.data ],
-           totalRecord: action.payload.totalRecord,
-           errors: []
-         }
-       }
+
+      // Handle success
+      if (action.payload?.success === true) {
+        toast(action.payload.msg, { position: "top-right", type: "success" });
+        
+        const customerpayment = {
+          ...action.payload.customerpayment[0],
+          id: action.payload.customerpayment[0]._id,
+        };
+
+        // Maintain maximum 5 items in the list
+        if (state.data.length === 5) {
+          const poppedState = state.data.slice(0, 4);
+          state.data = [customerpayment, ...poppedState];
+        } else {
+          state.data = [customerpayment, ...state.data];
+        }
+        
+        state.totalRecord = action.payload.totalRecord;
+        state.errors = [];
       }
     })
 
@@ -214,6 +208,14 @@ export const customerPaymentSlice = createSlice({
     //@used for     DELETE CUSTOMER PAYMENT
     //@Data         Filtered data stored
     builder.addCase(deleteCustomerPayment.fulfilled, (state, action) => {
+
+       //Check for errors
+      if(action.payload?.errors?.length > 0){
+        return {
+          ...state,
+          errors: action.payload.errors
+        }
+      }
       //Check for request success
       if (action.payload.success === true) {
         //Set Alert
@@ -233,5 +235,5 @@ export const customerPaymentSlice = createSlice({
 });
 
 //Export Reducer functions
-export const { clearCustomerPayments } = customerPaymentSlice.actions;
+export const { clearCustomerPayments, clearCurrentCustomerPayment } = customerPaymentSlice.actions;
 export default customerPaymentSlice.reducer;

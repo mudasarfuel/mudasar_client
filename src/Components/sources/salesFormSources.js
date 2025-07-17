@@ -40,8 +40,7 @@ export const searchSalesFilters = (filter) => {
       options: [
         { id: 1, name: "Receipt No", value: "receiptNo" },
         { id: 2, name: "Customer Name", value: "name" },
-        { id: 3, name: "Product Name", value: "productName" },
-        { id: 4, name: "Date", value: "date" },
+        { id: 3, name: "Date", value: "date" },
       ]
     },
     {

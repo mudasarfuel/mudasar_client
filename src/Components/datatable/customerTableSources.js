@@ -1,16 +1,13 @@
-import { Link } from "react-router-dom";
-import { Delete, Edit, Info, Style } from "@mui/icons-material";
-import { IconButton, Chip } from "@mui/material";
+import { Delete, Edit, Info } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
-// SAMPLE DATA FOR USERS
 //Export Customer Columns
 export const customerColumns = (
   setOpenDeleteDialog,
   setDetailsDialog,
   setOpenFormDialog
 ) => [
-  // { field: "id", headerName: "ID", width: 70 },
   {
     field: "name",
     headerName: "Name",
@@ -27,7 +24,9 @@ export const customerColumns = (
             alt=""
             className="cellImg"
           />
-          {params.row.name}
+           {params.row.name.length > 30
+            ? params.row.name.substring(0, 30) + `....`
+            : params.row.name}
         </div>
       );
     },
@@ -45,7 +44,7 @@ export const customerColumns = (
             currency: "PKR",
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
-          })}
+          }) || 0}
         </div>
       );
     },
@@ -58,9 +57,17 @@ export const customerColumns = (
     width: 100,
     renderCell: (params) => {
       return (
-       <div style={{ background: params.row.status === "Active" ? "#02bf2e" : "#999", color: "white", width: 65, textAlign: "center", borderRadius: 4 }}>
-        {params.row.status}
-      </div>
+        <div
+          style={{
+            background: params.row.status === "Active" ? "#02bf2e" : "#999",
+            color: "white",
+            width: 65,
+            textAlign: "center",
+            borderRadius: 4,
+          }}
+        >
+          {params.row.status}
+        </div>
       );
     },
   },
@@ -71,28 +78,32 @@ export const customerColumns = (
     renderCell: (params) => {
       return (
         <div className="cellAction">
-          <IconButton
-            className="viewButton"
-            onClick={() => {
-              setOpenFormDialog(true);
-            }}
-          >
-            <Edit style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          <IconButton
-            className="viewButton"
-            onClick={() => setDetailsDialog(true)}
-          >
-            <Info style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          <IconButton
-            className="viewButton"
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            <Delete style={{ fontSize: "20px" }} />
-          </IconButton>
+          <Tooltip title="Edit Customer">
+            <IconButton
+              className="viewButton"
+              onClick={() => {
+                setOpenFormDialog(true);
+              }}
+            >
+              <Edit style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="View Detials">
+            <IconButton
+              className="viewButton"
+              onClick={() => setDetailsDialog(true)}
+            >
+              <Info style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete Customer">
+            <IconButton
+              className="viewButton"
+              onClick={() => setOpenDeleteDialog(true)}
+            >
+              <Delete style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip>
         </div>
       );
     },

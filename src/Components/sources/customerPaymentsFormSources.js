@@ -7,6 +7,7 @@ export const customerPaymentInputFields = (selectedRowId, currentCustomer, custo
     label: "Customer",
     type: "select",
     name: "customerId",
+    disabled: Object.entries(currentCustomer).length > 0 ? true : false,
     options:
       customers.length > 0 &&
       customers.map((item) =>
@@ -28,7 +29,7 @@ export const customerPaymentInputFields = (selectedRowId, currentCustomer, custo
     label: "Amount",
     tabIndex: 1,
     type: "number",
-    name: "amount",
+    name: "payingAmount",
     grid: {
       xs: 12,
       sm: 6,

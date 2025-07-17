@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
-import { Delete, Edit, Info, Style } from "@mui/icons-material";
-import { IconButton, Chip } from "@mui/material";
+
+import { Delete, Edit, Info } from "@mui/icons-material";
+import { IconButton, Tooltip} from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
 //Export Customer Payment Columns
 export const customerPaymentColumns = (
   setOpenDeleteDialog,
-  setDetailsDialog,
+  setOpenDetailsDialog,
   setOpenFormDialog
 ) => [
   {
@@ -25,7 +25,9 @@ export const customerPaymentColumns = (
             alt=""
             className="cellImg"
           />
-          {params.row.name}
+           {params.row.name.length > 30
+            ? params.row.name.substring(0, 30) + `....`
+            : params.row.name}
         </div>
       );
     },
@@ -35,15 +37,52 @@ export const customerPaymentColumns = (
     headerName: "Previous Amount",
     width: 150,
     renderCell: (params) => {
-      return <div className="cellAction">Rs. {params.row.prevAmount}</div>;
+      return (
+        <div className="cellAction">
+          {params.row.prevAmount?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
+        </div>
+      );
     },
   },
-  { field: "amount", headerName: "Paid Amount", width: 150,  renderCell: (params) => {
-    return <div className="cellAction">Rs. {params.row.payingAmount}</div>;
-  }, },
-  { field: "remaining", headerName: "Remaining Amount", width: 150,  renderCell: (params) => {
-    return <div className="cellAction">Rs. {params.row.remAmount}</div>;
-  }, },
+  {
+    field: "amount",
+    headerName: "Paid Amount",
+    width: 150,
+    renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.payingAmount?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
+        </div>
+      );
+    },
+  },
+  {
+    field: "remaining",
+    headerName: "Remaining Amount",
+    width: 150,
+    renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.remAmount?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
+        </div>
+      );
+    },
+  },
   {
     field: "date",
     headerName: "Date",
@@ -56,7 +95,19 @@ export const customerPaymentColumns = (
     renderCell: (params) => {
       return (
         <div className="cellAction">
+          
+           <Tooltip title="Customer Payment Details">
           <IconButton
+            className="viewButton"
+            onClick={() => setOpenDetailsDialog(true)}
+          >
+            <Info style={{ fontSize: "20px" }} />
+          </IconButton>
+          </Tooltip>
+          {params.row.status === "open" && (
+            <>
+            <Tooltip title="Edit Customer Payment">
+             <IconButton
             className="viewButton"
             onClick={() => {
               setOpenFormDialog(true);
@@ -64,23 +115,22 @@ export const customerPaymentColumns = (
           >
             <Edit style={{ fontSize: "20px" }} />
           </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete Customer Payment">
 
-          <IconButton
-            className="viewButton"
-            onClick={() => setDetailsDialog(true)}
-          >
-            <Info style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          {params.row.status === "open" && <IconButton
-            className="viewButton"
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            <Delete style={{ fontSize: "20px" }} />
-          </IconButton>}
+         
+            <IconButton
+              className="viewButton"
+              onClick={() => setOpenDeleteDialog(true)}
+            >
+              <Delete style={{ fontSize: "20px" }} />
+            </IconButton>
+             </Tooltip>
+            </>
+            
+          )}
         </div>
       );
     },
   },
 ];
-

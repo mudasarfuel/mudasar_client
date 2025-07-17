@@ -18,23 +18,23 @@ export const salesColumns = (
   {
     field: "name",
     headerName: "Name",
-    width: 190,
+    width: 250,
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
           <img
             src={
-              params.row.customer.pic
-                ? `${DOMAIN}/public/customers/images/${params.row.customer.pic}`
+              params.row.pic
+                ? `${DOMAIN}/public/customers/images/${params.row.pic}`
                 : "./img/avatarfile.png"
             }
             alt=""
             className="cellImg"
           />
-          {console.log("CHECK CUSTOMER SALE => ", params.row.customer.name)}
-          {params.row.customer.name.length > 11
-            ? params.row.customer.name.substring(0, 11) + `....`
-            : params.row.customer.name}
+          
+          {params.row.name.length > 30
+            ? params.row.name.substring(0, 30) + `....`
+            : params.row.name}
         </div>
       );
     },
@@ -58,7 +58,7 @@ export const salesColumns = (
                   key={item._id}
                 >
                   <div>
-                    {item?.product !== null ? item?.product?.name : null}
+                    {item?.productName !== null ? item?.productName : null}
                   </div>
                   {/* <div>Qty. {item.quantity}</div> */}
                   {/* <div>Rs. {item.price.newSellingPrice}</div> */}
@@ -72,9 +72,14 @@ export const salesColumns = (
   {
     field: "totalAmount",
     headerName: "Total Amount",
-    width: 120,
+    width: 170,
     renderCell: (params) => {
-      return <div>Rs. {params.row.totalAmount}</div>;
+      return <div>{params.row.totalAmount?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}</div>;
     },
   },
   {
@@ -84,15 +89,7 @@ export const salesColumns = (
     renderCell: (params) => {
       return (
         <div className="cellAction">
-          {/* <IconButton
-            className="viewButton"
-            onClick={() => {
-              setOpenFormDialog(true)
-            }}
-          >
-            <Edit style={{ fontSize: "20px" }} />
-          </IconButton> */}
-
+       
           <IconButton
             className="viewButton"
             onClick={() => setDetailsDialog(true)}

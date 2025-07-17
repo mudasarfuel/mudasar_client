@@ -141,6 +141,11 @@ export const completeDataSlice = createSlice({
             stocks: []
         };
       },
+
+        // ✅ Clear Active customers item
+    clearAllActiveCustomers(state) {
+      state.customers = [];
+    },
     },
     extraReducers: (builder) => {
       //@CaseNo       01
@@ -195,7 +200,7 @@ export const completeDataSlice = createSlice({
         //Check for request success
         if (actions.payload.success === true) {
           //First Removing all the active customers
-          state.advances = [];
+          state.customers = [];
           //Using map iterate each item and push into the state
           actions.payload.data.map((item) => {
             //Here we are modifying the _id to id of each record
@@ -317,5 +322,5 @@ export const completeDataSlice = createSlice({
   });
 
   //Export Reducer functions
-export const { cleardata } = completeDataSlice.actions;
+export const { cleardata, clearAllActiveCustomers } = completeDataSlice.actions;
 export default completeDataSlice.reducer;

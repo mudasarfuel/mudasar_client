@@ -37,12 +37,14 @@ import { customerAdvanceInputFields } from "../../Components/sources/customerAdv
 import { customerAdvanceColumns } from "../../Components/datatable/customerAdvanceTableSources";
 import {
   addCustomerAdvance,
+  clearCurrentCustomerAdvance,
   clearCustomerAdvance,
   deleteCustomerAdvance,
   getCustomerAdvances,
   getSingleCustomerAdvance,
   updateCustomerAdvance,
 } from "../../redux/customerAdvanceSlice/customerAdvanceSlice";
+import { clearAllActiveCustomers, getAllActiveCustomers } from "../../redux/completeDataSlice/completeDataSlice";
 
 const CustomerAdvance = () => {
   //Initializing dispatch function to call redux functions
@@ -50,7 +52,7 @@ const CustomerAdvance = () => {
   //Use Auth Context get user
   const { user } = useContext(AuthContext);
   //Initializing useSelector to get data from redux store
-  const customers = useSelector((state) => state.customers.data);
+  const customers = useSelector((state) => state.completeData.customers);
   const customerAdvances = useSelector((state) => state.customerAdvances.data);
   //Initializing the current customer
   const currentCustomer = useSelector(
@@ -65,7 +67,7 @@ const CustomerAdvance = () => {
   //Use State for Handle Open and close of form dialog
   const [openFormDialog, setOpenFormDialog] = useState(false);
   //Use State for handle Open and close of Details Dialog
-  const [openDetailsDialog, setDetailsDialog] = useState(false);
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   //Use State for Handle Open and close of dialog box
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   //Use State for selected row item id
@@ -108,6 +110,8 @@ const CustomerAdvance = () => {
     // eslint-disable-next-line
   }, [selectedRowId]);
 
+
+  console.log("Checking the current Customer => ", currentCustomer)
   //Load Data into state for update Use Effect
   useEffect(() => {
     if (Object.keys(currentCustomer).length !== 0) {
@@ -130,12 +134,12 @@ const CustomerAdvance = () => {
     };
 
     // Fetch customers and their advances
-    dispatch(getCustomers(initialQuery));
+    dispatch(getAllActiveCustomers());
     dispatch(getCustomerAdvances(initialQuery));
 
     // Cleanup function to reset state when component unmounts
     return () => {
-      dispatch(clearCustomers()); // Clear customers from state
+      dispatch(clearAllActiveCustomers())
       dispatch(clearCustomerAdvance()); // Clear customer advances from state
     };
 
@@ -179,7 +183,7 @@ const CustomerAdvance = () => {
   const loadData = () => {
     const initialData = { page: 0, sort: -1 };
     //Call getCustomers using dispatch
-    dispatch(getCustomerPayments(initialData));
+    dispatch(getCustomerAdvances(initialData));
   };
   //Handle On submit
   const handleOnSubmit = async (e) => {
@@ -204,7 +208,7 @@ const CustomerAdvance = () => {
         toast("Please Select Date", { position: "top-right", type: "error" });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getCustomerPayments(newState));
+        dispatch(getCustomerAdvances(newState));
         //After search results close the filters panel
         setOpenFiltersPanel(!openFiltersPanel);
         //Set Page to Zero
@@ -212,7 +216,7 @@ const CustomerAdvance = () => {
       }
     } else if (field === "") {
       //Calling dispatch function to hit API Call
-      dispatch(getCustomerPayments(newState));
+      dispatch(getCustomerAdvances(newState));
       //After search results close the filters panel
       setOpenFiltersPanel(!openFiltersPanel);
       //Set Page to Zero
@@ -231,7 +235,7 @@ const CustomerAdvance = () => {
       } else {
         console.log("New State => ", newState);
         //Calling dispatch function to hit API Call
-        dispatch(getCustomerPayments(newState));
+        dispatch(getCustomerAdvances(newState));
         //After search results close the filters panel
         setOpenFiltersPanel(!openFiltersPanel);
         //Set Page to Zero
@@ -250,9 +254,12 @@ const CustomerAdvance = () => {
     setState({
       userId: user._id,
       customerId: "",
+      description: "",
       amount: "",
       date: "",
     });
+
+    dispatch(clearCurrentCustomerAdvance())
   };
 
   //Handle on Page Change
@@ -260,7 +267,7 @@ const CustomerAdvance = () => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -279,10 +286,10 @@ const CustomerAdvance = () => {
         toast("Please Select Date", { position: "top-right", type: "error" });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getCustomerPayments(newState));
+        dispatch(getCustomerAdvances(newState));
       }
     } else if (field === "") {
-      dispatch(getCustomerPayments(newState));
+      dispatch(getCustomerAdvances(newState));
     } else {
       if (field !== "" && searchInput === "") {
         toast("Please Enter to search..", {
@@ -291,7 +298,7 @@ const CustomerAdvance = () => {
         });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getCustomerPayments(newState));
+        dispatch(getCustomerAdvances(newState));
       }
     }
   };
@@ -382,8 +389,20 @@ const CustomerAdvance = () => {
         {Object.keys(currentCustomer).length !== 0 && (
           <DetailsDialog
             openDetailsDialog={openDetailsDialog}
-            heading={"Kashif's Detail"}
+            heading={`${capitalizeEachWord(currentCustomer?.customerName)} Advance Details`}
             inputs={currentCustomer}
+             handleOnCloseDetails={() => {
+                          setOpenDetailsDialog(false);
+                          setSelectedRowId(null);
+                          setState({
+                            userId: "",
+                            customerId: "",
+                            amount: "",
+                            description: "",
+                            date: "",
+                          });
+                          dispatch(clearCurrentCustomerAdvance());
+                        }}
             icon={<AssignmentInd style={{ marginRight: "10px" }} />}
           />
         )}
@@ -392,10 +411,10 @@ const CustomerAdvance = () => {
           openDeleteDialog={openDeleteDialog}
           setOpenDeleteDialog={setOpenDeleteDialog}
           handleOnDelete={handleOnDelete}
-          heading={"DELETE CUSTOMER PAYMENT"}
+          heading={"DELETE CUSTOMER ADVANCE"}
           color="#ff0000"
           icon={<DangerousIcon style={{ marginRight: "10px" }} />}
-          message={"Are you sure you want to delete this payment."}
+          message={"Are you sure you want to delete this advance."}
         />
 
         {/* Here we calling Search component in which we 
@@ -416,7 +435,7 @@ const CustomerAdvance = () => {
         <DataTable
           columns={customerAdvanceColumns(
             setOpenDeleteDialog,
-            setDetailsDialog,
+            setOpenDetailsDialog,
             setOpenFormDialog
           )}
           rows={capitalizedRows}

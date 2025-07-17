@@ -74,6 +74,11 @@ export const customerAdvanceSlice = createSlice({
         errors: []
       };
     },
+       // ✅ Clear only current selected item
+    clearCurrentCustomerAdvance(state) {
+      state.current = {};
+    },
+
   },
   extraReducers: (builder) => {
     // GET all
@@ -96,12 +101,29 @@ export const customerAdvanceSlice = createSlice({
 
     // ADD new
     builder.addCase(addCustomerAdvance.fulfilled, (state, action) => {
+       // Handle errors
       if (action.payload?.errors?.length > 0) {
         state.errors = action.payload.errors;
-      } else if (action.payload.success === true) {
-        toast(action.payload.msg, { type: "success" });
-        const newEntry = { ...action.payload.advance[0], id: action.payload.advance[0]._id };
-        state.data = [newEntry, ...state.data.slice(0, 4)];
+        return;
+      }
+
+      // Handle success
+      if (action.payload?.success === true) {
+        toast(action.payload.msg, { position: "top-right", type: "success" });
+        
+        const customerAdvance = {
+          ...action.payload.advance,
+          id: action.payload.advance._id,
+        };
+
+        // Maintain maximum 5 items in the list
+        if (state.data.length === 5) {
+          const poppedState = state.data.slice(0, 4);
+          state.data = [customerAdvance, ...poppedState];
+        } else {
+          state.data = [customerAdvance, ...state.data];
+        }
+        
         state.totalRecord = action.payload.totalRecord;
         state.errors = [];
       }
@@ -109,18 +131,38 @@ export const customerAdvanceSlice = createSlice({
 
     // UPDATE
     builder.addCase(updateCustomerAdvance.fulfilled, (state, action) => {
-      if (action.payload?.errors?.length > 0) {
-        state.errors = action.payload.errors;
-      } else if (action.payload.success === true) {
-        toast(action.payload.msg, { type: "success" });
-        const updated = { ...action.payload.updated[0], id: action.payload.updated[0]._id };
-        state.data = state.data.map((item) => (item.id === updated.id ? updated : item));
-        state.errors = [];
+
+      console.log("Check updated advance payload => ", action.payload)
+      if(action.payload?.errors?.length > 0){
+        return {
+          ...state,
+          errors: action.payload.errors
+        }
+      }
+      //Check for Success
+      if(action.payload.success === true){
+       
+        
+        const updatedCustomerAdvance = {...action.payload.updated, id: action.payload.updated._id}
+        //Show Alert
+        toast(action.payload.msg, {position: "top-right", type: "success"})
+        return {
+          ...state,
+          data: state.data.map(item => 
+            item.id === action.payload.updated._id ? updatedCustomerAdvance : item
+          ),
+          errors: []
+        }
       }
     });
 
     // DELETE
     builder.addCase(deleteCustomerAdvance.fulfilled, (state, action) => {
+       // Handle errors
+      if (action.payload?.errors?.length > 0) {
+        state.errors = action.payload.errors;
+        return;
+      }
       if (action.payload.success === true) {
         toast(action.payload.msg, { type: "error" });
         state.data = state.data.filter((item) => item.id !== action.payload.id);
@@ -131,5 +173,5 @@ export const customerAdvanceSlice = createSlice({
 });
 
 // Export reducer and actions
-export const { clearCustomerAdvance } = customerAdvanceSlice.actions;
+export const { clearCustomerAdvance, clearCurrentCustomerAdvance } = customerAdvanceSlice.actions;
 export default customerAdvanceSlice.reducer;

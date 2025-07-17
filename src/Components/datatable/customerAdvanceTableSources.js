@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { Delete, Edit, Info, Style } from "@mui/icons-material";
-import { IconButton, Chip } from "@mui/material";
+import { IconButton, Chip, Tooltip } from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
 //Export Customer Payment Columns
 export const customerAdvanceColumns = (
   setOpenDeleteDialog,
-  setDetailsDialog,
+  setOpenDetailsDialog,
   setOpenFormDialog
 ) => [
   {
@@ -16,7 +16,9 @@ export const customerAdvanceColumns = (
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
-          {params.row.customerName}
+          {params.row.name.length > 30
+            ? params.row.name.substring(0, 30) + `....`
+            : params.row.name}
         </div>
       );
     },
@@ -30,7 +32,12 @@ export const customerAdvanceColumns = (
     },
   },
   { field: "amount", headerName: "Amount", width: 150,  renderCell: (params) => {
-    return <div className="cellAction">Rs. {params.row.amount}</div>;
+    return <div className="cellAction">{params.row.amount?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}</div>;
   }, },
   {
     field: "date",
@@ -44,6 +51,19 @@ export const customerAdvanceColumns = (
     renderCell: (params) => {
       return (
         <div className="cellAction">
+         
+          <Tooltip title="Customer Advance Detials">
+          <IconButton
+            className="viewButton"
+            onClick={() => setOpenDetailsDialog(true)}
+          >
+            <Info style={{ fontSize: "20px" }} />
+          </IconButton>
+           </Tooltip>
+
+          {params.row.status === "open" && 
+          <>
+           <Tooltip title="Edit Customer Advance">
           <IconButton
             className="viewButton"
             onClick={() => {
@@ -52,20 +72,17 @@ export const customerAdvanceColumns = (
           >
             <Edit style={{ fontSize: "20px" }} />
           </IconButton>
-
+          </Tooltip>
+          <Tooltip title="Delete Customer Advance">
           <IconButton
-            className="viewButton"
-            onClick={() => setDetailsDialog(true)}
-          >
-            <Info style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          {params.row.status === "open" && <IconButton
             className="viewButton"
             onClick={() => setOpenDeleteDialog(true)}
           >
             <Delete style={{ fontSize: "20px" }} />
-          </IconButton>}
+          </IconButton>
+          </Tooltip>
+          </>
+           }
         </div>
       );
     },

@@ -273,8 +273,7 @@ const TotalSale = () => {
   //Iterate and capitalizing data of each row
   const capitalizedRows = sales.length > 0 ? sales.map((row) => ({
     ...row,
-    totalAmount: row.items && calculateTotalAndDiscount(row.items).totalAmount,
-    totalDiscount: row.items && calculateTotalAndDiscount(row.items).totalDiscount,
+    // totalAmount: row.items && calculateTotalAndDiscount(row.items).totalAmount,
     product: row.items
   })) : [];
 
@@ -290,9 +289,6 @@ const TotalSale = () => {
         icon={<Assessment style={{ marginRight: "10px" }} />}
         title="Sales"
         subTitle="Manage Application Sales"
-      // addBtnTitle="Add Machine"
-      // dialog={openFormDialog}
-      // setDialog={setOpenFormDialog}
       />
       {/* Main Card for setup employees Table */}
       <Box className="mainCard">

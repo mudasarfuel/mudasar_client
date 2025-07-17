@@ -213,13 +213,11 @@ export default function Form({
             key={input.id}
           >
             <FormControl style={{ width: "100%" }} size="small">
-              {/* <InputLabel shrink>{input.label}</InputLabel> */}
-
               <Autocomplete
                 options={input.options || []}
                 size={input.size || "small"}
                 disableClearable
-                disabled = {input.disabled}
+                disabled={input.disabled}
                 isOptionEqualToValue={(option, value) =>
                   option.value === value.value
                 }
@@ -237,9 +235,39 @@ export default function Form({
                     },
                   });
                 }}
-                renderInput={(params) => (
-                  <TextField {...params} label={input.label} />
-                )}
+                renderInput={(params) => {
+                  const selectedItem = input.options.find(
+                    (item) => item.value === state?.[input.name]
+                  );
+
+                  return (
+                    <TextField
+                      {...params}
+                      label={input.label}
+                      helperText={
+                        selectedItem?.salary
+                          ? selectedItem?.designation
+                            ? `Salary: ${selectedItem.salary.toLocaleString(
+                                "en-US",
+                                {
+                                  style: "currency",
+                                  currency: "PKR",
+                                  minimumFractionDigits: 2,
+                                }
+                              )}`
+                            : `Remaining Amount: ${selectedItem.salary.toLocaleString(
+                                "en-US",
+                                {
+                                  style: "currency",
+                                  currency: "PKR",
+                                  minimumFractionDigits: 2,
+                                }
+                              )}`
+                          : ""
+                      }
+                    />
+                  );
+                }}
                 renderOption={(props, option) => (
                   <Box
                     component="li"
@@ -248,25 +276,26 @@ export default function Form({
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
+                      width: "100%",
                       gap: 2,
                     }}
                   >
-                    {/* Left Block */}
+                    {/* Left */}
                     <Box
-                      sx={{ display: "flex", alignItems: "center", }}
+                      sx={{ display: "flex", alignItems: "center", flex: 1 }}
                     >
                       {option.avatarUrl && (
                         <Avatar
                           src={option.avatarUrl}
-                          round
-                          size="30"
+                          size={40}
+                          round={true}
                           style={{ marginRight: 10 }}
                         />
                       )}
                       {option.name}
                     </Box>
 
-                    {/* Center Block */}
+                    {/* Center */}
                     <Box sx={{ textAlign: "center", flex: 1 }}>
                       {option.amount ? (
                         <>
@@ -296,84 +325,18 @@ export default function Form({
                       ) : null}
                     </Box>
 
-                    {/* Right Block */}
-                    <Box sx={{ textAlign: "right", flex: 1 }}>
-                      {option.designation
-                        ? `( ${option.designation} )`
-                        : option.date
-                        ? `( ${option.date} )`
-                        : null}
-                    </Box>
-                  </Box>
-                )}
-                renderValue={(selectedValue) => {
-                  const selectedItem = input.options.find(
-                    (item) => item.value === selectedValue?.value
-                  );
-                  if (!selectedItem) return "";
-
-                  return (
-                    <Box
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: "16px",
-                      }}
-                    >
-                      <Box
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          flex: 1,
-                        }}
-                      >
-                        {selectedItem.avatarUrl && (
-                          <Avatar
-                            src={selectedItem.avatarUrl}
-                            sx={{ width: 30, height: 30, mr: 1 }}
-                          />
-                        )}
-                        {selectedItem.name}
-                      </Box>
-
-                      <Box style={{ textAlign: "center", flex: 1 }}>
-                        {selectedItem.amount ? (
-                          <>
-                            <Box>
-                              {selectedItem.amount.toLocaleString("en-US", {
-                                style: "currency",
-                                currency: "PKR",
-                                minimumFractionDigits: 2,
-                              })}
-                            </Box>
-                            <Box>
-                              {selectedItem.remAdv.toLocaleString("en-US", {
-                                style: "currency",
-                                currency: "PKR",
-                                minimumFractionDigits: 2,
-                              })}
-                            </Box>
-                          </>
-                        ) : selectedItem.salary ? (
-                          selectedItem.salary.toLocaleString("en-US", {
-                            style: "currency",
-                            currency: "PKR",
-                            minimumFractionDigits: 2,
-                          })
-                        ) : null}
-                      </Box>
-
-                      <Box style={{ textAlign: "right", flex: 1 }}>
-                        {selectedItem.designation
-                          ? `( ${selectedItem.designation} )`
-                          : selectedItem.date
-                          ? `( ${selectedItem.date} )`
+                    {/* Right */}
+                    {(option.designation || option.date) && (
+                      <Box sx={{ textAlign: "right", flex: 1 }}>
+                        {option.designation
+                          ? `( ${option.designation} )`
+                          : option.date
+                          ? `( ${option.date} )`
                           : null}
                       </Box>
-                    </Box>
-                  );
-                }}
+                    )}
+                  </Box>
+                )}
               />
             </FormControl>
           </Grid>
@@ -471,7 +434,7 @@ export default function Form({
                 format="DD-MM-YYYY"
                 tabIndex={input.tabIndex}
                 disabled={input.disabled}
-                maxDate={dayjs()}  
+                maxDate={dayjs()}
                 value={
                   state[input.name] !== ""
                     ? dayjs(state[input.name], "DD-MM-YYYY")

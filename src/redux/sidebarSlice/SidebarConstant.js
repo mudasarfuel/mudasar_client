@@ -49,4 +49,102 @@ export const TenantSidebar = [
     id: 12,
     toggle: false,
   },
+  { id: 13, toggle: false },
+  {
+    id: 14,
+    toggle: false,
+  },
+  {
+    id: 15,
+    toggle: false,
+  },
+  {
+    id: 16,
+    toggle: false,
+  },
+  {
+    id: 17,
+    toggle: false,
+  },
+  {
+    id: 18,
+    toggle: false,
+  },
+  {
+    id: 19,
+    toggle: false,
+  },
+  {
+    id: 20,
+    toggle: false,
+  },
+  {
+    id: 21,
+    toggle: false,
+  },
+  {
+    id: 22,
+    toggle: false,
+  },
+  {
+    id: 23,
+    toggle: false,
+  },
+  {
+    id: 24,
+    toggle: false,
+  },
+  {
+    id: 25,
+    toggle: false,
+  },
+  { id: 26, toggle: false },
+  {
+    id: 27,
+    toggle: false,
+  },
+  {
+    id: 28,
+    toggle: false,
+  },
+  {
+    id: 29,
+    toggle: false,
+  },
+  {
+    id: 30,
+    toggle: false,
+  },
+  {
+    id: 31,
+    toggle: false,
+  },
+  {
+    id: 32,
+    toggle: false,
+  },
+  {
+    id: 33,
+    toggle: false,
+  },
+  {
+    id: 34,
+    toggle: false,
+  },
+  {
+    id: 35,
+    toggle: false,
+  },
+  {
+    id: 36,
+    toggle: false,
+  },
+  {
+    id: 37,
+    toggle: false,
+  },
+  {
+    id: 38,
+    toggle: false,
+  },
 ];

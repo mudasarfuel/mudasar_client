@@ -1,15 +1,19 @@
-import { Delete, Edit, Info} from "@mui/icons-material";
+import { Delete, Edit, Info } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
 // SAMPLE DATA FOR USERS
 //Export Supplier Columns
-export const supplierColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFormDialog) => [
+export const supplierColumns = (
+  setOpenDeleteDialog,
+  setDetailsDialog,
+  setOpenFormDialog
+) => [
   // { field: "id", headerName: "ID", width: 70 },
   {
     field: "name",
     headerName: "Name",
-    width: 230,
+    width: 200,
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
@@ -22,23 +26,49 @@ export const supplierColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFo
             alt=""
             className="cellImg"
           />
-          {params.row.name}
+           {params.row.name.length > 11
+            ? params.row.name.substring(0, 11) + `....`
+            : params.row.name}
         </div>
       );
     },
   },
   // { field: "email", headerName: "Email", width: 230 },
-  { field: "balance", headerName: "Payable", width: 150 },
-  { field: "contact", headerName: "Contact", width: 150 },
-  { field: "companyName", headerName: "Company", width: 150 },
+  {
+    field: "balance",
+    headerName: "Payable",
+    width: 150,
+    renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.balance?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
+        </div>
+      );
+    },
+  },
+  { field: "contact", headerName: "Contact", width: 130 },
+  { field: "companyName", headerName: "Company", width: 130 },
   { field: "address", headerName: "Address", width: 200 },
   {
     field: "status",
     headerName: "Status",
-    width: 100,
+    width: 90,
     renderCell: (params) => {
       return (
-        <div className={`cellWithStatus ${params.row.status}`}>
+        <div
+          style={{
+            background: params.row.status === "Active" ? "#02bf2e" : "#999",
+            color: "white",
+            width: 65,
+            textAlign: "center",
+            borderRadius: 4,
+          }}
+        >
           {params.row.status}
         </div>
       );
@@ -47,20 +77,23 @@ export const supplierColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFo
   {
     field: "action",
     headerName: "Action",
-    width: 160,
+    width: 150,
     renderCell: (params) => {
       return (
         <div className="cellAction">
           <IconButton
             className="viewButton"
             onClick={() => {
-              setOpenFormDialog(true)
+              setOpenFormDialog(true);
             }}
           >
             <Edit style={{ fontSize: "20px" }} />
           </IconButton>
 
-          <IconButton className="viewButton" onClick={()=>setDetailsDialog(true)}>
+          <IconButton
+            className="viewButton"
+            onClick={() => setDetailsDialog(true)}
+          >
             <Info style={{ fontSize: "20px" }} />
           </IconButton>
 

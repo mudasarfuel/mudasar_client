@@ -29,14 +29,8 @@ const DetailsDialog = ({
   inputs,
   message,
 }) => {
-
-  
-
   return (
     <>
-      {/* <Button variant="outlined" onClick={handleClickOpen}>
-    Open alert dialog
-  </Button> */}
       <Dialog
         open={openDetailsDialog}
         onClose={handleOnCloseDetails}
@@ -54,53 +48,50 @@ const DetailsDialog = ({
             fontWeight: "800",
           }}
         >
-          <Box style={{
-            color: color,
-            display: "flex",
-            alignItems: "center",
-            
-            fontSize: "16px",
-            fontWeight: "600",
-          }}>
-          {icon}
-          {heading}
+          <Box
+            style={{
+              color: color,
+              display: "flex",
+              alignItems: "center",
+
+              fontSize: "16px",
+              fontWeight: "600",
+            }}
+          >
+            {icon}
+            {heading}
           </Box>
           <Box>
             <IconButton onClick={handleOnCloseDetails}>
-              <Dangerous/>
+              <Dangerous />
             </IconButton>
-         
           </Box>
-         
         </DialogTitle>
         <DialogContent>
-         
-         <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            paddingTop: "8px",
-            paddingBottom: "8px",
-          }}
-        >
-          {console.log("Checking the Avatar => ", inputs.designation)}
-          {inputs && (
-  <Avatar
-    src={
-      inputs.pic 
-        ? `http://localhost:5000/public/${inputs.designation ? "employees" : "customers"}/images/${inputs.pic}`
-        : "./img/avatarfile.png"
-    }
-    size={120}
-    round={true}
-  />
-)}
-        </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              paddingTop: "8px",
+              paddingBottom: "8px",
+            }}
+          >
+            {inputs && (
+              <Avatar
+                src={
+                  inputs.pic
+                    ? `http://localhost:5000/public/${
+                        inputs.designation ? "employees" : "customers"
+                      }/images/${inputs.pic}`
+                    : "./img/avatarfile.png"
+                }
+                size={120}
+                round={true}
+              />
+            )}
+          </div>
           <DetailsPaper inputs={inputs} />
         </DialogContent>
-        {/* <DialogActions style={{marginRight: "18px", marginBottom: "15px"}}>
-         
-        </DialogActions> */}
       </Dialog>
     </>
   );

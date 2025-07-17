@@ -1,19 +1,35 @@
 import { DOMAIN } from "../../backend/API";
 
 //Add new customer Payment form fields
-export const customerAdvanceInputFields = (selectedRowId, currentCustomer, customers) => [
+export const customerAdvanceInputFields = (
+  selectedRowId,
+  currentCustomer,
+  customers
+) => [
   {
     id: 1,
     label: "Customer",
     type: "select",
     name: "customerId",
+    disabled: Object.entries(currentCustomer).length > 0 ? true : false,
     options:
       customers.length > 0 &&
       customers.map((item) =>
         // Here we are setup the filter operator items
         {
-          return { id: item._id, name: item.name, value: item._id, avatarUrl: `${DOMAIN}/public/customers/images/${item.pic}`, avatarAlt: "./img/avatarfile.png" , salary: item.balance.toLocaleString('en-US', { style: 'currency' ,
-            currency: 'PKR' , minimumFractionDigits: 2, maximumFractionDigits: 2 }) };
+          return {
+            id: item._id,
+            name: item.name,
+            value: item._id,
+            avatarUrl: `${DOMAIN}/public/customers/images/${item.pic}`,
+            avatarAlt: "./img/avatarfile.png",
+            salary: item.balance.toLocaleString("en-US", {
+              style: "currency",
+              currency: "PKR",
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }),
+          };
         }
       ),
     grid: {
