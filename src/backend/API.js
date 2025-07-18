@@ -67,6 +67,7 @@ export const ENDPOINTS = {
   EMPLOYEEADVANCE: DOMAIN + "/api/employeeAdvances", // Employee advances
   ALLADVANCE: DOMAIN + "/api/allEmployeeAdvances", // All active advances
   ADVANCEINSTALLMENT: DOMAIN + "/api/advanceInstallments", // Advance installments
+  EMPLOYEEPAYMENT: DOMAIN + "/api/employeePayments", // Advance installments
 
   // ====================================================
   // 08. INVENTORY & OPERATIONS MODULE ENDPOINTS

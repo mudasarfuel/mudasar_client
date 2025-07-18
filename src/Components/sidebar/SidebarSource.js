@@ -76,7 +76,8 @@ export const useLocalHook = () => {
       nested: [
         { itemId: 19, label: "Employee", icon: <AssignmentInd className="icon" />, url: "/employees" },
         { itemId: 20, label: "Employee Salary", icon: <LocalAtm className="icon" />, url: "/employeesalary" },
-        { itemId: 21, label: "Employee Advances", icon: <Payment className="icon" />, url: "/employeeadvances" },
+        { itemId: 21, label: "Employee Payment", icon: <AttachMoney className="icon" />, url: "/employeepayment" },
+        { itemId: 22, label: "Employee Advances", icon: <Payment className="icon" />, url: "/employeeadvances" },
       ],
     },
     (user.access === "web_admin" || user.access === "app_admin") && {
@@ -99,11 +100,11 @@ export const useLocalHook = () => {
       category: "SYSTEM",
       setList: "TOGGLE_SETTINGS",
       nested: [
-        { itemId: 22, label: "Machines", icon: <LocalGasStation className="icon" />, url: "/machines" },
-        { itemId: 23, label: "Readings", icon: <Speed className="icon" />, url: "/readings" },
-        { itemId: 24, label: "Products", icon: <Widgets className="icon" />, url: "/products" },
-        { itemId: 25, label: "Price Management", icon: <PriceChange className="icon" />, url: "/prices" },
-        { itemId: 26, label: "Users", icon: <People className="icon" />, url: "/admin/users" },
+        { itemId: 23, label: "Machines", icon: <LocalGasStation className="icon" />, url: "/machines" },
+        { itemId: 24, label: "Readings", icon: <Speed className="icon" />, url: "/readings" },
+        { itemId: 25, label: "Products", icon: <Widgets className="icon" />, url: "/products" },
+        { itemId: 26, label: "Price Management", icon: <PriceChange className="icon" />, url: "/prices" },
+        { itemId: 27, label: "Users", icon: <People className="icon" />, url: "/admin/users" },
       ],
     },
     {
@@ -112,8 +113,8 @@ export const useLocalHook = () => {
       icon: <Receipt className="icon" />,
       setList: "TOGGLE_STOCK",
       nested: [
-        { itemId: 27, label: "Get Report", icon: <Receipt className="icon" />, url: "/reports" },
-        { itemId: 28, label: "Expenses", icon: <Assessment className="icon" />, url: "/expenses" },
+        { itemId: 28, label: "Get Report", icon: <Receipt className="icon" />, url: "/reports" },
+        { itemId: 29, label: "Expenses", icon: <Assessment className="icon" />, url: "/expenses" },
       ],
     },
     {
@@ -122,10 +123,10 @@ export const useLocalHook = () => {
       icon: <Opacity className="icon" />,
       setList: "TOGGLE_STOCK",
       nested: [
-        { itemId: 29, label: "Stock List", icon: <Opacity className="icon" />, url: "/stocks" },
-        { itemId: 30, label: "Purchase Stock", icon: <Store className="icon" />, url: "/purchases" },
-        { itemId: 31, label: "Dip Records", icon: <Assessment className="icon" />, url: "/dips" },
-        { itemId: 32, label: "Stock Wastage", icon: <FormatColorReset className="icon" />, url: "/wastages" },
+        { itemId: 30, label: "Stock List", icon: <Opacity className="icon" />, url: "/stocks" },
+        { itemId: 31, label: "Purchase Stock", icon: <Store className="icon" />, url: "/purchases" },
+        { itemId: 32, label: "Dip Records", icon: <Assessment className="icon" />, url: "/dips" },
+        { itemId: 33, label: "Stock Wastage", icon: <FormatColorReset className="icon" />, url: "/wastages" },
       ],
     },
     {

@@ -28,6 +28,7 @@ import closingSlice  from "./closingsSlice/closingsSlice";
 import cashSlice  from "./cashSlice/cashSlice";
 import  bankSlice  from "./bankSlice/bankSlice";
 import  customerAdvanceSlice  from "./customerAdvanceSlice/customerAdvanceSlice";
+import  employeePaymentSlice  from "./employeePaymentSlice/employeePaymentSlice";
 
 export const store = configureStore({
     reducer: {
@@ -41,6 +42,7 @@ export const store = configureStore({
         employees: employeeSlice,
         salaries: employeeSalarySlice,
         advances: employeeAdvanceSlice,
+        employeepayments: employeePaymentSlice,
         machines: machineSlice,
         readings: readingSlice,
         products: productSlice,

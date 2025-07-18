@@ -4,12 +4,11 @@ import { DOMAIN } from "../../backend/API";
 
 // SAMPLE DATA FOR USERS
 //Export Employee Columns
-export const employeeColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFormDialog) => [
-  // { field: "id", headerName: "ID", width: 70 },
+export const employeeColumns = (setOpenDeleteDialog, setOpenDetailsDialog, setOpenFormDialog) => [
   {
     field: "name",
     headerName: "Name",
-    width: 210,
+    width: 230,
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
@@ -29,10 +28,15 @@ export const employeeColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFo
   },
   // { field: "email", headerName: "Email", width: 230 },
   {
-    field: "salary", headerName: "Salary", width: 110, renderCell: (params) => {
+    field: "salary", headerName: "Salary", width: 150, renderCell: (params) => {
       return (
         <div className={`cellWithStatus ${params.row.salary}`}>
-          Rs. {params.row.salary}
+          {params.row.salary?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
         </div>
       );
     },
@@ -40,13 +44,18 @@ export const employeeColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFo
   {
     field: "remainingAdvance", headerName: "Remaining Advance", width: 150, renderCell: (params) => {
       return (
-        <div className={`cellWithStatus ${params.row.remainingAdvance}`}>
-          Rs. {params.row.remainingAdvance}
+        <div className={`cellWithStatus ${params.row.advance}`}>
+          {params.row.advance?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
         </div>
       );
     },
   },
-  { field: "contact", headerName: "Contact", width: 140 },
+  { field: "contact", headerName: "Contact", width: 130 },
   { field: "designation", headerName: "Designation", width: 130 },
   {
     field: "status",
@@ -74,7 +83,7 @@ export const employeeColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFo
             <Edit style={{ fontSize: "20px" }} />
           </IconButton>
 
-          <IconButton className="viewButton" onClick={() => setDetailsDialog(true)}>
+          <IconButton className="viewButton" onClick={() => setOpenDetailsDialog(true)}>
             <Info style={{ fontSize: "20px" }} />
           </IconButton>
 

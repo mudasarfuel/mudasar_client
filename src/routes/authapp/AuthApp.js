@@ -40,6 +40,7 @@ import TotalSaleClosings from "../../Pages/DataEntry/TotalSaleClosings";
 import AddShift from "../../Pages/DataEntry/AddShift";
 import DailyCash from "../../Pages/Finance/DailyCash";
 import BankTransaction from "../../Pages/Finance/BankTransaction";
+import EmployeePayment from "../../Pages/Employee/EmployeePayment";
 
 const AuthApp = ({ mode }) => {
   
@@ -80,6 +81,7 @@ const AuthApp = ({ mode }) => {
               {/* EMPLOYEE ROUTES  */}
               <Route exact path="/employees" element={<Employee />} />
               <Route exact path="/employeesalary" element={<EmployeeSalary />} />
+              <Route exact path="/employeepayment" element={<EmployeePayment />} />
               <Route exact path="/employeeadvances" element={<EmployeeAdvance />} />
               {/* MACHINE ROUTES  */}
               <Route exact path="/machines" element={<Machine />} />

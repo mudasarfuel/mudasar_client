@@ -254,7 +254,7 @@ const CustomerPayment = () => {
       page: e,
       searchInput: searchInput,
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-      endDate: endDate === "" && startDate !== "" ? endDate : endDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
 
     if (field === "date") {

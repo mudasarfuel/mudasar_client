@@ -1,6 +1,6 @@
 // import "./customer.scss";
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../../Components/Header/Header";
 import DataTable from "../../Components/datatable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,14 +28,17 @@ import { supplierPaymentInputFields } from "../../Components/sources/supplierPay
 import { supplierPaymentColumns } from "../../Components/datatable/supplierPaymentTableSources";
 import { addEmployeeSalary, clearEmployeePayments, clearEmployeeSalaries, deleteEmployeeSalary, getEmployeePayments, getEmployeeSalaries, updateEmployeeSalary } from "../../redux/employeeSalarySlice/employeeSalarySlice";
 import { employeeSalaryColumns } from "../../Components/datatable/employeeSalaryTableSources";
-import { employeeSalaryInputFields } from "../../Components/sources/employeeSalaryFormSources";
+import { employeeSalaryInputFields, searchEmployeeSalaryFilters } from "../../Components/sources/employeeSalaryFormSources";
 import { getEmployees } from "../../redux/employeeSlice/employeeSlice";
 import dayjs from "dayjs";
 import { getAllEmployees } from "../../redux/completeDataSlice/completeDataSlice";
+import AuthContext from "../../context/auth/AuthContext";
 
 const EmployeeSalary = () => {
   //Initializing dispatch function to call redux functions
   const dispatch = useDispatch();
+   //Use Auth Context get user
+  const { user } = useContext(AuthContext);
   //Initializing useSelector to get data from redux store
   const allEmployees = useSelector((state) => state.completeData.employees);
   const salaries = useSelector((state) => state.salaries.data);
@@ -70,8 +73,8 @@ const EmployeeSalary = () => {
   
   //Setup state for values
   const [state, setState] = useState({
+    userId: user._id,
     employeeId: "",
-    advanceDeducted: 0,
     salaryOfMonth: dayjs().format('MMM'),
     salaryOfYear: dayjs().format('YYYY'),
     date: ""
@@ -152,7 +155,7 @@ const handleOnDelete = () => {
 const loadData = () => {
   const initialData = { page: 0, sort: -1 };
   //Call getSuppliers Payments using dispatch
-  dispatch(getSupplierPayments(initialData));
+  dispatch(getEmployeeSalaries(initialData));
 };
 //Handle On submit
 const handleOnSubmit = async (e) => {
@@ -177,7 +180,7 @@ const handleOnSubmit = async (e) => {
       toast("Please Select Date", { position: "top-right", type: "error" });
     } else {
       //Calling dispatch function to hit API Call
-      dispatch(getSupplierPayments(newState));
+      dispatch(getEmployeeSalaries(newState));
       //After search results close the filters panel
       setOpenFiltersPanel(!openFiltersPanel);
       //Set Page to Zero
@@ -185,7 +188,7 @@ const handleOnSubmit = async (e) => {
     }
   } else if (field === "") {
     //Calling dispatch function to hit API Call
-    dispatch(getSupplierPayments(newState));
+    dispatch(getEmployeeSalaries(newState));
     //After search results close the filters panel
     setOpenFiltersPanel(!openFiltersPanel);
     //Set Page to Zero
@@ -202,9 +205,9 @@ const handleOnSubmit = async (e) => {
         type: "error",
       });
     } else {
-      console.log("New State => ", newState)
+      
       //Calling dispatch function to hit API Call
-      dispatch(getSupplierPayments(newState));
+      dispatch(getEmployeeSalaries(newState));
       //After search results close the filters panel
       setOpenFiltersPanel(!openFiltersPanel);
       //Set Page to Zero
@@ -221,8 +224,8 @@ const handleOnSubmit = async (e) => {
     setSelectedRowId(null);
     //Clear State and remove previous data
     setState({
+      userId: user._id,
       employeeId: "",
-      advanceDeducted: 0,
       salaryOfMonth: dayjs().format('MMM'),
       salaryOfYear: dayjs().format('YYYY'),
       date: ""
@@ -234,7 +237,7 @@ const handleOnSubmit = async (e) => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -245,7 +248,7 @@ const handleOnSubmit = async (e) => {
       page: e,
       searchInput: searchInput,
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-      endDate: endDate === "" && startDate !== "" ? endDate : endDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
 
     if (field === "date") {
@@ -253,10 +256,10 @@ const handleOnSubmit = async (e) => {
         toast("Please Select Date", { position: "top-right", type: "error" });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getCustomerPayments(newState));
+        dispatch(getEmployeeSalaries(newState));
       }
     } else if (field === "") {
-      dispatch(getCustomerPayments(newState));
+      dispatch(getEmployeeSalaries(newState));
     } else {
       if (field !== "" && searchInput === "") {
         toast("Please Enter to search..", {
@@ -265,7 +268,7 @@ const handleOnSubmit = async (e) => {
         });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getCustomerPayments(newState));
+        dispatch(getEmployeeSalaries(newState));
       }
     }
   };
@@ -286,7 +289,7 @@ const handleOnSubmit = async (e) => {
     
   }));
   //Destructure values from the state
-  const { employeeId,  advanceDeducted, salaryOfMonth, date } = state;
+  const { userId, employeeId,  advanceDeducted, salaryOfMonth, date } = state;
   //Handle on submit function
   const handleOnAddUpdateFormSubmit = async (e) => {
     e.preventDefault();
@@ -383,7 +386,7 @@ const handleOnSubmit = async (e) => {
           openFiltersPanel={openFiltersPanel}
           setOpenFiltersPanel={setOpenFiltersPanel}
           loadDataFunc={loadData}
-          searchFiltersForm={searchCustomerPaymentFilters}
+          searchFiltersForm={searchEmployeeSalaryFilters}
           searchInputForm={searchCustomerInput}
         />
         {/* DataTable for Employee Payments  */}

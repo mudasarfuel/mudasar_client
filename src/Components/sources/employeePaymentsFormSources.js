@@ -1,30 +1,20 @@
 import { DOMAIN } from "../../backend/API";
 
-//Add new Employee Salary form fields
-export const employeeSalaryInputFields = (
-  selectedRowId,
-  currentData,
-  employees
-) => [
+//Add new employee Payment form fields
+export const employeePaymentInputFields = (selectedRowId, currentData, employees) => [
   {
     id: 1,
     label: "Employee",
     type: "select",
     name: "employeeId",
+    disabled: Object.entries(currentData).length > 0 ? true : false,
     options:
       employees.length > 0 &&
       employees.map((item) =>
         // Here we are setup the filter operator items
         {
-          return {
-            id: item._id,
-            name: item.name,
-            value: item._id,
-            avatarUrl: `${DOMAIN}/public/employees/images/${item.pic}`,
-            avatarAlt: "./img/avatarfile.png",
-            designation: item.designation,
-            salary: item.salary,
-          };
+          return { id: item._id, name: item.name, value: item._id, avatarUrl: `${DOMAIN}/public/customers/images/${item.pic}`, avatarAlt: "./img/avatarfile.png" , salary: item.advance.toLocaleString('en-US', { style: 'currency' ,
+            currency: 'PKR' , minimumFractionDigits: 2, maximumFractionDigits: 2 }) };
         }
       ),
     grid: {
@@ -34,7 +24,19 @@ export const employeeSalaryInputFields = (
       lg: 12,
     },
   },
-
+  {
+    id: 2,
+    label: "Amount",
+    tabIndex: 1,
+    type: "number",
+    name: "amount",
+    grid: {
+      xs: 12,
+      sm: 6,
+      md: 6,
+      lg: 6,
+    },
+  },
   {
     id: 3,
     label: "Date",
@@ -49,42 +51,10 @@ export const employeeSalaryInputFields = (
   },
   {
     id: 4,
-    label: "Month of Salary",
-    type: "month",
-    name: "salaryOfMonth",
-    grid: {
-      xs: 12,
-      sm: 6,
-      md: 6,
-      lg: 6,
-    },
-  },
-  {
-    id: 5,
-    label: "Status",
-    type: "select",
-    tabIndex: 5,
-    disable: false,
-    name: "status",
-    size: "small",
-    minWidth: "100wh",
-    grid: {
-      xs: 12,
-      sm: 6,
-      md: 6,
-      lg: 6,
-    },
-    options: [
-      { id: 1, name: "Pending", value: "pending" },
-      { id: 2, name: "Paid", value: "paid" },
-    ],
-  },
-  {
-    id: 6,
     label:
       selectedRowId !== null && Object.keys(currentData).length !== 0
-        ? "Update Employee Salary"
-        : "ADD Employee Salary",
+        ? "Update Employee Payment"
+        : "ADD Employee Payemnt",
     type: "button",
     tabIndex: 6,
     btntype: "submit",
@@ -99,8 +69,8 @@ export const employeeSalaryInputFields = (
   },
 ];
 
-//SEARCH Supplier Payment Filters
-export const searchEmployeeSalaryFilters = (filter) => {
+//SEARCH Customer Payment Filters
+export const searchEmployeePaymentFilters = (filter) => {
   return [
     {
       id: 1,
@@ -143,9 +113,7 @@ export const searchEmployeeSalaryFilters = (filter) => {
 
       options: [
         { id: 1, name: "Name", value: "name" },
-        { id: 2, name: "Month", value: "salaryOfMonth" },
-        { id: 3, name: "Year", value: "salaryOfYear" },
-        { id: 4, name: "Date", value: "date" },
+        { id: 2, name: "Date", value: "date" },
       ],
     },
     {
@@ -169,8 +137,8 @@ export const searchEmployeeSalaryFilters = (filter) => {
   ];
 };
 
-
-export const searchEmployeeSalaryInput = (filter) => {
+//SEARCH CUSTOMERS INPUTS
+export const searchCustomerInput = (filter) => {
   return [
     filter.field !== "date" &&
       filter.field !== "contact" && {

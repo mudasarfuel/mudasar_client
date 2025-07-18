@@ -213,6 +213,13 @@ export const employeeSalarySlice = createSlice({
     //@used for     DELETE EMPLOYEE SALARY
     //@Data         Filtered data stored
     builder.addCase(deleteEmployeeSalary.fulfilled, (state, action) => {
+      //Check for errors
+      if(action.payload?.errors?.length > 0){
+        return {
+          ...state,
+          errors: action.payload.errors
+        }
+      }
       //Check for request success
       if (action.payload.success === true) {
         
