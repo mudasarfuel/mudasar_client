@@ -1,11 +1,11 @@
 import { Delete, Info } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
 //Export Employee Payment Columns
 export const employeeAdvanceColumns = (
   setOpenDeleteDialog,
-  setDetailsDialog,
+  setOpenDetailsDialog,
   setOpenFormDialog
 ) => [
   {
@@ -30,30 +30,49 @@ export const employeeAdvanceColumns = (
     },
   },
   {
-    field: "advanceDeducted",
-    headerName: "Total Adv Amount ",
-    width: 150,
+    field: "description",
+    headerName: "Description ",
+    width: 300,
     renderCell: (params) => {
-      return <div className="cellAction">Rs. {params.row.amount}</div>;
+      return (
+        <div className="cellAction">
+          {params.row.description?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
+        </div>
+      );
     },
   },
-  { field: "totAdvanceReturned", headerName: "Returned Advance", width: 150,  renderCell: (params) => {
-    return <div className="cellAction">Rs. {params.row.totAdvanceReturned}</div>;
-  }, },
-  { field: "remainingAdvance", headerName: "Rem: Advance", width: 150,  renderCell: (params) => {
-    return <div className="cellAction">Rs. {params.row.remainingAdvance}</div>;
-  }, },
-  { field: "grossSal", headerName: "Date", width: 110,  renderCell: (params) => {
-    return <div className="cellAction">{params.row.date}</div>;
-  }, },
-  { field: "status", headerName: "Status", width: 100,  renderCell: (params) => {
-    return (
-      <div style={{ background: params.row.status === "pending" ? "#ff0000" : "#06c90a", color: "white", width: 60, textAlign: "center", borderRadius: 4}}>
-        {params.row.status}
+  {
+    field: "amount",
+    headerName: "Amount",
+    width: 150,
+    renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.amount?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
         </div>
-    )
-  }, },
-  
+      );
+    },
+  },
+
+  {
+    field: "date",
+    headerName: "Date",
+    width: 150,
+    renderCell: (params) => {
+      return <div className="cellAction">{params.row.date}</div>;
+    },
+  },
+
   {
     field: "action",
     headerName: "Action",
@@ -61,22 +80,26 @@ export const employeeAdvanceColumns = (
     renderCell: (params) => {
       return (
         <div className="cellAction">
-          <IconButton
-            className="viewButton"
-            onClick={() => setDetailsDialog(true)}
-          >
-            <Info style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          <IconButton
-            className="viewButton"
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            <Delete style={{ fontSize: "20px" }} />
-          </IconButton>
+          <Tooltip title="Employee Advance Details">
+            <IconButton
+              className="viewButton"
+              onClick={() => setOpenDetailsDialog(true)}
+            >
+              <Info style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip>
+          {params.row.status === "open" && (
+            <Tooltip title="Delete Employee Advance">
+              <IconButton
+                className="viewButton"
+                onClick={() => setOpenDeleteDialog(true)}
+              >
+                <Delete style={{ fontSize: "20px" }} />
+              </IconButton>
+            </Tooltip>
+          )}
         </div>
       );
     },
   },
 ];
-

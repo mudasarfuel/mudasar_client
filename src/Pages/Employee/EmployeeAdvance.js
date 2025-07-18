@@ -1,6 +1,6 @@
 // import "./customer.scss";
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../../Components/Header/Header";
 import DataTable from "../../Components/datatable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,6 +39,8 @@ import { employeeAdvanceInputFields } from "../../Components/sources/employeeAdv
 import {
   addAdvanceInstallment,
   addEmployeeAdvance,
+  clearCurrentEmployeeAdvance,
+  deleteEmployeeAdvance,
   getEmployeeAdvances,
   getSingleEmployeeAdvance,
 } from "../../redux/employeeAdvanceSlice/employeeAdvanceSlice";
@@ -48,10 +50,14 @@ import {
   getAllEmployees,
 } from "../../redux/completeDataSlice/completeDataSlice";
 import AdvanceDetails from "./AdvanceDetails";
+import AuthContext from "../../context/auth/AuthContext";
 
 const EmployeeAdvance = () => {
   //Initializing dispatch function to call redux functions
   const dispatch = useDispatch();
+
+  //Use Auth Context get user
+  const { user } = useContext(AuthContext);
   //Initializing useSelector to get data from redux store
   const allActiveEmployees = useSelector(
     (state) => state.completeData.employees
@@ -68,7 +74,7 @@ const EmployeeAdvance = () => {
   const [openFormDialog, setOpenFormDialog] = useState(false);
 
   //Use State for handle Open and close of Details Dialog
-  const [openDetailsDialog, setDetailsDialog] = useState(false);
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   //Use State for Handle Open and close of dialog box
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   //Use State for selected row item id
@@ -90,8 +96,9 @@ const EmployeeAdvance = () => {
 
   //Setup state for values
   const [state, setState] = useState({
+    userId: user._id,
     employeeId: "",
-    advanceId: "",
+    description: "",
     amount: 0,
     date: "",
   });
@@ -164,7 +171,7 @@ const EmployeeAdvance = () => {
   //Handle Delete Tenant func
   const handleOnDelete = () => {
     //Calling delete function
-    dispatch(deleteSupplierPayment(selectedRowId));
+    dispatch(deleteEmployeeAdvance(selectedRowId));
     //after delete clear row id
     setSelectedRowId(null);
   };
@@ -173,7 +180,7 @@ const EmployeeAdvance = () => {
   const loadData = () => {
     const initialData = { page: 0, sort: -1 };
     //Call getSuppliers Payments using dispatch
-    dispatch(getSupplierPayments(initialData));
+    dispatch(getEmployeeAdvances(initialData));
   };
   //Handle On submit
   const handleOnSubmit = async (e) => {
@@ -198,7 +205,7 @@ const EmployeeAdvance = () => {
         toast("Please Select Date", { position: "top-right", type: "error" });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getSupplierPayments(newState));
+        dispatch(getEmployeeAdvances(newState));
         //After search results close the filters panel
         setOpenFiltersPanel(!openFiltersPanel);
         //Set Page to Zero
@@ -206,7 +213,7 @@ const EmployeeAdvance = () => {
       }
     } else if (field === "") {
       //Calling dispatch function to hit API Call
-      dispatch(getSupplierPayments(newState));
+      dispatch(getEmployeeAdvances(newState));
       //After search results close the filters panel
       setOpenFiltersPanel(!openFiltersPanel);
       //Set Page to Zero
@@ -225,7 +232,7 @@ const EmployeeAdvance = () => {
       } else {
         console.log("New State => ", newState);
         //Calling dispatch function to hit API Call
-        dispatch(getSupplierPayments(newState));
+        dispatch(getEmployeeAdvances(newState));
         //After search results close the filters panel
         setOpenFiltersPanel(!openFiltersPanel);
         //Set Page to Zero
@@ -243,8 +250,9 @@ const EmployeeAdvance = () => {
     setSelectedRowId(null);
     //Clear State and remove previous data
     setState({
+      userId: user._id,
       employeeId: "",
-      advanceId: "",
+      description: "",
       amount: 0,
       date: "",
     });
@@ -255,7 +263,7 @@ const EmployeeAdvance = () => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -307,22 +315,15 @@ const EmployeeAdvance = () => {
   }));
 
   //Destructure values from the state
-  const { employeeId, advanceId, amount, date } = state;
+  const { employeeId, amount, date } = state;
   //Handle on submit function
   const handleOnAddUpdateFormSubmit = async (e) => {
     e.preventDefault();
-    if (employeeId === "" && advanceId === "") {
-      if (employeeId === "") {
-        toast("Select employee first ", {
-          position: "top-right",
-          type: "error",
-        });
-      } else {
-        toast("Select advance first ", {
-          position: "top-right",
-          type: "error",
-        });
-      }
+    if (employeeId === "") {
+      toast("Select employee first ", {
+        position: "top-right",
+        type: "error",
+      });
     } else if (amount === "" || amount === 0) {
       toast("Please amount given as advance", {
         position: "top-right",
@@ -332,13 +333,9 @@ const EmployeeAdvance = () => {
       toast("Select date", { position: "top-right", type: "error" });
     } else {
       //Check for image uploaded
-      if (employeeId !== "") {
-        //Hit API Call using dispatch to add employee salar
-        dispatch(addEmployeeAdvance(state));
-      } else if (advanceId !== "") {
-        dispatch(addAdvanceInstallment(state));
-      }
-      // loadData()
+
+      //Hit API Call using dispatch to add employee salar
+      dispatch(addEmployeeAdvance(state));
     }
   };
 
@@ -357,17 +354,26 @@ const EmployeeAdvance = () => {
       {/* Main Card for setup tenants Table */}
       <Box className="mainCard">
         {/* Employee Advance Details Dialog box  */}
-        <AdvanceDetails
+        {Object.keys(currentData).length !== 0 && <DetailsDialog
           openDetailsDialog={openDetailsDialog}
-          heading={
-            Object.keys(currentData).length !== 0
-              ? `Advance Detail of ${currentData.employee.name}`
-              : "Advance Details"
-          }
-          inputs={Object.keys(currentData).length !== 0 && currentData}
-          icon={<Assessment style={{ marginRight: "10px" }} />}
-          handleOnCloseDetails={() => setDetailsDialog(false)}
-        />
+          heading={`${capitalizeEachWord(
+            currentData?.employeeName
+          )} Advance Details`}
+          inputs={currentData}
+          handleOnCloseDetails={() => {
+            setOpenDetailsDialog(false);
+            setSelectedRowId(null);
+            setState({
+              userId: user._id,
+              employeeId: "",
+              amount: "",
+              description: "",
+              date: "",
+            });
+            dispatch(clearCurrentEmployeeAdvance());
+          }}
+          icon={<AssignmentInd style={{ marginRight: "10px" }} />}
+        />}
         {/* Add OR Update Customer Dialog Box  */}
         {openFormDialog && (
           <FormDialog
@@ -390,7 +396,6 @@ const EmployeeAdvance = () => {
             icon={<SwitchAccount style={{ marginRight: "10px" }} />}
           />
         )}
-      
 
         {/* Delete Content Dialog box  */}
         <Dialogue
@@ -421,7 +426,7 @@ const EmployeeAdvance = () => {
         <DataTable
           columns={employeeAdvanceColumns(
             setOpenDeleteDialog,
-            setDetailsDialog,
+            setOpenDetailsDialog,
             setOpenFormDialog
           )}
           rows={capitalizedRows}

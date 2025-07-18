@@ -11,13 +11,9 @@ import { AssignmentInd, AttachMoney, SwitchAccount } from "@mui/icons-material";
 import Search from "../../Components/search/Search";
 import { toast } from "react-toastify";
 
-import {
-  searchCustomerInput,
-} from "../../Components/sources/customersFormSources";
+import { searchCustomerInput } from "../../Components/sources/customersFormSources";
 import DetailsDialog from "../../Components/dialogue/DetailsDialogue";
-import {
-  searchCustomerPaymentFilters,
-} from "../../Components/sources/customerPaymentsFormSources";
+import { searchCustomerPaymentFilters } from "../../Components/sources/customerPaymentsFormSources";
 import AuthContext from "../../context/auth/AuthContext";
 import { customerAdvanceInputFields } from "../../Components/sources/customerAdvancesFormSources";
 import { customerAdvanceColumns } from "../../Components/datatable/customerAdvanceTableSources";
@@ -30,7 +26,10 @@ import {
   getSingleCustomerAdvance,
   updateCustomerAdvance,
 } from "../../redux/customerAdvanceSlice/customerAdvanceSlice";
-import { clearAllActiveCustomers, getAllActiveCustomers } from "../../redux/completeDataSlice/completeDataSlice";
+import {
+  clearAllActiveCustomers,
+  getAllActiveCustomers,
+} from "../../redux/completeDataSlice/completeDataSlice";
 
 const CustomerAdvance = () => {
   //Initializing dispatch function to call redux functions
@@ -96,8 +95,6 @@ const CustomerAdvance = () => {
     // eslint-disable-next-line
   }, [selectedRowId]);
 
-
- 
   //Load Data into state for update Use Effect
   useEffect(() => {
     if (Object.keys(currentCustomer).length !== 0) {
@@ -125,13 +122,13 @@ const CustomerAdvance = () => {
 
     // Cleanup function to reset state when component unmounts
     return () => {
-      dispatch(clearAllActiveCustomers())
+      dispatch(clearAllActiveCustomers());
       dispatch(clearCustomerAdvance()); // Clear customer advances from state
     };
 
     // We deliberately omit filters.sort from dependencies to avoid infinite loops
     // eslint-disable-next-line react-hooks/exhaustive-deps
-     // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   //useEffect to handle the dates filter
@@ -220,7 +217,6 @@ const CustomerAdvance = () => {
           type: "error",
         });
       } else {
-       
         //Calling dispatch function to hit API Call
         dispatch(getCustomerAdvances(newState));
         //After search results close the filters panel
@@ -246,8 +242,8 @@ const CustomerAdvance = () => {
       date: "",
     });
 
-    dispatch(clearCurrentCustomerAdvance())
-     // eslint-disable-next-line
+    dispatch(clearCurrentCustomerAdvance());
+    // eslint-disable-next-line
   };
 
   //Handle on Page Change
@@ -313,8 +309,11 @@ const CustomerAdvance = () => {
     } else if (customerId === "") {
       toast("Select Customer", { position: "top-right", type: "error" });
     } else if (description === "") {
-      toast("Please enter description", { position: "top-right", type: "error" });
-    }  else if (amount === "") {
+      toast("Please enter description", {
+        position: "top-right",
+        type: "error",
+      });
+    } else if (amount === "") {
       toast("Please enter amount", { position: "top-right", type: "error" });
     } else if (date === "") {
       toast("Select date", { position: "top-right", type: "error" });
@@ -330,7 +329,7 @@ const CustomerAdvance = () => {
         //Hit API Call using dispatch to updated tenant
         dispatch(updateCustomerAdvance(data));
       } else {
-        console.log("Check state => ", state)
+        console.log("Check state => ", state);
         //Hit API Call using dispatch to add tenant
         dispatch(addCustomerAdvance(state));
       }
@@ -377,20 +376,22 @@ const CustomerAdvance = () => {
         {Object.keys(currentCustomer).length !== 0 && (
           <DetailsDialog
             openDetailsDialog={openDetailsDialog}
-            heading={`${capitalizeEachWord(currentCustomer?.customerName)} Advance Details`}
+            heading={`${capitalizeEachWord(
+              currentCustomer?.customerName
+            )} Advance Details`}
             inputs={currentCustomer}
-             handleOnCloseDetails={() => {
-                          setOpenDetailsDialog(false);
-                          setSelectedRowId(null);
-                          setState({
-                            userId: "",
-                            customerId: "",
-                            amount: "",
-                            description: "",
-                            date: "",
-                          });
-                          dispatch(clearCurrentCustomerAdvance());
-                        }}
+            handleOnCloseDetails={() => {
+              setOpenDetailsDialog(false);
+              setSelectedRowId(null);
+              setState({
+                userId: user._id,
+                customerId: "",
+                amount: "",
+                description: "",
+                date: "",
+              });
+              dispatch(clearCurrentCustomerAdvance());
+            }}
             icon={<AssignmentInd style={{ marginRight: "10px" }} />}
           />
         )}
