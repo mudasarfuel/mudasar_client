@@ -79,7 +79,7 @@ const DetailsDialog = ({
                           ? "employees"
                           : inputs.companyName
                           ? "suppliers"
-                          : inputs.newSellingPrice ? "products" : "customers"
+                          : inputs.newSellingPrice ? "products" : inputs.username ? "users": "customers"
                       }/images/${inputs.pic}`
                     : "./img/avatarfile.png"
                 }

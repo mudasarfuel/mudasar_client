@@ -15,7 +15,7 @@ import Tenants from "../../Pages/Admin/Accounts/Tenants/Tenants";
 import NewTenant from "../../Pages/Admin/Accounts/Tenants/NewTenant";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Users from "../../Pages/Admin/Accounts/Users/Users";
+import Users from "../../Pages/Users/Users";
 import Customer from "../../Pages/Customer/Customer";
 import Supplier from "../../Pages/Supplier/Supplier";
 import Employee from "../../Pages/Employee/Employee";
@@ -108,7 +108,7 @@ const AuthApp = ({ mode }) => {
               <Route exact path="/tenants/new" element={<NewTenant />} />
               <Route exact path="/tenants/update/:id" element={<NewTenant />} />
               {/* USERS ROUTES  */}
-              <Route exact path="/admin/users" element={<Users />} />
+              <Route exact path="/users" element={<Users />} />
               <Route exact path="/addShift" element={<AddShift />} />
               <Route exact path="/allclosings" element={<TotalSaleClosings />} />
 

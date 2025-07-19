@@ -104,7 +104,7 @@ export const useLocalHook = () => {
         { itemId: 24, label: "Readings", icon: <Speed className="icon" />, url: "/readings" },
         { itemId: 25, label: "Products", icon: <Widgets className="icon" />, url: "/products" },
         { itemId: 26, label: "Price Management", icon: <PriceChange className="icon" />, url: "/prices" },
-        { itemId: 27, label: "Users", icon: <People className="icon" />, url: "/admin/users" },
+        { itemId: 27, label: "Users", icon: <People className="icon" />, url: "/users" },
       ],
     },
     {
@@ -228,7 +228,7 @@ export const useLocalHook = () => {
         { itemId: 9, label: "Readings", icon: <Speed className="icon" />, url: "/readings" },
         { itemId: 10, label: "Products", icon: <Widgets className="icon" />, url: "/products" },
         { itemId: 11, label: "Price Management", icon: <PriceChange className="icon" />, url: "/prices" },
-        { itemId: 12, label: "Users", icon: <People className="icon" />, url: "/admin/users" },
+        { itemId: 12, label: "Users", icon: <People className="icon" />, url: "/users" },
       ],
     },
     {

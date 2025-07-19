@@ -14,15 +14,19 @@ export const userColumns = (setOpenFormDialog, setDetailsDialog, setOpenDeleteDi
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
-          <img src={
-              // console.log("Check for user iMage", params.row)
-              params.row.pic
+          {console.log(params.row.pic)}
+          <img
+            src={
+              params.row.pic 
                 ? `${DOMAIN}/public/users/images/${params.row.pic}`
-                : "avatarfile.png"
+                : "./img/avatarfile.png"
             }
             alt=""
-            className="cellImg"/>
-          {params.row.name}
+            className="cellImg"
+          />
+           {params.row.name.length > 30
+            ? params.row.name.substring(0, 30) + `....`
+            : params.row.name}
         </div>
       );
     },
@@ -34,9 +38,17 @@ export const userColumns = (setOpenFormDialog, setDetailsDialog, setOpenDeleteDi
     field: "status",
     headerName: "Status",
     width: 100,
-    renderCell: (params) => {
+     renderCell: (params) => {
       return (
-        <div className={`cellWithStatus ${params.row.status}`}>
+        <div
+          style={{
+            background: params.row.status.toLowerCase() === "active" ? "#02bf2e" : "#999",
+            color: "white",
+            width: 65,
+            textAlign: "center",
+            borderRadius: 4,
+          }}
+        >
           {params.row.status}
         </div>
       );
@@ -62,12 +74,12 @@ export const userColumns = (setOpenFormDialog, setDetailsDialog, setOpenDeleteDi
             <Info style={{ fontSize: "20px" }} />
           </IconButton>
 
-          <IconButton
+          {/* <IconButton
             className="viewButton"
             onClick={() => setOpenDeleteDialog(true)}
           >
             <Delete style={{ fontSize: "20px" }} />
-          </IconButton>
+          </IconButton> */}
         </div>
       );
     },

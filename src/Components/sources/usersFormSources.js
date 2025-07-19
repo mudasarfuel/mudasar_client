@@ -55,7 +55,7 @@ export const userInputFields =(selectedRowId, currentData) => [
       lg: 6,  
     },
     options: [
-      { id: 1, name: "Admin", value: "admin" },
+      { id: 1, name: "Admin", value: "web_admin" },
       { id: 2, name: "Cashier", value: "cashier" },
     ],
   },
