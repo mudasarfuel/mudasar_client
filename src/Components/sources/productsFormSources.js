@@ -142,7 +142,8 @@ export const searchProductFilters = (filter) => {
       options: [
         { id: 1, name: "Name", value: "name" },
         { id: 2, name: "type", value: "type" },
-        { id: 7, name: "Status", value: "status" },
+        { id: 3, name: "Status", value: "status" },
+        { id: 4, name: "Date", value: "date" },
       ]
     },
     {

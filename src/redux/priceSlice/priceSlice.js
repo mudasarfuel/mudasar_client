@@ -34,13 +34,14 @@ export const getPrices = createAsyncThunk("getPrices", async (initData) => {
 });
 
 //GET SINGLE PRODUCT AXIOS CALL USING ASYNC THUNK
-export const getSingleProduct = createAsyncThunk(
-  "getSingleProduct",
+export const getSinglePrice = createAsyncThunk(
+  "getSinglePrice",
   async (id) => {
     try {
+      console.log("Row id in price Slice => ", id)
       //Creating API Call using base url (/api/products/:id)
       return await axios
-        .get(`${ENDPOINTS.PRODUCT}/${id}`)
+        .get(`${ENDPOINTS.PRICE}/${id}`)
         .then((res) => res.data);
     } catch (error) {
       //In case of error
@@ -90,6 +91,10 @@ export const priceSlice = createSlice({
         errors: [],
       };
     },
+
+    clearCurrentPrice(state){
+      state.current = {}
+    }
   },
   extraReducers: (builder) => {
     //@CaseNo       01
@@ -122,13 +127,13 @@ export const priceSlice = createSlice({
     //@Loading      False
     //@used For     GET SINGLE PRODUCT
     //@Response     Date Stored in State current
-    builder.addCase(getSingleProduct.fulfilled, (state, action) => {
+    builder.addCase(getSinglePrice.fulfilled, (state, action) => {
       //Checking for success
       if (action.payload.success === true) {
         //Set state
         return {
           ...state,
-          current: action.payload.data[0],
+          current: action.payload.price[0],
         };
       }
     });
@@ -140,23 +145,33 @@ export const priceSlice = createSlice({
     //@used for     Add Price
     //@Response     Success Alert
     builder.addCase(addPrice.fulfilled, (state, action) => {
-      //Check for errors
+     // Handle errors
       if (action.payload?.errors?.length > 0) {
-        return {
-          ...state,
-          errors: action.payload.errors,
-        };
+        state.errors = action.payload.errors;
+        return;
       }
-      //Check for success status
+
+      // Handle success
       if (action.payload?.success === true) {
-        console.log(action.payload.product);
-        //toast
         toast(action.payload.msg, { position: "top-right", type: "success" });
-        return {
-          ...state,
-          errors: [],
+        
+        const price = {
+          ...action.payload.price[0],
+          id: action.payload.price[0]._id,
         };
+
+        // Maintain maximum 5 items in the list
+        if (state.data.length === 5) {
+          const poppedState = state.data.slice(0, 4);
+          state.data = [price, ...poppedState];
+        } else {
+          state.data = [price, ...state.data];
+        } 
+        
+        state.totalRecord = action.payload.totalRecord;
+        state.errors = [];
       }
+
     });
 
    
@@ -168,6 +183,10 @@ export const priceSlice = createSlice({
     //@used for     DELETE PRICE
     //@Data         Filtered data stored
     builder.addCase(deletePrice.fulfilled, (state, action) => {
+       if (action.payload?.errors?.length > 0) {
+        state.errors = action.payload.errors;
+        return;
+      }
       //Check for request success
       if (action.payload.success === true) {
         //Set Alert
@@ -183,5 +202,5 @@ export const priceSlice = createSlice({
 });
 
 //export
-export const { clearPrices } = priceSlice.actions;
+export const { clearPrices, clearCurrentPrice } = priceSlice.actions;
 export default priceSlice.reducer;

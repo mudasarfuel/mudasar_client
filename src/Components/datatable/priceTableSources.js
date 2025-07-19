@@ -1,10 +1,13 @@
-import { Delete, Edit, Info} from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { Delete, Edit, Info } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
-
 //Export Price Columns
-export const priceColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFormDialog) => [
+export const priceColumns = (
+  setOpenDeleteDialog,
+  setDetailsDialog,
+  setOpenFormDialog
+) => [
   // { field: "id", headerName: "ID", width: 70 },
   {
     field: "name",
@@ -27,44 +30,82 @@ export const priceColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFormD
       );
     },
   },
-  { field: "costPrice", headerName: "Cost Price", width: 120, renderCell: (params) => {
-    return (
-      <div>
-        {console.log(params.row.prices)}
-        Rs. {params.row.costPrice ? params.row.costPrice : ""}
-        </div>
-    )
-  } },
-  { field: "oldSellingPrice", headerName: "Old Selling Price", width: 140, renderCell: (params) => {
-    return (
-      <div>
-        Rs. {params.row.oldSellingPrice}
-        </div>
-    )
-  } },
-  { field: "newSellingPrice", headerName: "Selling Price", width: 120, renderCell: (params) => {
-    return (
-      <div>
-        Rs. {params.row.newSellingPrice}
-        </div>
-    )
-  } },
-  { field: "differenceValue", headerName: "Difference Amount", width: 170, renderCell: (params) => {
-    return (
-      <div>
-        Rs. {params.row.differenceValue}
-        </div>
-    )
-  } },
-  { field: "date", headerName: "Date", width: 120,
+  {
+    field: "costPrice",
+    headerName: "Cost Price",
+    width: 120,
     renderCell: (params) => {
       return (
         <div>
-        {params.row.date}
-          </div>
-      )
-    }
-   },
+          {params.row.costPrice?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
+        </div>
+      );
+    },
+  },
+  {
+    field: "oldSellingPrice",
+    headerName: "Old Selling Price",
+    width: 140,
+    renderCell: (params) => {
+      return (
+        <div>
+          {params.row.oldSellingPrice?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
+        </div>
+      );
+    },
+  },
+  {
+    field: "newSellingPrice",
+    headerName: "Selling Price",
+    width: 120,
+    renderCell: (params) => {
+      return (
+        <div>
+          {params.row.newSellingPrice?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
+        </div>
+      );
+    },
+  },
+  {
+    field: "differenceValue",
+    headerName: "Difference Amount",
+    width: 170,
+    renderCell: (params) => {
+      return (
+        <div>
+          {params.row.differenceValue?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
+        </div>
+      );
+    },
+  },
+  {
+    field: "date",
+    headerName: "Date",
+    width: 120,
+    renderCell: (params) => {
+      return <div>{params.row.date}</div>;
+    },
+  },
   {
     field: "action",
     headerName: "Action",
@@ -72,20 +113,27 @@ export const priceColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFormD
     renderCell: (params) => {
       return (
         <div className="cellAction">
+          <Tooltip title="Price Details">
+            <IconButton
+              className="viewButton"
+              onClick={() => setDetailsDialog(true)}
+            >
+              <Info style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip>
 
-          <IconButton className="viewButton" onClick={()=>setDetailsDialog(true)}>
-            <Info style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          <IconButton
-            className="viewButton"
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            <Delete style={{ fontSize: "20px" }} />
-          </IconButton>
+          {params.row?.status === "open" && (
+            <Tooltip title="Delete Price">
+              <IconButton
+                className="viewButton"
+                onClick={() => setOpenDeleteDialog(true)}
+              >
+                <Delete style={{ fontSize: "20px" }} />
+              </IconButton>
+            </Tooltip>
+          )}
         </div>
       );
     },
   },
 ];
-

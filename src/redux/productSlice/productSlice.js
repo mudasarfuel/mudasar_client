@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 //GET ALL PRODUCTS AXIOS CALL USING ASYNC THUNK
 export const getProducts = createAsyncThunk("getProducts", async (initData) => {
   try {
-    const { field, operator, sort, page, searchInput } = initData;
+    const { field, operator, startDate, endDate, sort, page, searchInput } = initData;
 
     //Creating API call using ENDPOINTS as Base URL (/api/products)
     console.log(
@@ -24,7 +24,7 @@ export const getProducts = createAsyncThunk("getProducts", async (initData) => {
     );
     return await axios
       .get(
-        `${ENDPOINTS.PRODUCT}?field=${field}&operator=${operator}&searchInput=${searchInput}&page=${page}&sort=${sort}`
+        `${ENDPOINTS.PRODUCT}?field=${field}&startDate=${startDate}&endDate=${endDate}&operator=${operator}&searchInput=${searchInput}&page=${page}&sort=${sort}`
       )
       .then((res) => res.data);
   } catch (error) {
@@ -107,6 +107,10 @@ export const productSlice = createSlice({
         errors: [],
       };
     },
+
+    clearCurrentProduct(state){
+      state.current = {}
+    }
   },
   extraReducers: (builder) => {
     //@CaseNo       01
@@ -158,29 +162,33 @@ export const productSlice = createSlice({
     //@used for     Add Product
     //@Response     Success Alert
     builder.addCase(addProduct.fulfilled, (state, action) => {
-      //Check for errors
+     // Handle errors
       if (action.payload?.errors?.length > 0) {
-        return {
-          ...state,
-          errors: action.payload.errors,
-        };
+        state.errors = action.payload.errors;
+        return;
       }
-      //Check for success status
+
+      // Handle success
       if (action.payload?.success === true) {
-        console.log(action.payload.product);
-        //toast
         toast(action.payload.msg, { position: "top-right", type: "success" });
-        //Modifying id
+        
         const product = {
           ...action.payload.product[0],
           id: action.payload.product[0]._id,
         };
-        return {
-          ...state,
-          data: [...state.data, product],
-          errors: [],
-        };
+
+        // Maintain maximum 5 items in the list
+        if (state.data.length === 5) {
+          const poppedState = state.data.slice(0, 4);
+          state.data = [product, ...poppedState];
+        } else {
+          state.data = [product, ...state.data];
+        } 
+        
+        state.totalRecord = action.payload.totalRecord;
+        state.errors = [];
       }
+
     });
 
     //@CaseNo       05
@@ -202,7 +210,7 @@ export const productSlice = createSlice({
        
         const updatedProduct = {...action.payload.updated[0], id: action.payload.updated[0]._id}
         //Show Alert
-        toast(action.payload.msg, {position: "top-right", type: "success"})
+        // toast(action.payload.msg, {position: "top-right", type: "success"})
         return {
           ...state,
           data: state.data.map(item => 
@@ -235,5 +243,5 @@ export const productSlice = createSlice({
 });
 
 //export
-export const { clearProducts } = productSlice.actions;
+export const { clearProducts, clearCurrentProduct } = productSlice.actions;
 export default productSlice.reducer;

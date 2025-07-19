@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 import { productColumns } from "../../Components/datatable/productTableSources";
 import {searchEmployeeInput } from "../../Components/sources/employeesFormSources";
 import { productInputFields, searchProductFilters } from "../../Components/sources/productsFormSources";
-import { addProduct, clearProducts, deleteProduct, getProducts, getSingleProduct, updateProduct } from "../../redux/productSlice/productSlice";
+import { addProduct, clearCurrentProduct, clearProducts, deleteProduct, getProducts, getSingleProduct, updateProduct } from "../../redux/productSlice/productSlice";
 import ProductDetails from "./ProductDetails";
 
 const Product = () => {
@@ -241,14 +241,17 @@ const handleOnSubmit = async (e) => {
     });
     //Clear File loaded in file state
     setFile("");
+
+    dispatch(clearCurrentProduct())
   };
 
+  console.log("Check current data => ", currentData)
   //Handle on Page Change
   const handleOnPageChange = (e) => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -259,7 +262,7 @@ const handleOnSubmit = async (e) => {
       page: e,
       searchInput: searchInput,
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-      endDate: endDate === "" && startDate !== "" ? endDate : endDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
 
     if (field === "date") {
@@ -373,10 +376,25 @@ const handleOnSubmit = async (e) => {
   const handleOnCloseDetails = () => {
 
     setDetailsDialog(false)
+     //Clear selected Row Id
+    setSelectedRowId(null);
+    //Clear State and remove previous data
+    setState({
+      name: "",
+      type: "",
+      costPrice: "",
+      sellingPrice: "",
+      date: "",
+      status: "",
+      pic: "",
+    });
+    //Clear File loaded in file state
+    setFile("");
+
+    dispatch(clearCurrentProduct())
   }
   
   //Check the state 
-  console.log("Check the State => ", state)
   return (
     <Box m="0px 20px 15px 20px">
       {/* Header for Products Page  */}

@@ -29,7 +29,7 @@ export const machineColumns = (
       return (
         <div
           style={{
-            background: params.row.status === "Active" ? "#02bf2e" : "#999",
+            background: params.row.status.toLowerCase() === "active" ? "#02bf2e" : "#999",
             color: "white",
             width: 65,
             textAlign: "center",

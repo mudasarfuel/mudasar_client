@@ -37,19 +37,22 @@ import {
 import { priceColumns } from "../../Components/datatable/priceTableSources";
 import {
   addPrice,
+  clearCurrentPrice,
   clearPrices,
   deletePrice,
   getPrices,
+  getSinglePrice,
 } from "../../redux/priceSlice/priceSlice";
+import { getAllProducts } from "../../redux/completeDataSlice/completeDataSlice";
 
 const Prices = () => {
   //Initializing dispatch function to call redux functions
   const dispatch = useDispatch();
   //Initializing useSelector to get data from redux store
-  const products = useSelector((state) => state.products.data);
+  const products = useSelector((state) => state.completeData.products);
   const prices = useSelector((state) => state.prices.data);
   //Initializing the current employee
-  const currentData = useSelector((state) => state.products.current);
+  const currentData = useSelector((state) => state.prices.current);
   //Initiaizing useSelector to get total records
   const totalRecords = useSelector((state) => state.prices.totalRecord);
   //Initializing UseSelector to get errors
@@ -64,6 +67,7 @@ const Prices = () => {
   const [selectedRowId, setSelectedRowId] = useState(null);
   //Use State for manage pages
   const [currentPage, setCurrentPage] = useState(0);
+ 
   //Setup use state for search filters
   const [filters, setFilter] = useState({
     field: "",
@@ -95,8 +99,10 @@ const Prices = () => {
       (selectedRowId !== undefined && openFormDialog === true) ||
       (selectedRowId !== undefined && openDetailsDialog === true)
     ) {
+
+     
       //Dispatch current product
-      dispatch(getSingleProduct(selectedRowId));
+      dispatch(getSinglePrice(selectedRowId));
     }
     // eslint-disable-next-line
   }, [selectedRowId]);
@@ -106,12 +112,12 @@ const Prices = () => {
     if (Object.keys(currentData).length !== 0) {
       // Set the state when current Product is updated
       setState({
-        name: currentData.name,
-        type: currentData.type,
-        costPrice: currentData.prices[0].costPrice,
-        sellingPrice: currentData.prices[0].newSellingPrice,
-        date: currentData.prices[0].date,
-        status: currentData.status,
+        name: currentData?.product?.name,
+        type: currentData?.product?.type,
+        costPrice: currentData.costPrice,
+        sellingPrice: currentData.newSellingPrice,
+        date: currentData.date,
+        status: currentData?.product?.status,
       });
     }
   }, [currentData]);
@@ -120,7 +126,7 @@ const Prices = () => {
   useEffect(() => {
     const initialData = { page: 0, sort: filters.sort };
     //Call getProducts using dispatch
-    dispatch(getProducts(initialData));
+    dispatch(getAllProducts());
     dispatch(getPrices(initialData));
 
     //Call clear products to clear products from state on unmount
@@ -231,6 +237,7 @@ const Prices = () => {
     setOpenFormDialog(false);
     //Clear selected Row Id
     setSelectedRowId(null);
+    setDetailsDialog(false)
     //Clear State and remove previous data
     setState({
       productId: "",
@@ -240,6 +247,9 @@ const Prices = () => {
     });
     //Clear File loaded in file state
     setFile("");
+
+    
+    dispatch(clearCurrentPrice())
   };
 
   //Handle on Page Change
@@ -258,7 +268,7 @@ const Prices = () => {
       page: e,
       searchInput: searchInput,
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-      endDate: endDate === "" && startDate !== "" ? endDate : endDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
 
     if (field === "date") {
@@ -325,27 +335,8 @@ const Prices = () => {
       dispatch(addPrice(state));
     }
   };
-  //Short Cut for add new customer
-  //   window.addEventListener("keydown", (event) => {
-  //     // event.ctrlKey.preventDefault()
-  //     if (event.ctrlKey && event.key === "a") {
-  //       event.preventDefault();
-  //       setOpenFormDialog(true);
-  //     } else if (event.key === "Delete") {
-  //       if (selectedRowId === null || selectedRowId === "") {
-  //         toast("Select Customer first", {
-  //           position: "top-right",
-  //           type: "error",
-  //         });
-  //       } else {
-  //         setOpenDeleteDialog(true);
-  //       }
-  //     }
-  //     // else if(event.ctrlKey && event.key === 'e'){
-  //     //   event.preventDefault()
-  //     //   dispatch(getSingleCustomer(selectedRowId))
-  //     // }
-  //   });
+ 
+
   return (
     <Box m="0px 20px 15px 20px">
       {/* Header for Products Page  */}
@@ -378,21 +369,22 @@ const Prices = () => {
           icon={<Widgets style={{ marginRight: "10px" }} />}
         />
         {/* Employee Details Dialog box  */}
-        <DetailsDialog
+       {Object.entries(currentData).length > 0 &&  <DetailsDialog
           openDetailsDialog={openDetailsDialog}
-          heading={"Kashif's Detail"}
-          inputs={Object.keys(currentData).length !== 0 && currentData}
+          heading={`${currentData?.product?.name}'s Detail`}
+          inputs={Object.keys(currentData).length !== 0 && (({ product, ...rest }) => rest)(currentData)}
           icon={<AssignmentInd style={{ marginRight: "10px" }} />}
-        />
+          handleOnCloseDetails={handleOnFormDialogClose}
+        />}
         {/* Delete Content Dialog box  */}
         <Dialogue
           openDeleteDialog={openDeleteDialog}
           setOpenDeleteDialog={setOpenDeleteDialog}
           handleOnDelete={handleOnDelete}
-          heading={"DELETE Product"}
+          heading={"REVISE PRICE BY DELETE"}
           color="#ff0000"
           icon={<DangerousIcon style={{ marginRight: "10px" }} />}
-          message={"Are sure you want to delete Product?."}
+          message={"Are sure you want to delete price entry it will revise prices?."}
         />
 
         {/* Here we calling Search component in which we 

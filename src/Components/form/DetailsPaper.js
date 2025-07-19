@@ -32,7 +32,7 @@ const DetailsPaper = ({ inputs }) => {
       {
         Object.entries(inputs).map(([key, value], i) => {
           return (
-            key !== "_id" && key !== "pic" && key !== "userId" && key !== "customerId" && key !== "supplierId" && key !== "createdOn" && key !== "customerName" && key !== "name" &&  key !== "employeeId" && key !== "employeeName" && <Grid item xs={12} sm={6} md={6} lg={6} key={i}>
+            key !== "_id" && key !== "pic" && key !== "userId" && key !== "customerId" && key !== "supplierId" && key !== "priceId" && key !== "productId" && key !== "createdOn" && key !== "customerName" && key !== "name" &&  key !== "employeeId" && key !== "employeeName" && <Grid item xs={12} sm={6} md={6} lg={6} key={i}>
               <Box style={{ display: "flex", gap: 10 }} >
 
                 <Typography>{capitalizeEachWord(key)}</Typography> :
@@ -43,7 +43,7 @@ const DetailsPaper = ({ inputs }) => {
                       currency: "PKR",
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    })}</Typography> : key === "email"? <Typography style={{fontWeight: "bold", color: "#2a4ea1"}}>{String(value)}</Typography>: key === "balance" ||  key === "payingAmount" || key === "remAmount" || key === "prevAmount" || key === "amount" || key === "advance" || key === "prevAdvance" || key === "remAdvance"  ? <Typography style={{fontWeight: "bold", color: "#2a4ea1"}}>{value?.toLocaleString("en-US", {
+                    })}</Typography> : key === "email"? <Typography style={{fontWeight: "bold", color: "#2a4ea1"}}>{String(value)}</Typography>: key === "balance" ||  key === "payingAmount" || key === "remAmount" || key === "prevAmount" || key === "amount" || key === "advance" || key === "prevAdvance" || key === "remAdvance" || key === "newSellingPrice" || key === "costPrice" || key === "oldSellingPrice" || key === "differenceValue" ? <Typography style={{fontWeight: "bold", color: "#2a4ea1"}}>{value?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "PKR",
                       minimumFractionDigits: 2,
