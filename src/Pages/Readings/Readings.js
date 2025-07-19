@@ -3,39 +3,30 @@ import React, { useEffect, useState } from "react";
 import Header from "../../Components/Header/Header";
 import DataTable from "../../Components/datatable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
-import { FileUpload } from "../../backend/uploadFile";
-import Dialogue from "../../Components/dialogue/Dialogue";
-import FormDialog from "../../Components/dialogue/FormDialogue";
-import DangerousIcon from "@mui/icons-material/Dangerous";
+
 import {
-  AssignmentInd,
-  LocalGasStation,
+  
   Speed,
-  SwitchAccount,
+
 } from "@mui/icons-material";
 import Search from "../../Components/search/Search";
 import { toast } from "react-toastify";
-import DetailsDialog from "../../Components/dialogue/DetailsDialogue";
-import { employeeColumns } from "../../Components/datatable/employeeTableSources";
-import { addEmployee, clearEmployees, deleteEmplyee, getEmployees, getSingleEmployee, updateEmployee } from "../../redux/employeeSlice/employeeSlice";
-import { employeeInputFields, searchEmployeeFilters, searchEmployeeInput } from "../../Components/sources/employeesFormSources";
-import { machineColumns } from "../../Components/datatable/machineTableSources";
+
 import { addMachine, clearMachines, deleteMachine, getMachines, getSingleMachine, updateMachine } from "../../redux/machineSlice/machineSlice";
 import { machineInputFields, searchMachineFilters } from "../../Components/sources/machinesFormSources";
 import { searchInput } from "../../Components/sources/formSources";
 import { readingColumns } from "../../Components/datatable/readingTableSources";
-import { deleteReading, getReadings } from "../../redux/readingSlice/readingSlice";
+import { clearReadings, deleteReading, getReadings } from "../../redux/readingSlice/readingSlice";
+import { searchReadingFilters } from "../../Components/sources/readingsFormSources";
 
 const Readings = () => {
   //Initializing dispatch function to call redux functions
   const dispatch = useDispatch();
-  //Initializing useSelector to get data from redux store
-  const machines = useSelector((state) => state.machines.data);
+ 
   const readings = useSelector((state) => state.readings.data);
-  //Initializing the current machine
-  const currentData = useSelector((state) => state.machines.current);
+ 
   //Initiaizing useSelector to get total records
-  const totalRecords = useSelector((state) => state.machines.totalRecord);
+  const totalRecords = useSelector((state) => state.readings.totalRecord);
   //Initializing UseSelector to get errors
   const submitErrors = useSelector((state) => state.readings.errors);
   //Use State for Handle Open and close of form dialog
@@ -56,52 +47,25 @@ const Readings = () => {
   });
   //Use State for search inputs
   const [search, setSearch] = useState({
-    searchInput: "",
+    startDate: "",
+    endDate: "",
+    searchInput: ""
   });
-  //Setup state for values
-  const [state, setState] = useState({
-    name: "",
-    type: "",
-    initialReading: "",
-    currentReading: "",
-    status: ""
-  });
+
   
   //Use State for manage filters panel
   const [openFiltersPanel, setOpenFiltersPanel] = useState(false);
   //Use Effect to get Single Customer API Hit
-  useEffect(() => {
-    if ((selectedRowId !== undefined && openFormDialog === true) || (selectedRowId !== undefined && openDetailsDialog === true) ) {
-      //Dispatch current supplier
-      dispatch(getSingleMachine(selectedRowId));
-    }
-    // eslint-disable-next-line
-  }, [selectedRowId]);
-
-  //Load Data into state for update Use Effect
-  useEffect(() => {
-    if (Object.keys(currentData).length !== 0) {
-      // Set the state when currentCustomer is updated
-      setState({
-        name: currentData.name,
-        type: currentData.type,
-        initialReading: currentData.initialReading,
-        currentReading: currentData.currentReading,
-        status: currentData.status,
-      });
-    }
-  }, [currentData]);
+ 
 
   //useEffect to dispatch all machines
   useEffect(() => {
     const initialData = { page: 0, sort: filters.sort };
-    //Call getMachines using dispatch
-    dispatch(getMachines(initialData));
     dispatch(getReadings(initialData));
 
     //Call clear machines to clear machines from state on unmount
     return () => {
-      dispatch(clearMachines());
+      dispatch(clearReadings());
     };
     //eslint-disable-next-line
   }, []);
@@ -125,24 +89,15 @@ useEffect(() => {
     submitErrors.forEach((item) => {
       toast(item.msg, { position: "top-right", type: "error" });
     });
-  } else {
-    handleOnFormDialogClose();
-  }
+  } 
 }, [submitErrors]);
 
-//Handle Delete Machine func
-const handleOnDelete = () => {
-  //Calling delete function
-  dispatch(deleteReading(selectedRowId));
-  //after delete clear row id
-  setSelectedRowId(null);
-};
 
 //Load The Data
 const loadData = () => {
   const initialData = { page: 0, sort: -1 };
-  //Call getMachines using dispatch
-  dispatch(getMachines(initialData));
+  //Call get Readings using dispatch
+  dispatch(getReadings(initialData));
 };
 //Handle On submit
 const handleOnSubmit = async (e) => {
@@ -166,7 +121,7 @@ const handleOnSubmit = async (e) => {
       toast("Please Select Date", { position: "top-right", type: "error" });
     } else {
       //Calling dispatch function to hit API Call
-      dispatch(getMachines(newState));
+      dispatch(getReadings(newState));
       //After search results close the filters panel
       setOpenFiltersPanel(!openFiltersPanel);
       //Set Page to Zero
@@ -174,7 +129,7 @@ const handleOnSubmit = async (e) => {
     }
   } else if (field === "") {
     //Calling dispatch function to hit API Call
-    dispatch(getMachines(newState));
+    dispatch(getReadings(newState));
     //After search results close the filters panel
     setOpenFiltersPanel(!openFiltersPanel);
     //Set Page to Zero
@@ -192,7 +147,7 @@ const handleOnSubmit = async (e) => {
       });
     } else {
       //Calling dispatch function to hit API Call
-      dispatch(getMachines(newState));
+      dispatch(getReadings(newState));
       //After search results close the filters panel
       setOpenFiltersPanel(!openFiltersPanel);
       //Set Page to Zero
@@ -201,28 +156,14 @@ const handleOnSubmit = async (e) => {
   }
 };
 
-  //Handle On Form Dialog Close
-  const handleOnFormDialogClose = () => {
-    //Close Form Dialog
-    setOpenFormDialog(false);
-    //Clear selected Row Id
-    setSelectedRowId(null);
-    //Clear State and remove previous data
-    setState({
-      name: "",
-      type: "",
-      initialReading: "",
-      currentReading: "",
-      status: ""
-    });
-  };
+ 
 
   //Handle on Page Change
   const handleOnPageChange = (e) => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -233,7 +174,7 @@ const handleOnSubmit = async (e) => {
       page: e,
       searchInput: searchInput,
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-      endDate: endDate === "" && startDate !== "" ? endDate : endDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
 
     if (field === "date") {
@@ -241,10 +182,10 @@ const handleOnSubmit = async (e) => {
         toast("Please Select Date", { position: "top-right", type: "error" });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getMachines(newState));
+        dispatch(getReadings(newState));
       }
     } else if (field === "") {
-      dispatch(getMachines(newState));
+      dispatch(getReadings(newState));
     } else {
       if (field !== "" && searchInput === "") {
         toast("Please Enter to search..", {
@@ -253,7 +194,7 @@ const handleOnSubmit = async (e) => {
         });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getMachines(newState));
+        dispatch(getReadings(newState));
       }
     }
   };
@@ -272,58 +213,9 @@ const handleOnSubmit = async (e) => {
     name: row.machine.name && capitalizeEachWord(row.machine.name),
     type: row.machine.type && capitalizeEachWord(row.machine.type)
   }));
-  //Destructure values from the state
-  const { name,  type, initialReading, currentReading, status} = state;
-  //Handle on submit function
-  const handleOnAddUpdateFormSubmit = async (e) => {
-    e.preventDefault();
-    if (name === "") {
-      toast("Enter machine name", { position: "top-right", type: "error" });  
-    } else if (type === "") {
-      toast("Select fuel type", { position: "top-right", type: "error" });
-    } else if (initialReading === "") {
-      toast("Enter initial reading", { position: "top-right", type: "error" });
-    } else if (currentReading === "") {
-      toast("Enter current reading", { position: "top-right", type: "error" });
-    } else if (status === "") {
-      toast("Please select status", { position: "top-right", type: "error" });
-    } else {    
-        
-        if (selectedRowId !== null) {
-          const data = {
-            id: selectedRowId[0],
-            Data: state,
-          };
-          //Hit API Call using dispatch to updated machine
-          dispatch(updateMachine(data));
-        } else {
-          //Hit API Call using dispatch to add Machine
-          dispatch(addMachine(state));
-        }
-      
-    }
-  };
-//Short Cut for add new customer
-//   window.addEventListener("keydown", (event) => {
-//     // event.ctrlKey.preventDefault()
-//     if (event.ctrlKey && event.key === "a") {
-//       event.preventDefault();
-//       setOpenFormDialog(true);
-//     } else if (event.key === "Delete") {
-//       if (selectedRowId === null || selectedRowId === "") {
-//         toast("Select Customer first", {
-//           position: "top-right",
-//           type: "error",
-//         });
-//       } else {
-//         setOpenDeleteDialog(true);
-//       }
-//     }
-//     // else if(event.ctrlKey && event.key === 'e'){
-//     //   event.preventDefault()
-//     //   dispatch(getSingleCustomer(selectedRowId))
-//     // }
-//   });
+ 
+ 
+
   return (
     <Box m="0px 20px 15px 20px">
       {/* Header for Employee Page  */}
@@ -331,50 +223,13 @@ const handleOnSubmit = async (e) => {
         icon={<Speed style={{ marginRight: "10px" }} />}
         title="Machine Readings"
         subTitle="Manage Application Machines Readings"
-        addBtnTitle="Add Machine"
-        dialog={openFormDialog}
-        setDialog={setOpenFormDialog}
+        
       />
       {/* Main Card for setup employees Table */}
       <Box className="mainCard">
-        {/* Add OR Update Employee Dialog Box  */}
-        <FormDialog
-          openFormDialog={openFormDialog}
-          setOpenFormDialog={setOpenFormDialog}
-          heading={
-            selectedRowId !== null && Object.keys(currentData).length !== 0
-              ? "UPDATE MACHINE"
-              : "ADD MACHINE"
-          }
-          color="#999999"
-          state={state}
-          Id={selectedRowId}
-          setState={setState}
-          handleOnClose={handleOnFormDialogClose}
-          handleOnSubmit={handleOnAddUpdateFormSubmit}
-          inputs={machineInputFields(selectedRowId, currentData)}
-          icon={<SwitchAccount style={{ marginRight: "10px" }} />}
-        />
-        {/* Employee Details Dialog box  */}
-        <DetailsDialog
-          openDetailsDialog={openDetailsDialog}
-          heading={"Kashif's Detail"}
-          inputs={Object.keys(currentData).length !== 0 && currentData}
-          icon={<AssignmentInd style={{ marginRight: "10px" }} />}
-        />
-        {/* Delete Content Dialog box  */}
-        <Dialogue
-          openDeleteDialog={openDeleteDialog}
-          setOpenDeleteDialog={setOpenDeleteDialog}
-          handleOnDelete={handleOnDelete}
-          heading={"DELETE READING"}
-          color="#ff0000"
-          icon={<DangerousIcon style={{ marginRight: "10px" }} />}
-          message={
-            "Are sure you want to delete Machine Reading?."
-          }
-        />
-
+      
+        
+      
         {/* Here we calling Search component in which we 
         are passing Filters state and Input Values state  */}
         <Search
@@ -386,7 +241,7 @@ const handleOnSubmit = async (e) => {
           openFiltersPanel={openFiltersPanel}
           setOpenFiltersPanel={setOpenFiltersPanel}
           loadDataFunc={loadData}
-          searchFiltersForm={searchMachineFilters}
+          searchFiltersForm={searchReadingFilters}
           searchInputForm={searchInput}
         />
         {/* DataTable for Employees  */}

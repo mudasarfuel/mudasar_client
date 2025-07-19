@@ -5,14 +5,14 @@ import { ENDPOINTS } from "../../backend/API";
 //GET ALL READINGS AXIOS CALL USING ASYNC THUNK
 export const getReadings = createAsyncThunk("getReadings", async (initData) => {
     try {
-      const { field, operator, sort, page, searchInput } =
+      const { field, operator, startDate, endDate, sort, page, searchInput } =
         initData;
        
       //Creating API call using ENDPOINTS as Base URL (/api/readings)
-      console.log("Field => ", field, "Operator =>", operator, "sort => ", sort, "Page =>", page, "Search Input =>", searchInput)
+      console.log("Field => ", field, "Operator =>", operator,  "Start Date =>", startDate, "endDate => ", endDate, " sort => ", sort, "Page =>", page, "Search Input =>", searchInput)
       return await axios
         .get(
-          `${ENDPOINTS.READING}?field=${field}&operator=${operator}&searchInput=${searchInput}&page=${page}&sort=${sort}`
+          `${ENDPOINTS.READING}?field=${field}&startDate=${startDate}&endDate=${endDate}&operator=${operator}&searchInput=${searchInput}&page=${page}&sort=${sort}`
         )
         .then((res) => res.data);
     } catch (error) {

@@ -19,7 +19,7 @@ import { employeeColumns } from "../../Components/datatable/employeeTableSources
 import { addEmployee, clearEmployees, deleteEmplyee, getEmployees, getSingleEmployee, updateEmployee } from "../../redux/employeeSlice/employeeSlice";
 import { employeeInputFields, searchEmployeeFilters, searchEmployeeInput } from "../../Components/sources/employeesFormSources";
 import { machineColumns } from "../../Components/datatable/machineTableSources";
-import { addMachine, clearMachines, deleteMachine, getMachines, getSingleMachine, updateMachine } from "../../redux/machineSlice/machineSlice";
+import { addMachine, clearCurrentMachine, clearMachines, deleteMachine, getMachines, getSingleMachine, updateMachine } from "../../redux/machineSlice/machineSlice";
 import { machineInputFields, searchMachineFilters } from "../../Components/sources/machinesFormSources";
 import { searchInput } from "../../Components/sources/formSources";
 
@@ -81,8 +81,8 @@ const Machine = () => {
       setState({
         name: currentData.name,
         type: currentData.type,
-        initialReading: currentData.initialReading,
-        currentReading: currentData.currentReading,
+        initialReading: currentData.prevReading,
+        currentReading: currentData.newReading,
         status: currentData.status,
       });
     }
@@ -210,6 +210,8 @@ const handleOnSubmit = async (e) => {
       currentReading: "",
       status: ""
     });
+
+    dispatch(clearCurrentMachine())
   };
 
   //Handle on Page Change
@@ -217,7 +219,7 @@ const handleOnSubmit = async (e) => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -299,27 +301,6 @@ const handleOnSubmit = async (e) => {
       
     }
   };
-//Short Cut for add new customer
-//   window.addEventListener("keydown", (event) => {
-//     // event.ctrlKey.preventDefault()
-//     if (event.ctrlKey && event.key === "a") {
-//       event.preventDefault();
-//       setOpenFormDialog(true);
-//     } else if (event.key === "Delete") {
-//       if (selectedRowId === null || selectedRowId === "") {
-//         toast("Select Customer first", {
-//           position: "top-right",
-//           type: "error",
-//         });
-//       } else {
-//         setOpenDeleteDialog(true);
-//       }
-//     }
-//     // else if(event.ctrlKey && event.key === 'e'){
-//     //   event.preventDefault()
-//     //   dispatch(getSingleCustomer(selectedRowId))
-//     // }
-//   });
   return (
     <Box m="0px 20px 15px 20px">
       {/* Header for Employee Page  */}
@@ -351,13 +332,7 @@ const handleOnSubmit = async (e) => {
           inputs={machineInputFields(selectedRowId, currentData)}
           icon={<SwitchAccount style={{ marginRight: "10px" }} />}
         />
-        {/* Employee Details Dialog box  */}
-        <DetailsDialog
-          openDetailsDialog={openDetailsDialog}
-          heading={"Kashif's Detail"}
-          inputs={Object.keys(currentData).length !== 0 && currentData}
-          icon={<AssignmentInd style={{ marginRight: "10px" }} />}
-        />
+       
         {/* Delete Content Dialog box  */}
         <Dialogue
           openDeleteDialog={openDeleteDialog}

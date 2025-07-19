@@ -90,6 +90,11 @@ export const machineSlice = createSlice({
                 totalRecord: 0,
                 errors: []
             }
+        },
+
+        //Clear current machine 
+        clearCurrentMachine(state){
+          state.current = {}
         }
     },
     extraReducers: (builder)=>{
@@ -140,25 +145,47 @@ export const machineSlice = createSlice({
       //@used for     Add Machine
       //@Response     Success Alert
       builder.addCase(addMachine.fulfilled, (state, action) => {
-        //Check for errors
-        if(action.payload?.errors?.length > 0){
+       //Check for errors
+      if (action.payload?.errors?.length > 0) {
+        return {
+          ...state,
+          errors: action.payload.errors,
+        };
+      }
+      //Check for success status
+      if (action.payload?.success === true) {
+        //toast
+        toast(action.payload.msg, { position: "top-right", type: "success" });
+
+        console.log("TOtal record => ", action.payload.totalRecord)
+        //Modifying id
+        const machine = {
+          ...action.payload.machine,
+          id: action.payload.machine._id,
+        };
+
+        //If items are 5 then remove one item from screen and add ne item
+        if (state.data.length === 5) {
+          let popedState = []; // Creating empty array
+          //Inserting all items except last one
+          state.data.forEach(
+            (item, index) => index < 4 && popedState.push(item)
+          );
           return {
             ...state,
-            errors: action.payload.errors
-          }
-        }
-        //Check for success status
-        if(action.payload?.success === true){
-          //toast
-          toast(action.payload.msg, {position: "top-right", type: "success"})
-          //Modifying id
-          const machine = {...action.payload.machine, id: action.payload.machine._id}
+            data: [machine, ...popedState],
+            totalRecord: action.payload.totalRecord,
+            errors: [],
+          };
+        } else {
           return {
             ...state,
-            data: [...state.data, machine],
-            errors: []
-          }
+            data: [machine, ...state.data],
+            totalRecord: action.payload.totalRecord,
+            errors: [],
+          };
         }
+      }
       })
   
       //@CaseNo       05
@@ -214,5 +241,5 @@ export const machineSlice = createSlice({
 })
 
 //export 
-export const {clearMachines} = machineSlice.actions
+export const {clearMachines, clearCurrentMachine} = machineSlice.actions
 export default machineSlice.reducer

@@ -1,33 +1,41 @@
-import { Delete, Edit, Info} from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { Delete, Edit, Info } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 
 // SAMPLE DATA FOR USERS
 //Export Machine Columns
-export const machineColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFormDialog) => [
+export const machineColumns = (
+  setOpenDeleteDialog,
+  setDetailsDialog,
+  setOpenFormDialog
+) => [
   // { field: "id", headerName: "ID", width: 70 },
   {
     field: "name",
     headerName: "Name",
     width: 230,
     renderCell: (params) => {
-      return (
-        <div className="cellWithImg">
-          {params.row.name}
-        </div>
-      );
+      return <div className="cellWithImg">{params.row.name}</div>;
     },
   },
   // { field: "email", headerName: "Email", width: 230 },
   { field: "type", headerName: "Fuel Type", width: 150 },
-  { field: "initialReading", headerName: "Initial Reading", width: 150 },
-  { field: "currentReading", headerName: "Current Reading", width: 150 },
+  { field: "prevReading", headerName: "Previous Reading", width: 150 },
+  { field: "newReading", headerName: "Current Reading", width: 150 },
   {
     field: "status",
     headerName: "Status",
     width: 100,
     renderCell: (params) => {
       return (
-        <div className={`cellWithStatus ${params.row.status}`}>
+        <div
+          style={{
+            background: params.row.status === "Active" ? "#02bf2e" : "#999",
+            color: "white",
+            width: 65,
+            textAlign: "center",
+            borderRadius: 4,
+          }}
+        >
           {params.row.status}
         </div>
       );
@@ -40,28 +48,28 @@ export const machineColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFor
     renderCell: (params) => {
       return (
         <div className="cellAction">
-          <IconButton
-            className="viewButton"
-            onClick={() => {
-              setOpenFormDialog(true)
-            }}
-          >
-            <Edit style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          <IconButton className="viewButton" onClick={()=>setDetailsDialog(true)}>
-            <Info style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          <IconButton
-            className="viewButton"
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            <Delete style={{ fontSize: "20px" }} />
-          </IconButton>
+          <Tooltip title="Edit Machine">
+            <IconButton
+              className="viewButton"
+              onClick={() => {
+                setOpenFormDialog(true);
+              }}
+            >
+              <Edit style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip>
+          {params.row.lockStatus === "open" && (
+            <Tooltip title="Delete Machine">
+              <IconButton
+                className="viewButton"
+                onClick={() => setOpenDeleteDialog(true)}
+              >
+                <Delete style={{ fontSize: "20px" }} />
+              </IconButton>
+            </Tooltip>
+          )}
         </div>
       );
     },
   },
 ];
-

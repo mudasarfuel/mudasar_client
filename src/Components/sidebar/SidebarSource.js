@@ -114,7 +114,8 @@ export const useLocalHook = () => {
       setList: "TOGGLE_STOCK",
       nested: [
         { itemId: 28, label: "Get Report", icon: <Receipt className="icon" />, url: "/reports" },
-        { itemId: 29, label: "Expenses", icon: <Assessment className="icon" />, url: "/expenses" },
+        { itemId: 29, label: "Customer Report", icon: <Receipt className="icon" />, url: "/reports" },
+        { itemId: 30, label: "Expenses", icon: <Assessment className="icon" />, url: "/expenses" },
       ],
     },
     {
@@ -123,10 +124,10 @@ export const useLocalHook = () => {
       icon: <Opacity className="icon" />,
       setList: "TOGGLE_STOCK",
       nested: [
-        { itemId: 30, label: "Stock List", icon: <Opacity className="icon" />, url: "/stocks" },
-        { itemId: 31, label: "Purchase Stock", icon: <Store className="icon" />, url: "/purchases" },
-        { itemId: 32, label: "Dip Records", icon: <Assessment className="icon" />, url: "/dips" },
-        { itemId: 33, label: "Stock Wastage", icon: <FormatColorReset className="icon" />, url: "/wastages" },
+        { itemId: 31, label: "Stock List", icon: <Opacity className="icon" />, url: "/stocks" },
+        { itemId: 32, label: "Purchase Stock", icon: <Store className="icon" />, url: "/purchases" },
+        { itemId: 33, label: "Dip Records", icon: <Assessment className="icon" />, url: "/dips" },
+        { itemId: 34, label: "Stock Wastage", icon: <FormatColorReset className="icon" />, url: "/wastages" },
       ],
     },
     {
