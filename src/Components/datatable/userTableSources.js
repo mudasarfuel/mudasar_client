@@ -1,11 +1,15 @@
 import { Link } from "react-router-dom";
 import { Delete, Edit, Info, Style } from "@mui/icons-material";
-import { IconButton, Chip } from "@mui/material";
+import { IconButton, Chip, Tooltip } from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
 // SAMPLE DATA FOR USERS
 //Export User Columns
-export const userColumns = (setOpenFormDialog, setDetailsDialog, setOpenDeleteDialog ) => [
+export const userColumns = (
+  setOpenFormDialog,
+  setDetailsDialog,
+  setOpenDeleteDialog
+) => [
   // { field: "id", headerName: "ID", width: 70 },
   {
     field: "user",
@@ -17,14 +21,14 @@ export const userColumns = (setOpenFormDialog, setDetailsDialog, setOpenDeleteDi
           {console.log(params.row.pic)}
           <img
             src={
-              params.row.pic 
+              params.row.pic
                 ? `${DOMAIN}/public/users/images/${params.row.pic}`
                 : "./img/avatarfile.png"
             }
             alt=""
             className="cellImg"
           />
-           {params.row.name.length > 30
+          {params.row.name.length > 30
             ? params.row.name.substring(0, 30) + `....`
             : params.row.name}
         </div>
@@ -38,11 +42,12 @@ export const userColumns = (setOpenFormDialog, setDetailsDialog, setOpenDeleteDi
     field: "status",
     headerName: "Status",
     width: 100,
-     renderCell: (params) => {
+    renderCell: (params) => {
       return (
         <div
           style={{
-            background: params.row.status.toLowerCase() === "active" ? "#02bf2e" : "#999",
+            background:
+              params.row.status.toLowerCase() === "active" ? "#02bf2e" : "#999",
             color: "white",
             width: 65,
             textAlign: "center",
@@ -61,18 +66,25 @@ export const userColumns = (setOpenFormDialog, setDetailsDialog, setOpenDeleteDi
     renderCell: (params) => {
       return (
         <div className="cellAction">
-          <IconButton
-            className="viewButton"
-            onClick={() => {
-              setOpenFormDialog(true)
-            }}
-          >
-            <Edit style={{ fontSize: "20px" }} />
-          </IconButton>
+          <Tooltip title="Edit User">
+            <IconButton
+              className="viewButton"
+              onClick={() => {
+                setOpenFormDialog(true);
+              }}
+            >
+              <Edit style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip>
 
-          <IconButton className="viewButton" onClick={()=>setDetailsDialog(true)}>
-            <Info style={{ fontSize: "20px" }} />
-          </IconButton>
+          <Tooltip title="User Details">
+            <IconButton
+              className="viewButton"
+              onClick={() => setDetailsDialog(true)}
+            >
+              <Info style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip>
 
           {/* <IconButton
             className="viewButton"

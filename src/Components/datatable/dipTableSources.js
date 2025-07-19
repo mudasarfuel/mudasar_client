@@ -1,10 +1,13 @@
-import { Delete, Edit, Info} from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { Delete, Edit, Info } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
-
 //Export dips Columns
-export const dipColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFormDialog) => [
+export const dipColumns = (
+  setOpenDeleteDialog,
+  setDetailsDialog,
+  setOpenFormDialog
+) => [
   // { field: "id", headerName: "ID", width: 70 },
   {
     field: "name",
@@ -33,7 +36,7 @@ export const dipColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFormDia
   { field: "stock", headerName: "Stock", width: 150 },
   { field: "dipDiff", headerName: "Dip Diff:", width: 100 },
   { field: "stockDiff", headerName: "Stock Diff:", width: 100 },
-  { field: "date", headerName: "Date", width: 130},
+  { field: "date", headerName: "Date", width: 130 },
   {
     field: "action",
     headerName: "Action",
@@ -53,16 +56,18 @@ export const dipColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFormDia
           {/* <IconButton className="viewButton" onClick={()=>setDetailsDialog(true)}>
             <Info style={{ fontSize: "20px" }} />
           </IconButton> */}
-
-          <IconButton
-            className="viewButton"
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            <Delete style={{ fontSize: "20px" }} />
-          </IconButton>
+          {params.row.status === "open" && (
+            <Tooltip title="Delete Dip Reading">
+              <IconButton
+                className="viewButton"
+                onClick={() => setOpenDeleteDialog(true)}
+              >
+                <Delete style={{ fontSize: "20px" }} />
+              </IconButton>
+            </Tooltip>
+          )}
         </div>
       );
     },
   },
 ];
-

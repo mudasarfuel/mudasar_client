@@ -158,23 +158,31 @@ export const dipSlice = createSlice({
     //@used for     Add Dip
     //@Response     Success Alert
     builder.addCase(addDip.fulfilled, (state, action) => {
-      //Check for errors
+     // Handle errors
       if (action.payload?.errors?.length > 0) {
-        return {
-          ...state,
-          errors: action.payload.errors,
-        };
+        state.errors = action.payload.errors;
+        return;
       }
-      //Check for success status
+
+      // Handle success
       if (action.payload?.success === true) {
-        console.log(action.payload.product);
-        //toast
         toast(action.payload.msg, { position: "top-right", type: "success" });
-       
-        return {
-          ...state,
-          errors: [],
+        
+        const dip = {
+          ...action.payload.dip,
+          id: action.payload.dip._id,
         };
+
+        // Maintain maximum 5 items in the list
+        if (state.data.length === 5) {
+          const poppedState = state.data.slice(0, 4);
+          state.data = [dip, ...poppedState];
+        } else {
+          state.data = [dip, ...state.data];
+        } 
+        
+        state.totalRecord = action.payload.totalRecord;
+        state.errors = [];
       }
     });
 

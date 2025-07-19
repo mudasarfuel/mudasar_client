@@ -28,12 +28,9 @@ import {
 } from "../../Components/sources/employeesFormSources";
 import { productInputFields } from "../../Components/sources/productsFormSources";
 import {
-  addProduct,
-  clearProducts,
-  deleteProduct,
+
   getProducts,
-  getSingleProduct,
-  updateProduct,
+
 } from "../../redux/productSlice/productSlice";
 import { purchaseColumns } from "../../Components/datatable/purchaseTableSources";
 import {
@@ -46,14 +43,16 @@ import {
 } from "../../redux/purchaseStockSlice/purchaseStockSlice";
 import { purchaseInputFields, searchPurchaseFilters } from "../../Components/sources/purchasesFormSources";
 import { getSuppliers } from "../../redux/supplierSlice/supplierSlice";
+import { cleardata, getAllActiveSuppliers, getAllProducts } from "../../redux/completeDataSlice/completeDataSlice";
 
 const Purchase = () => {
   //Initializing dispatch function to call redux functions
   const dispatch = useDispatch();
   //Initializing useSelector to get data from redux store
-  const products = useSelector((state) => state.products.data);
+  const products = useSelector((state) => state.completeData.products);
+  console.log(products)
   const purchases = useSelector((state) => state.purchases.data);
-  const suppliers = useSelector((state) => state.suppliers.data);
+  const suppliers = useSelector((state) => state.completeData.suppliers);
   //Initializing the current employee
   const currentData = useSelector((state) => state.purchases.current);
   //Initiaizing useSelector to get total records
@@ -131,13 +130,14 @@ const Purchase = () => {
   useEffect(() => {
     const initialData = { page: 0, sort: filters.sort };
     //Call getProducts using dispatch
-    dispatch(getProducts(initialData));
+    dispatch(getAllProducts());
     dispatch(getPurchases(initialData));
-    dispatch(getSuppliers(initialData));
+    dispatch(getAllActiveSuppliers());
 
     //Call clear products to clear products from state on unmount
     return () => {
       dispatch(clearPurchases());
+      dispatch(cleardata())
     };
     //eslint-disable-next-line
   }, []);
@@ -273,7 +273,7 @@ const Purchase = () => {
       page: e,
       searchInput: searchInput,
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-      endDate: endDate === "" && startDate !== "" ? endDate : endDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
 
     if (field === "date") {
@@ -361,7 +361,6 @@ const Purchase = () => {
       } else {
         //Hit API Call using dispatch to add purchase
         dispatch(addPurchase(state));
-        loadData()
       }
     }
   };

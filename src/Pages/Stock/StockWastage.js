@@ -19,12 +19,13 @@ import {  getProducts, getSingleProduct } from "../../redux/productSlice/product
 import { wastageColumns } from "../../Components/datatable/wastageTableSources";
 import { addWastage, clearWastages, deleteWastage, getSingleWastage, getWastages, updateWastage } from "../../redux/wastageSlice/wastageSlice";
 import { searchWastageFilters, wastageInputFields } from "../../Components/sources/wastagesFormSources";
+import { cleardata, getAllProducts } from "../../redux/completeDataSlice/completeDataSlice";
 
 const StockWastage = () => {
   //Initializing dispatch function to call redux functions
   const dispatch = useDispatch();
   //Initializing useSelector to get data from redux store
-  const products = useSelector((state) => state.products.data);
+  const products = useSelector((state) => state.completeData.products);
   const wastages = useSelector((state) => state.wastages.data);
   //Initializing the current employee
   const currentData = useSelector((state) => state.wastages.current);
@@ -88,12 +89,13 @@ const StockWastage = () => {
   useEffect(() => {
     const initialData = { page: 0, sort: filters.sort };
     //Call getProducts using dispatch
-    dispatch(getProducts(initialData));
+    dispatch(getAllProducts());
     dispatch(getWastages(initialData));
 
     //Call clear products to clear products from state on unmount
     return () => {
       dispatch(clearWastages());
+      dispatch(cleardata())
     };
     //eslint-disable-next-line
   }, []);
@@ -212,7 +214,7 @@ const handleOnSubmit = async (e) => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -223,7 +225,7 @@ const handleOnSubmit = async (e) => {
       page: e,
       searchInput: searchInput,
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-      endDate: endDate === "" && startDate !== "" ? endDate : endDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
 
     if (field === "date") {

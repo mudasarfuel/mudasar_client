@@ -25,6 +25,7 @@ import { addDip, clearDips, deleteDip, getDips, getSingleDip, updateDip } from "
 import { dipInputFields } from "../../Components/sources/dipsFormSources";
 import AuthContext from "../../context/auth/AuthContext";
 import { petrolDipChart } from "../../Components/sources/petrolDipChart";
+import { cleardata, getAllProducts } from "../../redux/completeDataSlice/completeDataSlice";
 
 const StockDip = () => {
    //Call Auth Context & Extract Logout
@@ -32,7 +33,7 @@ const StockDip = () => {
   //Initializing dispatch function to call redux functions
   const dispatch = useDispatch();
   //Initializing useSelector to get data from redux store
-  const products = useSelector((state) => state.products.data);
+  const products = useSelector((state) => state.completeData.products);
   const dips = useSelector((state) => state.dips.data);
   //Initializing the current employee
   const currentData = useSelector((state) => state.dips.current);
@@ -97,12 +98,13 @@ const StockDip = () => {
   useEffect(() => {
     const initialData = { page: 0, sort: filters.sort };
     //Call getProducts using dispatch
-    dispatch(getProducts(initialData));
+    dispatch(getAllProducts());
     dispatch(getDips(initialData));
 
     //Call clear products to clear products from state on unmount
     return () => {
       dispatch(clearDips());
+      dispatch(cleardata())
     };
     //eslint-disable-next-line
   }, []);
@@ -248,7 +250,7 @@ const handleOnSubmit = async (e) => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -259,7 +261,7 @@ const handleOnSubmit = async (e) => {
       page: e,
       searchInput: searchInput,
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-      endDate: endDate === "" && startDate !== "" ? endDate : endDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
 
     if (field === "date") {
@@ -330,7 +332,6 @@ const handleOnSubmit = async (e) => {
         } else {
           //Hit API Call using dispatch to add dip
           dispatch(addDip(state));
-          loadData();
         }
       
     }

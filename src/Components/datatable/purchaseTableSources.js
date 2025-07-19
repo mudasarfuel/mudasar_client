@@ -1,10 +1,13 @@
-import { Delete, Edit, Info} from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { Delete, Edit, Info } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
-
 //Export Purchase Columns
-export const purchaseColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFormDialog) => [
+export const purchaseColumns = (
+  setOpenDeleteDialog,
+  setDetailsDialog,
+  setOpenFormDialog
+) => [
   // { field: "id", headerName: "ID", width: 70 },
   {
     field: "supplier",
@@ -29,58 +32,79 @@ export const purchaseColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFo
   },
   { field: "productName", headerName: "Product Name", width: 150 },
   { field: "quantity", headerName: "Quantity", width: 120 },
-  { field: "costPrice", headerName: "Cost Price", width: 110, renderCell: (params) => {
-    return (
-      <div>
-        Rs. {params.row.costPrice}
-        </div>
-    )
-  } },
-  { field: "sellingPrice", headerName: "Selling Price", width: 110, renderCell: (params) => {
-    return (
-      <div>
-        Rs. {params.row.sellingPrice}
-        </div>
-    )
-  } },
-  { field: "date", headerName: "Date", width: 120,
+  {
+    field: "costPrice",
+    headerName: "Cost Price",
+    width: 130,
     renderCell: (params) => {
       return (
         <div>
-        {params.row.date}
-          </div>
-      )
-    }
-   },
+          {params.row.costPrice?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
+        </div>
+      );
+    },
+  },
+  {
+    field: "sellingPrice",
+    headerName: "Selling Price",
+    width: 130,
+    renderCell: (params) => {
+      return (
+        <div>
+          {params.row.sellingPrice?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}
+        </div>
+      );
+    },
+  },
+  {
+    field: "date",
+    headerName: "Date",
+    width: 120,
+    renderCell: (params) => {
+      return <div>{params.row.date}</div>;
+    },
+  },
   {
     field: "action",
     headerName: "Action",
-    width: 160,
+    width: 100,
     renderCell: (params) => {
       return (
+        
         <div className="cellAction">
-          <IconButton
-            className="viewButton"
-            onClick={() => {
-              setOpenFormDialog(true)
-            }}
-          >
-            <Edit style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          {/* <IconButton className="viewButton" onClick={()=>setDetailsDialog(true)}>
-            <Info style={{ fontSize: "20px" }} />
-          </IconButton> */}
-
-          <IconButton
-            className="viewButton"
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            <Delete style={{ fontSize: "20px" }} />
-          </IconButton>
+        {params.row.status === "open" && 
+        <>
+          {/* <Tooltip title="Edit Purchase">
+            <IconButton
+              className="viewButton"
+              onClick={() => {
+                setOpenFormDialog(true);
+              }}
+            >
+              <Edit style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip> */}
+          <Tooltip title="Delete Purchase">
+            <IconButton
+              className="viewButton"
+              onClick={() => setOpenDeleteDialog(true)}
+            >
+              <Delete style={{ fontSize: "20px" }} />
+            </IconButton>
+          </Tooltip>
+          </>}
         </div>
       );
     },
   },
 ];
-

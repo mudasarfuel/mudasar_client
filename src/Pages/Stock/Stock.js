@@ -30,7 +30,7 @@ import { getStocks } from "../../redux/stockSlice/stockSlice";
 import { purchaseInputFields } from "../../Components/sources/purchasesFormSources";
 import { getSuppliers } from "../../redux/supplierSlice/supplierSlice";
 import { addPurchase } from "../../redux/purchaseStockSlice/purchaseStockSlice";
-import { getAllProducts } from "../../redux/completeDataSlice/completeDataSlice";
+import { getAllActiveSuppliers, getAllProducts } from "../../redux/completeDataSlice/completeDataSlice";
 
 const Stock = () => {
   //Initializing dispatch function to call redux functions
@@ -38,7 +38,7 @@ const Stock = () => {
   //Initializing useSelector to get data from redux store
   const stocks = useSelector((state) => state.stocks.data);
   const products = useSelector((state) => state.completeData.products);
-  const suppliers = useSelector((state) => state.suppliers.data);
+  const suppliers = useSelector((state) => state.completeData.suppliers);
   //Initializing the current machine
   const currentData = useSelector((state) => state.machines.current);
   //Initiaizing useSelector to get total records
@@ -111,8 +111,8 @@ const Stock = () => {
     const initialData = { page: 0, sort: filters.sort };
     //Call getMachines using dispatch
     dispatch(getStocks(initialData));
-    dispatch(getAllProducts(initialData));
-    dispatch(getSuppliers(initialData));
+    dispatch(getAllProducts());
+    dispatch(getAllActiveSuppliers());
 
     //Call clear machines to clear machines from state on unmount
     return () => {
@@ -157,7 +157,7 @@ const Stock = () => {
   const loadData = () => {
     const initialData = { page: 0, sort: -1 };
     //Call getMachines using dispatch
-    dispatch(getMachines(initialData));
+    dispatch(getStocks(initialData));
   };
   //Handle On submit
   const handleOnSubmit = async (e) => {
@@ -239,7 +239,7 @@ const Stock = () => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -250,7 +250,7 @@ const Stock = () => {
       page: e,
       searchInput: searchInput,
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-      endDate: endDate === "" && startDate !== "" ? endDate : endDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
 
     if (field === "date") {
@@ -258,10 +258,10 @@ const Stock = () => {
         toast("Please Select Date", { position: "top-right", type: "error" });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getMachines(newState));
+        dispatch(getStocks(newState));
       }
     } else if (field === "") {
-      dispatch(getMachines(newState));
+      dispatch(getStocks(newState));
     } else {
       if (field !== "" && searchInput === "") {
         toast("Please Enter to search..", {
@@ -270,7 +270,7 @@ const Stock = () => {
         });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getMachines(newState));
+        dispatch(getStocks(newState));
       }
     }
   };
