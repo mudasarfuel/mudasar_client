@@ -157,23 +157,31 @@ export const wastageSlice = createSlice({
     //@used for     Add Wastage
     //@Response     Success Alert
     builder.addCase(addWastage.fulfilled, (state, action) => {
-      //Check for errors
+      // Handle errors
       if (action.payload?.errors?.length > 0) {
-        return {
-          ...state,
-          errors: action.payload.errors,
-        };
+        state.errors = action.payload.errors;
+        return;
       }
-      //Check for success status
+
+      // Handle success
       if (action.payload?.success === true) {
-        console.log(action.payload.product);
-        //toast
         toast(action.payload.msg, { position: "top-right", type: "success" });
-       
-        return {
-          ...state,
-          errors: [],
+        
+        const wastage = {
+          ...action.payload.wastage,
+          id: action.payload.wastage._id,
         };
+
+        // Maintain maximum 5 items in the list
+        if (state.data.length === 5) {
+          const poppedState = state.data.slice(0, 4);
+          state.data = [wastage, ...poppedState];
+        } else {
+          state.data = [wastage, ...state.data];
+        } 
+        
+        state.totalRecord = action.payload.totalRecord;
+        state.errors = [];
       }
     });
 
@@ -184,26 +192,27 @@ export const wastageSlice = createSlice({
     //@used For     Update Wastage
     //@Response     Success Alert
     builder.addCase(updateWastage.fulfilled, (state, action)=> {
-      
-      if(action.payload?.errors?.length > 0){
+     if (action.payload?.errors?.length > 0) {
         return {
           ...state,
-          errors: action.payload.errors
-        }
+          errors: action.payload.errors,
+        };
       }
       //Check for Success
-      if(action.payload.success === true){
-       
-        const updatedWastage = {...action.payload.updated, id: action.payload.updated._id}
+      if (action.payload.success === true) {
+        const updatedWastage = {
+          ...action.payload.updated,
+          id: action.payload.updated._id,
+        };
         //Show Alert
-        toast(action.payload.msg, {position: "top-right", type: "success"})
+        toast(action.payload.msg, { position: "top-right", type: "success" });
         return {
           ...state,
-          data: state.data.map(item => 
+          data: state.data.map((item) =>
             item.id === action.payload.updated._id ? updatedWastage : item
           ),
-          errors: []
-        }
+          errors: [],
+        };
       }
     })
 
@@ -214,6 +223,12 @@ export const wastageSlice = createSlice({
     //@used for     DELETE WASTAGE
     //@Data         Filtered data stored
     builder.addCase(deleteWastage.fulfilled, (state, action) => {
+       if(action.payload?.errors?.length > 0){
+        return {
+          ...state,
+          errors: action.payload.errors
+        }
+      }
       //Check for request success
       if (action.payload.success === true) {
         //Set Alert
@@ -221,7 +236,7 @@ export const wastageSlice = createSlice({
         return {
           ...state,
           data: [...state.data.filter((item) => item.id !== action.payload.id)],
-          totalRecord: action.payload.totalRecords,
+          totalRecord: action.payload.totalRecord,
         };
       }
     });

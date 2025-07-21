@@ -225,6 +225,12 @@ export const purchaseStockSlice = createSlice({
     //@used for     DELETE PURCHASE
     //@Data         Filtered data stored
     builder.addCase(deletePurchase.fulfilled, (state, action) => {
+        if(action.payload?.errors?.length > 0){
+        return {
+          ...state,
+          errors: action.payload.errors
+        }
+      }
       //Check for request success
       if (action.payload.success === true) {
         //Set Alert

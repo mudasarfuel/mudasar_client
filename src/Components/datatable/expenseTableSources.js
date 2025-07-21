@@ -11,7 +11,12 @@ export const expenseColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFor
   },
   { field: "description", headerName: "Description", width: 300 },
   { field: "amount", headerName: "Amount", width: 150, renderCell: (params) => {
-    return <div className="cellAction">Rs. {params.row.amount}</div>;
+    return <div className="cellAction">{params.row.amount?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) || 0}</div>;
   }, },
   { field: "date", headerName: "Date", width: 150 },
   {
@@ -21,12 +26,6 @@ export const expenseColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFor
     renderCell: (params) => {
       return (
         <div className="cellAction">
-          {params.row.status === "open" && <IconButton
-            className="viewButton"
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            <Delete style={{ fontSize: "20px" }} />
-          </IconButton>}
           {params.row.status === "open" && <IconButton
             className="viewButton"
             onClick={() => setOpenDeleteDialog(true)}

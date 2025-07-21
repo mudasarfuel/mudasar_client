@@ -32,9 +32,10 @@ import {
 } from "../../Components/sources/customersFormSources";
 import DetailsDialog from "../../Components/dialogue/DetailsDialogue";
 import { dailyCashColumns } from "../../Components/datatable/dailyCashTableSources";
-import { getCashes, getSingleCash, updateCash } from "../../redux/cashSlice/cashSlice";
+import { clearCash, getCashes, getSingleCash, updateCash } from "../../redux/cashSlice/cashSlice";
 import { cashInputFields } from "../../Components/sources/cashFormSources";
 import AuthContext from "../../context/auth/AuthContext";
+import { searchCashesFilters } from "../../Components/sources/cashesFormSources";
 
 const DailyCash = () => {
    //Call Auth Context & Extract Logout
@@ -47,7 +48,7 @@ const DailyCash = () => {
   //Initializing the current customer
   const currentCash = useSelector((state) => state.cashes.current);
   //Initiaizing useSelector to get total records
-  const totalRecords = useSelector((state) => state.customers.totalRecord);
+  const totalRecords = useSelector((state) => state.cashes.totalRecord);
   //Initializing UseSelector to get errors
   const submitErrors = useSelector((state) => state.cashes.errors);
   //Use State for Handle Open and close of form dialog
@@ -68,6 +69,8 @@ const DailyCash = () => {
   });
   //Use State for search inputs
   const [search, setSearch] = useState({
+    startDate: "",
+    endDate: "",
     searchInput: "",
   });
   //Setup state for values
@@ -135,7 +138,7 @@ const DailyCash = () => {
 
     //Call clear customers to clear customers from state on unmount
     return () => {
-      dispatch(clearCustomers());
+      dispatch(clearCash());
     };
     //eslint-disable-next-line
   }, []);
@@ -176,7 +179,7 @@ const DailyCash = () => {
   const loadData = () => {
     const initialData = { page: 0, sort: -1 };
     //Call getCustomers using dispatch
-    dispatch(getCustomers(initialData));
+    dispatch(getCashes(initialData));
   };
   //Handle On submit
   const handleOnSubmit = async (e) => {
@@ -200,7 +203,7 @@ const DailyCash = () => {
         toast("Please Select Date", { position: "top-right", type: "error" });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getCustomers(newState));
+        dispatch(getCashes(newState));
         //After search results close the filters panel
         setOpenFiltersPanel(!openFiltersPanel);
         //Set Page to Zero
@@ -208,7 +211,7 @@ const DailyCash = () => {
       }
     } else if (field === "") {
       //Calling dispatch function to hit API Call
-      dispatch(getCustomers(newState));
+      dispatch(getCashes(newState));
       //After search results close the filters panel
       setOpenFiltersPanel(!openFiltersPanel);
       //Set Page to Zero
@@ -226,7 +229,7 @@ const DailyCash = () => {
         });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getCustomers(newState));
+        dispatch(getCashes(newState));
         //After search results close the filters panel
         setOpenFiltersPanel(!openFiltersPanel);
         //Set Page to Zero
@@ -259,7 +262,7 @@ const DailyCash = () => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -270,7 +273,7 @@ const DailyCash = () => {
       page: e,
       searchInput: searchInput,
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-      endDate: endDate === "" && startDate !== "" ? endDate : endDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
 
     if (field === "date") {
@@ -278,10 +281,10 @@ const DailyCash = () => {
         toast("Please Select Date", { position: "top-right", type: "error" });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getCustomers(newState));
+        dispatch(getCashes(newState));
       }
     } else if (field === "") {
-      dispatch(getCustomers(newState));
+      dispatch(getCashes(newState));
     } else {
       if (field !== "" && searchInput === "") {
         toast("Please Enter to search..", {
@@ -290,7 +293,7 @@ const DailyCash = () => {
         });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getCustomers(newState));
+        dispatch(getCashes(newState));
       }
     }
   };
@@ -350,8 +353,6 @@ const DailyCash = () => {
         icon={<CurrencyRupee style={{ marginRight: "10px" }} />}
         title="Daily Cash"
         subTitle="Manage Daily Cash"
-        // link="/customers/new"
-        // addBtnTitle={isMobile ? "Add" : "Collect Cash"}
         dialog={openFormDialog}
         // setDialog={setOpenFormDialog}
       />
@@ -405,7 +406,7 @@ const DailyCash = () => {
           openFiltersPanel={openFiltersPanel}
           setOpenFiltersPanel={setOpenFiltersPanel}
           loadDataFunc={loadData}
-          searchFiltersForm={searchCustomerFilters}
+          searchFiltersForm={searchCashesFilters}
           searchInputForm={searchCustomerInput}
         />
         {/* DataTable for Daily Cash  */}

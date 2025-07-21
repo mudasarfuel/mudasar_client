@@ -1,10 +1,13 @@
-import { Delete, Edit, Info} from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { Delete, Edit, Info } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 import { DOMAIN } from "../../backend/API";
 
-
 //Export wastage Columns
-export const wastageColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFormDialog) => [
+export const wastageColumns = (
+  setOpenDeleteDialog,
+  setDetailsDialog,
+  setOpenFormDialog
+) => [
   // { field: "id", headerName: "ID", width: 70 },
   {
     field: "name",
@@ -28,7 +31,7 @@ export const wastageColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFor
     },
   },
   { field: "quantity", headerName: "Quantity", width: 250 },
-  { field: "date", headerName: "Date", width: 250},
+  { field: "date", headerName: "Date", width: 250 },
   {
     field: "action",
     headerName: "Action",
@@ -36,28 +39,31 @@ export const wastageColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFor
     renderCell: (params) => {
       return (
         <div className="cellAction">
-          <IconButton
-            className="viewButton"
-            onClick={() => {
-              setOpenFormDialog(true)
-            }}
-          >
-            <Edit style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          <IconButton className="viewButton" onClick={()=>setDetailsDialog(true)}>
-            <Info style={{ fontSize: "20px" }} />
-          </IconButton>
-
-          <IconButton
-            className="viewButton"
-            onClick={() => setOpenDeleteDialog(true)}
-          >
-            <Delete style={{ fontSize: "20px" }} />
-          </IconButton>
+         
+          {params.row.status === "open" && (
+            <>
+              {/* <Tooltip title="Edit Wastage">
+                <IconButton
+                  className="viewButton"
+                  onClick={() => {
+                    setOpenFormDialog(true);
+                  }}
+                >
+                  <Edit style={{ fontSize: "20px" }} />
+                </IconButton>
+              </Tooltip> */}
+              <Tooltip title="Delete Wastage">
+                <IconButton
+                  className="viewButton"
+                  onClick={() => setOpenDeleteDialog(true)}
+                >
+                  <Delete style={{ fontSize: "20px" }} />
+                </IconButton>
+              </Tooltip>
+            </>
+          )}
         </div>
       );
     },
   },
 ];
-

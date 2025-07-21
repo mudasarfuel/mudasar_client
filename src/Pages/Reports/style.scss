@@ -101,6 +101,22 @@
   color: #227044 !important;
 }
 
+.section.yellow .section-title {
+  border-color: #f1c40f;
+  color: #aa8b00;
+}
+
+.summary-box {
+  margin-top: 30px;
+}
+
+.summary-box h3 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
 @media screen and (max-width: 768px) {
   .report-card {
     padding: 20px;

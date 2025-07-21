@@ -61,7 +61,7 @@ const Expense = () => {
   });
   //Setup state for values
   const [state, setState] = useState({
-    cashierId: user._id,
+    userId: user._id,
     name: "",
     description: "",
     amount: "",
@@ -214,7 +214,7 @@ const Expense = () => {
     setSelectedRowId(null);
     //Clear State and remove previous data
     setState({
-      cashierId: user._id,
+      userId: user._id,
       name: "",
       description: "",
       amount: "",
@@ -239,7 +239,7 @@ const Expense = () => {
       page: e,
       searchInput: searchInput,
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-      endDate: endDate === "" && startDate !== "" ? endDate : endDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
 
     if (field === "date") {
@@ -306,7 +306,7 @@ const Expense = () => {
         let newObj = { ...state, amount: handleValuesRound(amount) }
         //Hit API Call using dispatch to add Expense
         dispatch(addExpense(newObj));
-        loadData()
+        
       }
 
     }

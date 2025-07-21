@@ -80,7 +80,7 @@ export const useLocalHook = () => {
         { itemId: 22, label: "Employee Advances", icon: <Payment className="icon" />, url: "/employeeadvances" },
       ],
     },
-    (user.access === "web_admin" || user.access === "app_admin") && {
+    {
       id: 4,
       label: "Shift Closing",
       icon: <Speed className="icon" />,
@@ -114,7 +114,7 @@ export const useLocalHook = () => {
       setList: "TOGGLE_STOCK",
       nested: [
         { itemId: 28, label: "Get Report", icon: <Receipt className="icon" />, url: "/reports" },
-        { itemId: 29, label: "Customer Report", icon: <Receipt className="icon" />, url: "/reports" },
+        { itemId: 29, label: "Customer Report", icon: <Receipt className="icon" />, url: "/customerreports" },
         { itemId: 30, label: "Expenses", icon: <Assessment className="icon" />, url: "/expenses" },
       ],
     },
@@ -144,17 +144,11 @@ export const useLocalHook = () => {
       url: "/bankTransaction",
     },
     {
-      id: 11,
-      label: "Profile",
-      icon: <AccountCircle className="icon" />,
-      url: "/sales",
-      category: "USER",
-    },
-    {
       id: 12,
       label: "Logout",
       icon: <PowerSettingsNew className="icon" />,
       clickFunc: LogoutFunc,
+       category: "LOGGING"
     },
   ].filter(Boolean);
 
@@ -279,33 +273,16 @@ export const useLocalHook = () => {
     },
     {
       id: 1,
-      label: "Customer",
-      icon: <SwitchAccount className="icon" />,
-      setList: "TOGGLE_CUSTOMER",
-      category: "ACCOUNTS",
-      nested: [
-        { itemId: 1, label: "Customers", icon: <SwitchAccount className="icon" />, url: "/customers" },
-        { itemId: 2, label: "Customer Balance", icon: <AttachMoney className="icon" />, url: "/customerpayments" },
-      ],
+      label: "Shift Closing",
+      icon: <Speed className="icon" />,
+      category: "DATA ENTRY",
+      url: "/addShift",
     },
     {
       id: 2,
-      label: "Sale Closing",
-      icon: <Speed className="icon" />,
-      category: "DATA ENTRY",
-      url: "/closing",
-    },
-    {
-      id: 3,
-      label: "POS",
-      icon: <TrendingUp className="icon" />,
-      url: "/pos",
-    },
-    {
-      id: 4,
-      label: "Expenses",
-      icon: <Assessment className="icon" />,
-      url: "/expenses",
+      label: "View Closings",
+      icon: <Visibility className="icon" />,
+      url: "/allclosings",
     },
     {
       id: 5,

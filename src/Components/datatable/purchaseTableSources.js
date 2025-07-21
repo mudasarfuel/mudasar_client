@@ -102,7 +102,8 @@ export const purchaseColumns = (
               <Delete style={{ fontSize: "20px" }} />
             </IconButton>
           </Tooltip>
-          </>}
+          </>
+          }
         </div>
       );
     },

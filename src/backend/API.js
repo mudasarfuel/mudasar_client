@@ -118,6 +118,7 @@ export const ENDPOINTS = {
   // 10. REPORTING MODULE ENDPOINTS
   // ====================================================
   REPORT: DOMAIN + "/api/reports",             // Profit/loss reports
+  CUSTOMERREPORT: DOMAIN + "/api/customerreports",             // Profit/loss reports
   GENREPORT: DOMAIN + "/api/genReport",         // Report generation
   PRINTREPORT: DOMAIN + "/api/printMonthlyReport"         // Report generation
 };

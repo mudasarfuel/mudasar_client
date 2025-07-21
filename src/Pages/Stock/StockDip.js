@@ -26,6 +26,7 @@ import { dipInputFields } from "../../Components/sources/dipsFormSources";
 import AuthContext from "../../context/auth/AuthContext";
 import { petrolDipChart } from "../../Components/sources/petrolDipChart";
 import { cleardata, getAllProducts } from "../../redux/completeDataSlice/completeDataSlice";
+import { dieselDipChart } from "../../Components/sources/dieselDipChart";
 
 const StockDip = () => {
    //Call Auth Context & Extract Logout
@@ -299,10 +300,10 @@ const handleOnSubmit = async (e) => {
   const capitalizedRows = dips.map((row) => ({
     ...row,
     productName: row.product.name && capitalizeEachWord(row.product.name),
-    prevStock: row.prevDip && calculateLitres(row.prevDip, petrolDipChart),
-    stock: row.dip && calculateLitres(row.dip, petrolDipChart),
+    prevStock: row.prevDip && (row.product.name.toLowerCase() === "petrol" ? calculateLitres(row.prevDip, petrolDipChart) : calculateLitres(row.prevDip, dieselDipChart)),
+    stock: row.dip && (row.product.name.toLowerCase() === "petrol" ? calculateLitres(row.dip, petrolDipChart) : calculateLitres(row.dip, dieselDipChart)),
     dipDiff: row.prevDip && row.dip && (row.dip - row.prevDip),
-    stockDiff: row.prevDip && row.dip && (calculateLitres(row.dip, petrolDipChart) - calculateLitres(row.prevDip, petrolDipChart))
+    stockDiff: row.prevDip && row.dip && (row.product.name.toLowerCase() === "petrol" ? (calculateLitres(row.dip, petrolDipChart) - calculateLitres(row.prevDip, petrolDipChart)) : (calculateLitres(row.dip, dieselDipChart) - calculateLitres(row.prevDip, dieselDipChart)))
     }));
   //Destructure values from the state
   const { userId, productId, dip,  date} = state;

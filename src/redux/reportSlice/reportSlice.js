@@ -16,6 +16,20 @@ export const getReports = createAsyncThunk("getReports", async (initData) => {
   }
 });
 
+export const getCustomerReports = createAsyncThunk("getCustomerReports", async (initData) => {
+  try {
+    const { customerId, startDate, endDate } = initData;
+
+    //Creating API call using ENDPOINTS as Base URL (/api/reports)
+    return await axios
+      .get(`${ENDPOINTS.REPORT}?startDate=${startDate}&endDate=${endDate}&customerId=${customerId}`)
+      .then((res) => res.data);
+  } catch (error) {
+    //Incase of error catch error
+    return error.response.data.error[0];
+  }
+});
+
 //GET PRINT CLOSING AXIOS CALL USING ASYNC THUNK
 export const getPrintMonthlyReport = createAsyncThunk(
   "getPrintMonthlyReport",
@@ -87,17 +101,6 @@ export const reportSlice = createSlice({
       window.URL.revokeObjectURL(pdfUrl);
       //Check for request success
       console.log(actions.payload);
-      // if (actions.payload.success === true) {
-      //   //First Removing all the previous page readings
-      //   state.data = [];
-      //   //Using map iterate each item and push into the state
-      //   actions.payload.data.map((item) => {
-      //     //Here we are modifying the _id to id of each record
-      //     // const report = { ...item, id: item._id };
-      //     //Here we are setting the fetched readings in redux store
-      //     return state.data.push(item);
-      //   });
-      // }
     });
 
     //@CaseNo       01
@@ -109,6 +112,27 @@ export const reportSlice = createSlice({
     builder.addCase(getReports.fulfilled, (state, actions) => {
       //Check for request success
       console.log(actions.payload);
+      if (actions.payload.success === true) {
+        //First Removing all the previous page readings
+        state.data = [];
+        //Using map iterate each item and push into the state
+        actions.payload.data.map((item) => {
+          //Here we are modifying the _id to id of each record
+          // const report = { ...item, id: item._id };
+          //Here we are setting the fetched readings in redux store
+          return state.data.push(item);
+        });
+      }
+    });
+
+      //@CaseNo       01
+    //@Request      GET
+    //@Status       Success
+    //@Loading      False
+    //@used For     GET REPORTS
+    //@Data         Data stored in state
+    builder.addCase(getCustomerReports.fulfilled, (state, actions) => {
+      //Check for request success
       if (actions.payload.success === true) {
         //First Removing all the previous page readings
         state.data = [];

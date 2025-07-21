@@ -225,6 +225,12 @@ export const dipSlice = createSlice({
     //@used for     DELETE DIP
     //@Data         Filtered data stored
     builder.addCase(deleteDip.fulfilled, (state, action) => {
+        if(action.payload?.errors?.length > 0){
+        return {
+          ...state,
+          errors: action.payload.errors
+        }
+      }
       //Check for request success
       if (action.payload.success === true) {
         //Set Alert

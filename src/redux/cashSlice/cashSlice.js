@@ -83,7 +83,7 @@ export const cashSlice = createSlice({
           ...item,
           id: item._id,
         }));
-        state.totalRecord = action.payload.totalRecords;
+        state.totalRecord = action.payload.totalRecord;
       }
     });
 

@@ -19,14 +19,14 @@ export const dailyCashColumns = (
         <div className="cellWithImg">
           <img
             src={
-              params.row.pic
-                ? `${DOMAIN}/public/customers/images/${params.row.pic}`
+              params.row.user.pic
+                ? `${DOMAIN}/public/users/images/${params.row.user.pic}`
                 : "./img/avatarfile.png"
             }
             alt=""
             className="cellImg"
           />
-          {params.row.username}
+          {params.row.user.username}
         </div>
       );
     },

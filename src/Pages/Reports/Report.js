@@ -363,14 +363,7 @@ export default function Report() {
 
                 {reports.length > 0 && renderGroup(otherGroup).rows}
 
-                {/* 
-                <tr className="bold-row">
-                  <td>Totals</td>
-                  <td>60</td>
-                  <td></td>
-                  <td>6700</td>
-                  <td>469</td>
-                </tr> */}
+               
 
                 {/* Gross Total */}
                 <tr className="bold-row">

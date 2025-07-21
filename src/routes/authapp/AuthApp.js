@@ -41,6 +41,7 @@ import AddShift from "../../Pages/DataEntry/AddShift";
 import DailyCash from "../../Pages/Finance/DailyCash";
 import BankTransaction from "../../Pages/Finance/BankTransaction";
 import EmployeePayment from "../../Pages/Employee/EmployeePayment";
+import CustomerReport from "../../Pages/Reports/CustomerReport";
 
 const AuthApp = ({ mode }) => {
   
@@ -97,6 +98,7 @@ const AuthApp = ({ mode }) => {
               <Route exact path="/purchases" element={<Purchase />} />
               {/* REPORT GENERATIONS ROUTE  */}
               <Route exact path="/reports" element={<Report />} />
+              <Route exact path="/customerreports" element={<CustomerReport />} />
               {/* STOCKS ROUTES  */}
               <Route exact path="/stocks" element={<Stock />} />
               <Route exact path="/wastages" element={<StockWastage />} />
