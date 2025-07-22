@@ -22,7 +22,7 @@ export const getCustomerReports = createAsyncThunk("getCustomerReports", async (
 
     //Creating API call using ENDPOINTS as Base URL (/api/reports)
     return await axios
-      .get(`${ENDPOINTS.REPORT}?startDate=${startDate}&endDate=${endDate}&customerId=${customerId}`)
+      .get(`${ENDPOINTS.CUSTOMERREPORT}?startDate=${startDate}&endDate=${endDate}&customerId=${customerId}`)
       .then((res) => res.data);
   } catch (error) {
     //Incase of error catch error
@@ -76,6 +76,7 @@ export const reportSlice = createSlice({
     clearReports() {
       return {
         data: [],
+        customerReports: [],
         errors: [],
       };
     },
@@ -132,16 +133,17 @@ export const reportSlice = createSlice({
     //@used For     GET REPORTS
     //@Data         Data stored in state
     builder.addCase(getCustomerReports.fulfilled, (state, actions) => {
+
+      console.log("Customers Report => ", actions.payload)
       //Check for request success
       if (actions.payload.success === true) {
         //First Removing all the previous page readings
-        state.data = [];
+        state.customerReports = [];
         //Using map iterate each item and push into the state
         actions.payload.data.map((item) => {
           //Here we are modifying the _id to id of each record
-          // const report = { ...item, id: item._id };
           //Here we are setting the fetched readings in redux store
-          return state.data.push(item);
+          return state.customerReports.push(item);
         });
       }
     });
