@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   clearReports,
   getCustomerReports,
+  getPrintCustomerReport,
   getPrintMonthlyReport,
 } from "../../redux/reportSlice/reportSlice";
 import { DOMAIN } from "../../backend/API";
@@ -87,21 +88,22 @@ export default function CustomerReport() {
     dispatch(getAllActiveCustomers());
     return () => {
       dispatch(clearCustomers());
-      dispatch(clearReports())
-    }
+      dispatch(clearReports());
+    };
   }, [dispatch]);
 
   const printReport = async () => {
-    const { startDate, endDate } = state;
-    if (!startDate && !endDate) {
+    const { customerId, startDate, endDate } = state;
+    if (!customerId && !startDate && !endDate) {
       return toast("Please select date first", { type: "error" });
     }
 
     const newData = {
+      customerId,
       startDate: startDate || endDate,
       endDate: endDate || startDate,
     };
-    dispatch(getPrintMonthlyReport(newData));
+    dispatch(getPrintCustomerReport(newData));
   };
 
   const handleOnSubmit = (e) => {
@@ -139,7 +141,7 @@ export default function CustomerReport() {
   const advanceTotal = data?.advances?.grandTotal || 0;
 
   const totalCredit = creditTotal + advanceTotal;
-  const remaining = (lastCredit + totalCredit) - paymentTotal;
+  const remaining = lastCredit + totalCredit - paymentTotal;
 
   return (
     <Box m="0px 20px 20px 20px">
@@ -321,7 +323,7 @@ export default function CustomerReport() {
                         <strong>{totalCredit}</strong>
                       </td>
                     </tr>
-                     <tr>
+                    <tr>
                       <td>
                         <strong>Last Credit</strong>
                       </td>

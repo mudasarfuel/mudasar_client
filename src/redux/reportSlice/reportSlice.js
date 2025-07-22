@@ -49,6 +49,24 @@ export const getPrintMonthlyReport = createAsyncThunk(
   }
 );
 
+//GET PRINT CLOSING AXIOS CALL USING ASYNC THUNK
+export const getPrintCustomerReport = createAsyncThunk(
+  "getPrintCustomerReport",
+  async (initData) => {
+    try {
+      const { customerId, startDate, endDate } = initData;
+      //Creating API Call using base url (/api/printClosing/:id)
+      return await axios
+        .get(
+          `${ENDPOINTS.PRINTCUSTOMERREPORT}?customerId=${customerId}&startDate=${startDate}&endDate=${endDate}`
+        )
+        .then((res) => res.data);
+    } catch (error) {
+      //In case of error
+      return error.response.data.error[0];
+    }
+  }
+);
 export const genReport = createAsyncThunk("genReport", async (initData) => {
   try {
     const { startDate, endDate } = initData;
@@ -149,6 +167,30 @@ export const reportSlice = createSlice({
     });
 
     builder.addCase(getPrintMonthlyReport.fulfilled, (state, action) => {
+      //Checking for success
+      if (action.payload.success === true) {
+        const url = action.payload.url;
+
+        const serverUrl = "http://localhost:5000";
+        // Normalize backslashes and use RegExp to find exact /backend/ folder
+        const normalizedUrl = url.replace(/\\/g, "/");
+
+        // Match everything after "/backend/"
+        const match = normalizedUrl.match(/\/backend\/(.+)$/);
+
+        const relativePath = match ? `/${match[1]}` : "";
+
+        const fullUrl = serverUrl + relativePath;
+
+        // Open the new PDF in a new tab
+        window.open(fullUrl, "_blank");
+
+        // Optionally, revoke the object URL after use (for memory cleanup)
+        window.URL.revokeObjectURL(fullUrl);
+      }
+    });
+
+     builder.addCase(getPrintCustomerReport.fulfilled, (state, action) => {
       //Checking for success
       if (action.payload.success === true) {
         const url = action.payload.url;

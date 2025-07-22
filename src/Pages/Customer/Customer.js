@@ -1,6 +1,6 @@
 import "./customer.scss";
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -36,10 +36,11 @@ import {
   getSingleCustomer,
   updateCustomer,
 } from "../../redux/customerSlice/customerSlice";
+import AuthContext from "../../context/auth/AuthContext";
 
 /**
  * Customer Management Component
- * 
+ *
  * This component provides a complete interface for managing customers including:
  * - Viewing customer list
  * - Adding new customers
@@ -50,6 +51,8 @@ import {
 const Customer = () => {
   // Redux hooks
   const dispatch = useDispatch();
+  //Use Auth Context get user
+  const { user } = useContext(AuthContext);
   const customers = useSelector((state) => state.customers.data);
   const currentCustomer = useSelector((state) => state.customers.current);
   const totalRecords = useSelector((state) => state.customers.totalRecord);
@@ -67,6 +70,7 @@ const Customer = () => {
 
   // Form states
   const [state, setState] = useState({
+    userId: user._id,
     name: "",
     email: "",
     contact: "",
@@ -214,13 +218,19 @@ const Customer = () => {
 
     // Validate search input
     if (field && !searchInput) {
-      toast("Please Enter to search..", { position: "top-right", type: "error" });
+      toast("Please Enter to search..", {
+        position: "top-right",
+        type: "error",
+      });
       return;
     }
 
     // Validate operator
     if (field && !operator) {
-      toast("Please select condition", { position: "top-right", type: "error" });
+      toast("Please select condition", {
+        position: "top-right",
+        type: "error",
+      });
       return;
     }
 
@@ -258,6 +268,7 @@ const Customer = () => {
     setOpenFormDialog(false);
     setSelectedRowId(null);
     setState({
+        userId: user._id,
       name: "",
       email: "",
       contact: "",
@@ -314,7 +325,10 @@ const Customer = () => {
           await submitCustomerData(customerData);
         }
       } catch (error) {
-        toast("Error uploading image", { position: "top-right", type: "error" });
+        toast("Error uploading image", {
+          position: "top-right",
+          type: "error",
+        });
       }
     } else {
       await submitCustomerData(state);

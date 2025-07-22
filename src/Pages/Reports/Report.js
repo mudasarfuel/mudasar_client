@@ -268,9 +268,9 @@ export default function Report() {
                 {productName}
               </td>
             )}
-            <td>{item.quantity}</td>
-            <td>{item.sellingPrice}</td>
-            <td>{item.amount}</td>
+            <td>{roundValue(item.quantity)}</td>
+            <td>{roundValue(item.sellingPrice)}</td>
+            <td>{roundValue(item.amount)}</td>
             <td>
               {((item.sellingPrice - item.costPrice) * item.quantity).toFixed(
                 2
@@ -288,7 +288,7 @@ export default function Report() {
         className="bold-row"
       >
         <td>Totals</td>
-        <td>{groupTotalQty}</td>
+        <td>{ roundValue(groupTotalQty)}</td>
         <td></td>
         <td>
           {groupTotalAmt?.toLocaleString("en-US", {
@@ -322,6 +322,12 @@ export default function Report() {
                   
   }
 
+
+  const roundValue = (value, decimals = 2) => { 
+    if (isNaN(value)) return 0; 
+    const factor = Math.pow(10, decimals); 
+    return Math.round(value * factor) / factor; 
+  } 
   return (
     <Box m="0px 20px 20px 20px">
       {/* Header for subscription page  */}
@@ -562,9 +568,9 @@ export default function Report() {
                   return (
                     <tr key={item.productId}>
                       <td>{item.productName}</td>
-                      <td>{item.newStock || 0.0}</td>
+                      <td>{roundValue(item.newStock) || 0.0}</td>
                       <td>
-                        {item.amount}
+                        {roundValue(item.amount)}
                       </td>
                     </tr>
                   );
@@ -609,16 +615,11 @@ export default function Report() {
                   <td colSpan={2}>Profit Price Change</td>
                   <td>{reports[0]?.priceChangeProfit.toFixed(2) || 0}</td>
                 </tr>
-                <tr>
-                  <td>Petrol Gain</td>
-                  <td>{reports[0]?.petrolGain?.gain.toFixed(2) || 0}</td>
-                  <td>{reports[0]?.petrolGain?.amount.toFixed(2)  || 0}</td>
-                </tr>
-                <tr>
-                  <td>Diesel Gain Change</td>
-                  <td>{reports[0]?.dieselGain?.gain.toFixed(2) || 0}</td>
-                  <td>{reports[0]?.dieselGain?.amount.toFixed(2) || 0}</td>
-                </tr>
+                {reports[0]?.gain.map(item => <tr key={item.productId}>
+                  <td>{item.productName}</td>
+                  <td>{roundValue(item.totalGain)}</td>
+                  <td>{roundValue(item.totalAmount)}</td>
+                </tr>)}
                  <tr>
                   <td colSpan={2}>Expense</td>
                   <td>{reports[0]?.totalExpenses.toFixed(2) || 0}</td>
@@ -626,7 +627,7 @@ export default function Report() {
                 <tr className="bold-row">
                   <td colSpan={2}>Gross Total Profit</td>
                   <td>{((renderGroup(fuelGroup).totalProfit +
-                      renderGroup(otherGroup).totalProfit + reports[0]?.priceChangeProfit + reports[0]?.dieselGain?.amount + reports[0]?.petrolGain?.amount)- reports[0]?.totalExpenses)?.toLocaleString("en-US", {
+                      renderGroup(otherGroup).totalProfit + reports[0]?.priceChangeProfit + reports[0]?.gain[0].totalAmount + reports[0]?.gain[1].totalAmount)- reports[0]?.totalExpenses)?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "PKR",
                       minimumFractionDigits: 2,
@@ -636,14 +637,14 @@ export default function Report() {
                 <tr>
                   <td colSpan={2}>Zakat (2.5%)</td>
                   <td>{(((renderGroup(fuelGroup).totalProfit +
-                      renderGroup(otherGroup).totalProfit + reports[0]?.priceChangeProfit + reports[0]?.dieselGain?.amount + reports[0]?.petrolGain?.amount)- reports[0]?.totalExpenses)/100 *2.5).toFixed(2) || 0}</td>
+                      renderGroup(otherGroup).totalProfit + reports[0]?.priceChangeProfit + reports[0]?.gain[0].totalAmount + reports[0]?.gain[1].totalAmount)- reports[0]?.totalExpenses)/100 *2.5).toFixed(2) || 0}</td>
                 </tr>
                
                 <tr className="bold-row green-text">
                   <td colSpan={2}>Net Profit</td>
                   <td>{((((renderGroup(fuelGroup).totalProfit +
-                      renderGroup(otherGroup).totalProfit + reports[0]?.priceChangeProfit + reports[0]?.dieselGain?.amount + reports[0]?.petrolGain?.amount)- reports[0]?.totalExpenses) - (((renderGroup(fuelGroup).totalProfit +
-                      renderGroup(otherGroup).totalProfit + reports[0]?.priceChangeProfit + reports[0]?.dieselGain?.amount + reports[0]?.petrolGain?.amount)- reports[0]?.totalExpenses)/100 *2.5)))?.toLocaleString("en-US", {
+                      renderGroup(otherGroup).totalProfit + reports[0]?.priceChangeProfit + reports[0]?.gain[0].totalAmount + reports[0]?.gain[1].totalAmount)- reports[0]?.totalExpenses) - (((renderGroup(fuelGroup).totalProfit +
+                      renderGroup(otherGroup).totalProfit + reports[0]?.priceChangeProfit + reports[0]?.gain[0].totalAmount + reports[0]?.gain[1].totalAmount)- reports[0]?.totalExpenses)/100 *2.5)))?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "PKR",
                       minimumFractionDigits: 2,
