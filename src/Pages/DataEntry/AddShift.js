@@ -495,8 +495,8 @@ const AddShift = () => {
     const { customerId, productId, amount, description } = addCreditProduct;
 
     // Validate inputs
-    if (!customerId || !productId || amount <= 0) {
-      toast("Select all fields first", {
+    if (!customerId || !productId || amount <= 0 || !description) {
+      toast("Fill all fields first", {
         position: "top-right",
         type: "error",
       });
@@ -517,13 +517,13 @@ const AddShift = () => {
         updated[customerIndex].products.push({
           productId,
           amount,
+          description
         });
       } else {
         // New customer, create new entry
         updated.push({
           customerId,
-          products: [{ productId, amount }],
-          description,
+          products: [{ productId, amount, description }],
         });
       }
 
@@ -535,6 +535,7 @@ const AddShift = () => {
       ...addCreditProduct,
       productId: "",
       amount: 0,
+      description: ""
     });
   };
 

@@ -226,6 +226,11 @@ const SaleDetails = ({
                         </Box>
                       </Box>
                       <Box>
+                        <Typography>
+                          {item.description}
+                        </Typography>
+                      </Box>
+                      <Box>
                         <Box>
                           Quantity:{" "}
                           <Box style={{ fontWeight: "bold", color: "#2a4ea1" }}>

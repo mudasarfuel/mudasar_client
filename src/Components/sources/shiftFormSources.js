@@ -368,12 +368,6 @@ export const activeCustomerCreditInputFields = (
     label: "Description",
     tabIndex: 3,
     type: "text",
-    disabled:  addCreditProduct.customerId !== "" &&
-    addCustomerCreditProduct.some(
-      (entry) =>
-        entry.customerId === addCreditProduct.customerId &&
-        entry.description?.trim() !== ""
-    ) ? true : false,
     name: "description",
     grid: {
       xs: 12,
@@ -416,7 +410,7 @@ export const activeEmployeeDebitInputFields = (employees) => [
             id: item._id,
             name: item.name,
             value: item._id,
-            salary: item.remainingAdvance.toLocaleString("en-US", {
+            salary: item.advance.toLocaleString("en-US", {
               style: "currency",
               currency: "PKR",
               minimumFractionDigits: 2,
@@ -478,7 +472,7 @@ export const activeEmployeeCreditInputFields = (employees) => [
             id: item._id,
             name: item.name,
             value: item._id,
-            salary: item.remainingAdvance.toLocaleString("en-US", {
+            salary: item.advance.toLocaleString("en-US", {
               style: "currency",
               currency: "PKR",
               minimumFractionDigits: 2,
