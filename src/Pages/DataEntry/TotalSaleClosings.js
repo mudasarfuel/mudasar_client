@@ -1,29 +1,39 @@
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../../Components/Header/Header";
 import DataTable from "../../Components/datatable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
 import Dialogue from "../../Components/dialogue/Dialogue";
 import DangerousIcon from "@mui/icons-material/Dangerous";
-import {
-  Assessment,
-  PendingActions,
-} from "@mui/icons-material";
+import { Assessment, PendingActions } from "@mui/icons-material";
 // import "./sales.scss";
 import Search from "../../Components/search/Search";
 import { toast } from "react-toastify";
 import { getMachines } from "../../redux/machineSlice/machineSlice";
 import { searchInput } from "../../Components/sources/formSources";
 import { salesColumns } from "../../Components/datatable/salesTableSources";
-import { clearSales, deleteSale, getSales, getSingleSale } from "../../redux/saleSlice/saleSlice";
+import {
+  clearSales,
+  deleteSale,
+  getSales,
+  getSingleSale,
+} from "../../redux/saleSlice/saleSlice";
 import SaleDetails from "../Customer/SaleDetails";
 import { searchSalesFilters } from "../../Components/sources/salesFormSources";
 import { salesClosingsColumns } from "../../Components/datatable/salesClosingsTableSources";
-import { clearClosings, deleteClosing, getPrintClosingReport, getSaleClosings } from "../../redux/closingsSlice/closingsSlice";
+import {
+  clearClosings,
+  deleteClosing,
+  getPrintClosingReport,
+  getSaleClosings,
+} from "../../redux/closingsSlice/closingsSlice";
+import AuthContext from "../../context/auth/AuthContext";
 
 const TotalSaleClosings = () => {
   //Initializing dispatch function to call redux functions
   const dispatch = useDispatch();
+  //Call Auth Context & Extract Logout
+  const { user } = useContext(AuthContext);
   //Initializing useSelector to get data from redux store
   const closings = useSelector((state) => state.closings.data);
   //Initializing the current machine
@@ -52,7 +62,7 @@ const TotalSaleClosings = () => {
   const [search, setSearch] = useState({
     searchInput: "",
     startDate: "",
-    endDate: ""
+    endDate: "",
   });
   //Setup state for values
   const [state, setState] = useState({
@@ -60,21 +70,24 @@ const TotalSaleClosings = () => {
     type: "",
     initialReading: "",
     currentReading: "",
-    status: ""
+    status: "",
   });
 
   //Use State for manage filters panel
   const [openFiltersPanel, setOpenFiltersPanel] = useState(false);
   //Use Effect to get Single Customer API Hit
   useEffect(() => {
-    if ((selectedRowId !== undefined && openFormDialog === true) || (selectedRowId !== undefined && openDetailsDialog === true)) {
+    if (
+      (selectedRowId !== undefined && openFormDialog === true) ||
+      (selectedRowId !== undefined && openDetailsDialog === true)
+    ) {
       //Dispatch current supplier
       dispatch(getSingleSale(selectedRowId[0]));
     }
     // eslint-disable-next-line
   }, [selectedRowId]);
 
-  console.log("Checking the search State ", search)
+  console.log("Checking the search State ", search);
   //Load Data into state for update Use Effect
   useEffect(() => {
     if (Object.keys(currentData).length !== 0) {
@@ -138,10 +151,9 @@ const TotalSaleClosings = () => {
 
   //Handle Print Sale func
   const handlePrint = (id) => {
-
-    dispatch(getPrintClosingReport(id))
-    console.log("Check print id => ", id)
-  }
+    dispatch(getPrintClosingReport(id));
+    console.log("Check print id => ", id);
+  };
   //Load The Data
   const loadData = () => {
     const initialData = { page: 0, sort: -1 };
@@ -256,28 +268,33 @@ const TotalSaleClosings = () => {
   }
 
   function calculateTotalAndDiscount(items) {
-    let totalAmount = 0
-    let totalDiscount = 0
+    let totalAmount = 0;
+    let totalDiscount = 0;
 
-    items?.forEach(item => {
-      totalAmount += (item.quantity * item.price.newSellingPrice)
-      totalDiscount += (item.price.newSellingPrice / 100 * item.discount) * item.quantity
-    })
+    items?.forEach((item) => {
+      totalAmount += item.quantity * item.price.newSellingPrice;
+      totalDiscount +=
+        (item.price.newSellingPrice / 100) * item.discount * item.quantity;
+    });
 
-    return { totalAmount, totalDiscount }
+    return { totalAmount, totalDiscount };
   }
   //Iterate and capitalizing data of each row
-  const capitalizedRows = closings.length > 0 ? closings.map((row) => ({
-    ...row,
-    totalAmount: row.items && calculateTotalAndDiscount(row.items).totalAmount,
-    totalDiscount: row.items && calculateTotalAndDiscount(row.items).totalDiscount,
-    product: row.items
-  })) : [];
+  const capitalizedRows =
+    closings.length > 0
+      ? closings.map((row) => ({
+          ...row,
+          totalAmount:
+            row.items && calculateTotalAndDiscount(row.items).totalAmount,
+          totalDiscount:
+            row.items && calculateTotalAndDiscount(row.items).totalDiscount,
+          product: row.items,
+        }))
+      : [];
 
   const handleOnCloseDetails = () => {
-
-    setDetailsDialog(false)
-  }
+    setDetailsDialog(false);
+  };
 
   return (
     <Box m="0px 20px 15px 20px">
@@ -294,7 +311,11 @@ const TotalSaleClosings = () => {
         {/* Employee Details Dialog box  */}
         <SaleDetails
           openDetailsDialog={openDetailsDialog}
-          heading={Object.keys(currentData).length !== 0 ? `Sales Detail of ${currentData.customer.name}` : "Sale Details"}
+          heading={
+            Object.keys(currentData).length !== 0
+              ? `Sales Detail of ${currentData.customer.name}`
+              : "Sale Details"
+          }
           inputs={Object.keys(currentData).length !== 0 && currentData}
           icon={<Assessment style={{ marginRight: "10px" }} />}
           handleOnCloseDetails={handleOnCloseDetails}
@@ -307,9 +328,7 @@ const TotalSaleClosings = () => {
           heading={"DELETE SALE"}
           color="#ff0000"
           icon={<DangerousIcon style={{ marginRight: "10px" }} />}
-          message={
-            "Are sure you want to delete Sale?."
-          }
+          message={"Are sure you want to delete Sale?."}
         />
 
         {/* Here we calling Search component in which we 
@@ -332,6 +351,7 @@ const TotalSaleClosings = () => {
             setOpenDeleteDialog,
             setDetailsDialog,
             handlePrint,
+            user
           )}
           rows={capitalizedRows}
           currentPage={currentPage}

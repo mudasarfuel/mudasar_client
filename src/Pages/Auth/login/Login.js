@@ -17,7 +17,7 @@ const Login = () => {
       <Alert />
       <Container className="loginContainer" component="main" maxWidth="xs">
         {/* Company Logo */}
-          <img src={`${darkMode === "dark"? "./img/logo.png": "./img/logo.png" }`} style={{width: "100px", height: "100px"}} alt="logo" />
+          <img src={`${darkMode === "dark"? "./img/logo1.png": "./img/logo1.png" }`} style={{width: "100px", height: "100px"}} alt="logo" />
     
         <LoginForm />
         <Box mt={8}>

@@ -6,7 +6,8 @@ import LockIcon from "@mui/icons-material/Lock";
 export const salesClosingsColumns = (
   setOpenDeleteDialog,
   setDetailsDialog,
-  handlePrint
+  handlePrint,
+  user
 ) => [
   // { field: "id", headerName: "ID", width: 70 },
   {
@@ -70,7 +71,7 @@ export const salesClosingsColumns = (
           {/* <IconButton className="viewButton" onClick={()=>setDetailsDialog(true)}>
             <Info style={{ fontSize: "20px" }} />
           </IconButton> */}
-          {params.row.status === "open" && (
+          {params.row.status === "open" && user.access === "web_admin" && (
             <Tooltip title="Delete Closing">
               <IconButton
                 className="viewButton"

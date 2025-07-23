@@ -5,6 +5,7 @@ import {
 } from "@mui/icons-material";
 import { Box, Menu, MenuItem, Typography } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 //Dropdown Menu Items Array
 const settingItems = [
@@ -13,11 +14,11 @@ const settingItems = [
     title: "Dashboard",
     icon: <Dashboard style={{ fontSize: "20px" }} />,
   },
-  {
-    id: 2,
-    title: "Profile",
-    icon: <AccountCircle style={{ fontSize: "20px" }} />,
-  },
+  // {
+  //   id: 2,
+  //   title: "Profile",
+  //   icon: <AccountCircle style={{ fontSize: "20px" }} />,
+  // },
   {
     id: 3,
     title: "Logout",
@@ -25,7 +26,8 @@ const settingItems = [
   },
 ];
 
-export default function Dropdown({ anchorElUser, setAnchorElUser }) {
+export default function Dropdown({ anchorElUser, setAnchorElUser, logout }) {
+  const navigate = useNavigate();
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -53,7 +55,15 @@ export default function Dropdown({ anchorElUser, setAnchorElUser }) {
         onClose={handleCloseUserMenu}
       >
         {settingItems.map((setting) => (
-          <MenuItem key={setting.id} onClick={handleCloseUserMenu}>
+          <MenuItem key={setting.id} onClick={() => {
+            handleCloseUserMenu()
+
+            if(setting.title === "Logout"){
+              logout()
+            } else if(setting.title === "Dashboard"){
+              navigate("/")
+            }
+          }}>
             <div
               style={{
                 marginRight: "10px",

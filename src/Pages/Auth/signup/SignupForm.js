@@ -169,7 +169,7 @@ const SignupForm = ({ state, setState }) => {
       </Grid>
 
       {/* This is submit button which will execute onSubmit function on click */}
-      <Button type="submit" fullWidth variant="contained" className="signupBtn">
+      <Button type="submit" fullWidth variant="contained" className="primary" style={{marginTop: 20}}>
         Sign Up
       </Button>
     </form>

@@ -3,21 +3,15 @@ import React, { useEffect, useState } from "react";
 import Header from "../../Components/Header/Header";
 import DataTable from "../../Components/datatable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
-import { FileUpload } from "../../backend/uploadFile";
 import Dialogue from "../../Components/dialogue/Dialogue";
 import FormDialog from "../../Components/dialogue/FormDialogue";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import {
-  AssignmentInd,
   LocalGasStation,
   SwitchAccount,
 } from "@mui/icons-material";
 import Search from "../../Components/search/Search";
 import { toast } from "react-toastify";
-import DetailsDialog from "../../Components/dialogue/DetailsDialogue";
-import { employeeColumns } from "../../Components/datatable/employeeTableSources";
-import { addEmployee, clearEmployees, deleteEmplyee, getEmployees, getSingleEmployee, updateEmployee } from "../../redux/employeeSlice/employeeSlice";
-import { employeeInputFields, searchEmployeeFilters, searchEmployeeInput } from "../../Components/sources/employeesFormSources";
 import { machineColumns } from "../../Components/datatable/machineTableSources";
 import { addMachine, clearCurrentMachine, clearMachines, deleteMachine, getMachines, getSingleMachine, updateMachine } from "../../redux/machineSlice/machineSlice";
 import { machineInputFields, searchMachineFilters } from "../../Components/sources/machinesFormSources";

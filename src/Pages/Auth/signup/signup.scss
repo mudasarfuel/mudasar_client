@@ -4,9 +4,9 @@
     .MuiStepLabel-root .Mui-completed {
       color: rgb(13, 218, 13);
     }
-    .MuiStepLabel-root .Mui-active {
-      color: #ab3fee;
-    }
+    // .MuiStepLabel-root .Mui-active {
+    //   color: #ab3fee;
+    // }
 
     .signupContainer {
       display: flex;
@@ -85,13 +85,13 @@
   }
   
   //INPUT LABEL COLOR SETTING
-  .MuiInputLabel-root.Mui-focused {
-    color: #a737ed !important;
-  }
+  // .MuiInputLabel-root.Mui-focused {
+  //   color: #a737ed !important;
+  // }
    //Style Text Field Outline on Focus & Normal
-   .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline{
-    border-color: #a737ed;
-  }
+  //  .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline{
+  //   border-color: #a737ed;
+  // }
   // Signup Button styling on light mode 
   .signupBtn:hover {
     margin-top: 20px;

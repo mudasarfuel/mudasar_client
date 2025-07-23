@@ -1,16 +1,12 @@
 import { Box } from "@mui/material";
 import React, { useState } from "react";
-
 import Header from "../../Components/Header/Header";
-
 import { Receipt } from "@mui/icons-material";
 import GridForm from "../../Components/form/GridForm";
-import Search from "../../Components/search/Search";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { getPrintMonthlyReport, getReports } from "../../redux/reportSlice/reportSlice";
-import { ENDPOINTS } from "../../backend/API";
-import axios from "axios";
+
 import "./style.scss";
 //SEARCH USERS INPUTS
 const searchReportInput = (printReport) => [
@@ -112,83 +108,7 @@ export default function Report() {
       }
     }
   };
-  //Iterate and capitalizing data of each row
 
-  // let array = [];
-  // reports.map((row) => {
-  //   for (let i = 0; i < Object.keys(row).length; i++) {
-  //     if (Object.keys(row)[i] === "products") {
-  //       // Access the 'products' array dynamically
-  //       const getRow = row[Object.keys(row)[i]]; // Dynamically fetches row.products
-
-  //       // Clone 'products' array to make it extensible
-  //       let newRow = [...getRow].map((modified) => {
-  //         return {
-  //           ...modified,
-  //           id: modified._id,
-  //         };
-  //       });
-  //       // Push new product into the cloned array
-  //       newRow.unshift({ id: 1001, heading: "Products" });
-
-  //       array.push(...newRow);
-  //     } else if (Object.keys(row)[i] === "grossTotal") {
-  //       // Access the 'products' array dynamically
-  //       const getRow = row[Object.keys(row)[i]]; // Dynamically fetches row.products
-
-  //       // Clone 'products' array to make it extensible
-  //       let newRow = [...getRow].map((modified) => {
-  //         return {
-  //           ...modified,
-  //           id: modified._id,
-  //         };
-  //       });
-  //       // Push new product into the cloned array
-  //       newRow.unshift({ id: 1002, heading: "Gross Totals" });
-
-  //       array.push(...newRow);
-  //     } else if (Object.keys(row)[i] === "expenseData") {
-  //       // Access the 'products' array dynamically
-  //       const getRow = row[Object.keys(row)[i]]; // Dynamically fetches row.products
-
-  //       // Clone 'products' array to make it extensible
-  //       let newRow = [...getRow].map((modified) => {
-  //         return {
-  //           ...modified,
-  //           id: modified._id,
-  //         };
-  //       });
-  //       // Push new product into the cloned array
-  //       newRow.unshift({ id: 1003, heading: "Total Expense" });
-
-  //       array.push(...newRow);
-  //     } else if (Object.keys(row)[i] === "recovery") {
-  //       // Access the 'products' array dynamically
-  //       const getRow = row[Object.keys(row)[i]]; // Dynamically fetches row.products
-
-  //       // Clone 'products' array to make it extensible
-  //       let newRow = [...getRow].map((modified) => {
-  //         return {
-  //           ...modified,
-  //           id: modified._id,
-  //         };
-  //       });
-  //       // Push new product into the cloned array
-  //       newRow.unshift({ id: 1005, heading: "Recovery" });
-
-  //       array.push(...newRow);
-  //     }
-  //   }
-  //   console.log("check row item => ", Object.keys(row)[1]);
-  // });
-
-  // const iterateRows = array.map((item) => {
-  //   return {
-  //     ...item,
-  //   };
-  // });
-  // console.log(...capitalizedRows)
-  console.log("Check reports => ", reports);
   //Create handle one submit function
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -252,29 +172,27 @@ export default function Report() {
 
     const rows = Object.entries(group)?.flatMap(([productName, items]) =>
       items.map((item, index) => {
-        groupTotalQty += item.quantity;
-        groupTotalAmt += item.amount;
-        groupTestEntry += item.testEntry;
+        groupTotalQty += roundValue(item.quantity);
+        groupTotalAmt += roundValue(item.amount);
+        groupTestEntry += roundValue(item.testEntry);
 
-        totalProfit += parseFloat(
+        totalProfit += roundValue(parseFloat(
           (parseFloat(item.sellingPrice) - parseFloat(item.costPrice)) *
-            parseFloat(item.quantity)
+            parseFloat(item.quantity))
         );
 
         return (
           <tr key={productName + index}>
             {index === 0 && (
               <td className="product-cell" rowSpan={items.length}>
-                {productName}
+                {capitalizeEachWord(productName)}
               </td>
             )}
             <td>{roundValue(item.quantity)}</td>
             <td>{roundValue(item.sellingPrice)}</td>
             <td>{roundValue(item.amount)}</td>
             <td>
-              {((item.sellingPrice - item.costPrice) * item.quantity).toFixed(
-                2
-              )}
+              {roundValue((item.sellingPrice - item.costPrice) * item.quantity)}
             </td>
           </tr>
         );
@@ -318,7 +236,7 @@ export default function Report() {
     reports[0]?.endDateProductStocks.forEach((item) => stockAmount += item.amount)
                 
         
-    return stockAmount;
+    return roundValue(stockAmount);
                   
   }
 
@@ -391,7 +309,7 @@ export default function Report() {
                       currency: "PKR",
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    }) || 0.0 }</td>
+                    }) || 0 }</td>
                 </tr>
               </tbody>
             </table>
@@ -418,7 +336,7 @@ export default function Report() {
                       currency: "PKR",
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    }) || 0.0}
+                    }) || 0}
                   </td>
                   <td>Total Customer Credit</td>
                   <td>
@@ -427,7 +345,7 @@ export default function Report() {
                       currency: "PKR",
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    }) || 0.0}
+                    }) || 0}
                   </td>
                 </tr>
                 <tr>
@@ -605,15 +523,15 @@ export default function Report() {
                 <tr>
                   <td colSpan={2}>Gross Sale Profit</td>
                   <td>
-                    {(
+                    {roundValue(
                       renderGroup(fuelGroup).totalProfit +
                       renderGroup(otherGroup).totalProfit
-                    ).toFixed(2) || 0.0}
+                    ) || 0}
                   </td>
                 </tr>
                 <tr>
                   <td colSpan={2}>Profit Price Change</td>
-                  <td>{reports[0]?.priceChangeProfit.toFixed(2) || 0}</td>
+                  <td>{roundValue(reports[0]?.priceChangeProfit) || 0}</td>
                 </tr>
                 {reports[0]?.gain.map(item => <tr key={item.productId}>
                   <td>{item.productName}</td>
@@ -622,7 +540,7 @@ export default function Report() {
                 </tr>)}
                  <tr>
                   <td colSpan={2}>Expense</td>
-                  <td>{reports[0]?.totalExpenses.toFixed(2) || 0}</td>
+                  <td>{roundValue(reports[0]?.totalExpenses) || 0}</td>
                 </tr>
                 <tr className="bold-row">
                   <td colSpan={2}>Gross Total Profit</td>
@@ -636,8 +554,8 @@ export default function Report() {
                 </tr>
                 <tr>
                   <td colSpan={2}>Zakat (2.5%)</td>
-                  <td>{(((renderGroup(fuelGroup).totalProfit +
-                      renderGroup(otherGroup).totalProfit + reports[0]?.priceChangeProfit + reports[0]?.gain[0].totalAmount + reports[0]?.gain[1].totalAmount)- reports[0]?.totalExpenses)/100 *2.5).toFixed(2) || 0}</td>
+                  <td>{roundValue(((renderGroup(fuelGroup).totalProfit +
+                      renderGroup(otherGroup).totalProfit + reports[0]?.priceChangeProfit + reports[0]?.gain[0].totalAmount + reports[0]?.gain[1].totalAmount)- reports[0]?.totalExpenses)/100 *2.5) || 0}</td>
                 </tr>
                
                 <tr className="bold-row green-text">

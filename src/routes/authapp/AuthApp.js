@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Navbar from "../../Components/navbar/Navbar";
 import Sidebar from "../../Components/sidebar/Sidebar";
 import Dashboard from "../../Pages/Home/Dashboard";
@@ -42,22 +42,30 @@ import DailyCash from "../../Pages/Finance/DailyCash";
 import BankTransaction from "../../Pages/Finance/BankTransaction";
 import EmployeePayment from "../../Pages/Employee/EmployeePayment";
 import CustomerReport from "../../Pages/Reports/CustomerReport";
+import PageNotFount from "../../Pages/PageNotFount";
+
 
 const AuthApp = ({ mode }) => {
-  
   //Handle use state to control side bar
-  const [openSidebar, setOpenSidebar] = useState(false)
+  const [openSidebar, setOpenSidebar] = useState(false);
   //Call Auth Context & Extract Logout
   const { logout, user } = useContext(AuthContext);
+
+  console.log("Check for user => ", user);
   return (
     <div className={mode === "dark" ? "authApp dark" : "authApp"}>
       <BrowserRouter>
-       
-        <Navbar setOpenSidebar={setOpenSidebar} openSidebar={openSidebar} className="authNavbar" user={user} logout={logout} />
+        <Navbar
+          setOpenSidebar={setOpenSidebar}
+          openSidebar={openSidebar}
+          className="authNavbar"
+          user={user}
+          logout={logout}
+        />
         <ToastContainer theme="colored" closeButton={false} />
         <Alert />
         <div className="main">
-          <Sidebar className="authSidebar" openSidebar={openSidebar}/>
+          <Sidebar className="authSidebar" openSidebar={openSidebar} />
           <div className="appContainer">
             <Routes>
               <Route exact path="/" element={<Dashboard />} />
@@ -74,16 +82,40 @@ const AuthApp = ({ mode }) => {
               <Route exact path="/features/new" element={<NewFeature />} />
               {/* CUSTOMER ROUTES  */}
               <Route exact path="/customers" element={<Customer />} />
-              <Route exact path="/customerpayments" element={<CustomerPayment />} />
-              <Route exact path="/customeradvances" element={<CustomerAdvance />} />
+              <Route
+                exact
+                path="/customerpayments"
+                element={<CustomerPayment />}
+              />
+              <Route
+                exact
+                path="/customeradvances"
+                element={<CustomerAdvance />}
+              />
               {/* SUPPLIER ROUTES  */}
               <Route exact path="/suppliers" element={<Supplier />} />
-              <Route exact path="/supplierpayments" element={<SupplierPayment />} />
+              <Route
+                exact
+                path="/supplierpayments"
+                element={<SupplierPayment />}
+              />
               {/* EMPLOYEE ROUTES  */}
               <Route exact path="/employees" element={<Employee />} />
-              <Route exact path="/employeesalary" element={<EmployeeSalary />} />
-              <Route exact path="/employeepayment" element={<EmployeePayment />} />
-              <Route exact path="/employeeadvances" element={<EmployeeAdvance />} />
+              <Route
+                exact
+                path="/employeesalary"
+                element={<EmployeeSalary />}
+              />
+              <Route
+                exact
+                path="/employeepayment"
+                element={<EmployeePayment />}
+              />
+              <Route
+                exact
+                path="/employeeadvances"
+                element={<EmployeeAdvance />}
+              />
               {/* MACHINE ROUTES  */}
               <Route exact path="/machines" element={<Machine />} />
               {/* MACHINE READINGS ROUTES  */}
@@ -98,7 +130,11 @@ const AuthApp = ({ mode }) => {
               <Route exact path="/purchases" element={<Purchase />} />
               {/* REPORT GENERATIONS ROUTE  */}
               <Route exact path="/reports" element={<Report />} />
-              <Route exact path="/customerreports" element={<CustomerReport />} />
+              <Route
+                exact
+                path="/customerreports"
+                element={<CustomerReport />}
+              />
               {/* STOCKS ROUTES  */}
               <Route exact path="/stocks" element={<Stock />} />
               <Route exact path="/wastages" element={<StockWastage />} />
@@ -112,15 +148,30 @@ const AuthApp = ({ mode }) => {
               {/* USERS ROUTES  */}
               <Route exact path="/users" element={<Users />} />
               <Route exact path="/addShift" element={<AddShift />} />
-              <Route exact path="/allclosings" element={<TotalSaleClosings />} />
+              <Route
+                exact
+                path="/allclosings"
+                element={<TotalSaleClosings />}
+              />
 
               {/* FINANCE ROUTES  */}
               <Route exact path="/dailyCash" element={<DailyCash />} />
-              <Route exact path="/bankTransaction" element={<BankTransaction/>} />
+              <Route
+                exact
+                path="/bankTransaction"
+                element={<BankTransaction />}
+              />
+
+               <Route
+                exact
+                path="/pagenotfound"
+                element={<PageNotFount />}
+              />
+
+              <Route path="*" element={<Navigate to="/pagenotfound" replace />} />
             </Routes>
           </div>
         </div>
-
       </BrowserRouter>
     </div>
   );

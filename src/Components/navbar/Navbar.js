@@ -1,30 +1,34 @@
 import { useContext, useState } from "react";
 import "./navbar.scss";
-import SearchIcon from "@mui/icons-material/Search";
-import { useLocation } from "react-router-dom";
-import {
-  ChatBubbleOutlineOutlined,
-  DarkModeOutlined,
-  FullscreenExitOutlined,
-  LightMode,
-  ListOutlined,
-  Menu,
-  NotificationsNoneOutlined,
-} from "@mui/icons-material";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+// import {
+//   ChatBubbleOutlineOutlined,
+//   DarkModeOutlined,
+//   FullscreenExitOutlined,
+//   LightMode,
+//   ListOutlined,
+//   Menu,
+//   NotificationsNoneOutlined,
+// } from "@mui/icons-material";
 import MenuIcon from '@mui/icons-material/Menu';
-import profilepic from "../../img/profile_user.jpg";
 import { Avatar, Button, IconButton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import AuthContext from "../../context/auth/AuthContext";
 import ModeContext from "../../context/mode/ModeContext";
 import Dropdown from "../dropdown/Dropdown";
+import { DOMAIN } from "../../backend/API";
 
 const Navbar = ({openSidebar,setOpenSidebar}) => {
   //Initializing the use Context to get dispatch method to change dark or light mode
-  const { darkMode, dispatch } = useContext(ModeContext);
+  // const { darkMode, dispatch } = useContext(ModeContext);
   // Call Auth Context & Extract isAuthenticated
-  const { isAuthenticated, user } = useContext(AuthContext);
+  const { isAuthenticated, user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
+  const LogoutFunc = () => {
+    logout();
+    navigate("/");
+  };
   //Initializing the Location Hook
   const location = useLocation();
 
@@ -41,7 +45,7 @@ const Navbar = ({openSidebar,setOpenSidebar}) => {
             <MenuIcon />
           </IconButton>
           <Link to="/" style={{ textDecoration: "none" }}>
-            <Typography className="brand">Mudasar Fuel</Typography>
+            <Typography className="brand">Mudasar Filling Station</Typography>
           </Link>
         </div>
 
@@ -68,7 +72,7 @@ const Navbar = ({openSidebar,setOpenSidebar}) => {
                 sx={{ p: 0 }}
               >
                 <Avatar alt="Remy Sharp" src={ user.pic
-                ? `http://localhost:5000/public/users/images/${user.pic}`
+                ? `${DOMAIN}/public/users/images/${user.pic}`
                 : "./img/avatarfile.png"} />
               </IconButton>
             
@@ -77,6 +81,7 @@ const Navbar = ({openSidebar,setOpenSidebar}) => {
               anchorElUser={anchorElUser}
               setAnchorElUser={setAnchorElUser}
               BackdropProps={{ invisible: false }}
+              logout={LogoutFunc}
             />
             </div>
           </>

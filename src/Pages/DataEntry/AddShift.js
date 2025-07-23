@@ -427,6 +427,13 @@ const AddShift = () => {
           amount: addDebit.amount,
         },
       ]);
+
+      setAddDebit({
+        customerId: "",
+        employeeId: "",
+        amount: "",
+        description: ""
+      })
     } else {
       toast("Fill all the fields of customer advance", {
         position: "top-right",
@@ -1024,8 +1031,7 @@ const AddShift = () => {
   };
   let selectedRowId = 0;
 
-  //Consoling State
-  console.log("Main State => ", state);
+  
   return (
     <div>
       <h3>Add Shift Record</h3>
@@ -1225,7 +1231,7 @@ const AddShift = () => {
 
         {/* Employee Debit Dialog Box  */}
         {
-          <FormDialog
+          employees?.length > 0 && <FormDialog
             openFormDialog={employeeDebitDialog}
             setOpenFormDialog={setEmployeeDebitDialog}
             heading={"STAFF DEBIT ADVANCE"}
@@ -1241,7 +1247,7 @@ const AddShift = () => {
         }
 
         {/* Employee CREDIT Dialog Box  */}
-        <FormDialog
+         {employees?.length > 0 && <FormDialog
           openFormDialog={employeeCreditDialog}
           setOpenFormDialog={setEmployeeCreditDialog}
           heading={"STAFF CREDIT ADVANCE"}
@@ -1253,10 +1259,10 @@ const AddShift = () => {
           handleOnSubmit={(e) => handleEmployeeDebitCredit(e, "credit")}
           inputs={activeEmployeeCreditInputFields(employees)}
           icon={<SwitchAccount style={{ marginRight: "10px" }} />}
-        />
+        />}
 
         {/* Employee CREDIT Dialog Box  */}
-        <FormDialog
+        {customers.length > 0 && <FormDialog
           openFormDialog={customerAdvanceDialog}
           setOpenFormDialog={setEmployeeCreditDialog}
           heading={"CUSTOMER ADVANCE"}
@@ -1268,7 +1274,7 @@ const AddShift = () => {
           handleOnSubmit={(e) => handleCustomerAdvance(e)}
           inputs={activeCustomerAdvanceInputFields(customers)}
           icon={<SwitchAccount style={{ marginRight: "10px" }} />}
-        />
+        />}
 
         {/* Expense Dialog Box  */}
         <FormDialog
@@ -1285,7 +1291,7 @@ const AddShift = () => {
           icon={<SwitchAccount style={{ marginRight: "10px" }} />}
         />
 
-        <ShiftDialog
+        { customers.length > 0 && products.length > 0 && <ShiftDialog
           openDetailsDialog={customerCreditDialog}
           heading={"Add Customer Credit"}
           inputs={activeCustomerCreditInputFields(
@@ -1301,7 +1307,7 @@ const AddShift = () => {
           setState={setAddCreditProduct}
           icon={<Assessment style={{ marginRight: "10px" }} />}
           handleOnCloseDetails={() => setCustomerCreditDialog(false)}
-        />
+        />}
 
         <div className="headings">
           <Person style={{ marginRight: 10 }} />

@@ -151,7 +151,7 @@ export const shiftmobileOilsClosingForm = (item, totals) => [
   },
   {
     id: 2,
-    label: `Qt. ${item.price.newSellingPrice}`,
+    label: `Qt. ${item.stock}`,
     type: "label",
     name: "prevReading",
     grid: {

@@ -8,6 +8,7 @@ export const bankTransactionsColumns = (
   setOpenDeleteDialog,
   setDetailsDialog,
   setOpenFormDialog
+  
 ) => [
   // { field: "id", headerName: "ID", width: 70 },
   {
@@ -49,7 +50,18 @@ export const bankTransactionsColumns = (
     },
   },
   { field: "description", headerName: "Description", width: 200 },
-  { field: "depositAmount", headerName: "Deposit Amount", width: 150 },
+  { field: "depositAmount", headerName: "Deposit Amount", width: 150, renderCell: (params) => {
+      return (
+        <div className={`cellWithStatus `}>
+          {params.row.depositAmount?.toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
+        </div>
+      );
+    }, },
   {
     field: "status",
     headerName: "Status",

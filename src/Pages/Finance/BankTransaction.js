@@ -34,6 +34,7 @@ import { bankTransactionsColumns } from "../../Components/datatable/bankTransact
 import {
   getBankTransactions,
   getSingleBank,
+  updateBank,
 } from "../../redux/bankSlice/bankSlice";
 import { bankInputFields } from "../../Components/sources/bankFormSources";
 
@@ -113,12 +114,11 @@ const BankTransaction = () => {
       // Set the state when currentCash is updated
       setState({
         username: currentCash.username,
-
         totalCash: currentCash.totalCash,
-        description: currentCash.description,
-        depositAmount: currentCash.depositAmount,
+        description: currentCash.description || "",
+        depositAmount: currentCash.depositAmount || 0,
         date: currentCash.date,
-        depositDate: currentCash.depositDate,
+        depositDate: currentCash.depositDate || "",
         status: currentCash.status,
       });
     }
@@ -256,7 +256,7 @@ const BankTransaction = () => {
     //Setting pagination
     setCurrentPage(e);
     //Destructuring values from state
-    const { startDate, endDate, searchInput } = state;
+    const { startDate, endDate, searchInput } = search;
     //Destructuring values from filters
     const { field, operator, sort } = filters;
     //Organizing data from filters and search Input
@@ -267,7 +267,7 @@ const BankTransaction = () => {
       page: e,
       searchInput: searchInput,
       startDate: endDate !== "" && startDate === "" ? endDate : startDate,
-      endDate: endDate === "" && startDate !== "" ? endDate : endDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
     };
 
     if (field === "date") {
@@ -326,11 +326,8 @@ const BankTransaction = () => {
           Data: state,
         };
         //Hit API Call using dispatch to updated tenant
-        dispatch(updateCustomer(data));
-      } else {
-        //Hit API Call using dispatch to add tenant
-        dispatch(addCustomer(state));
-      }
+        dispatch(updateBank(data));
+      } 
     }
   };
 
@@ -354,8 +351,7 @@ const BankTransaction = () => {
           setOpenFormDialog={setOpenFormDialog}
           heading={
             selectedRowId !== null && Object.keys(currentCash).length !== 0
-              && "Update Transaction"
-            
+              && "Update Transaction"  
           }
           color="#999999"
           state={state}

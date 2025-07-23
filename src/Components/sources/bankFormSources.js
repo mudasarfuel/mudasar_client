@@ -105,7 +105,7 @@ export const bankInputFields = (selectedRowId, currentCash) => [
       },
       options: [
         { id: 1, name: "Pending", value: "pending" },
-        { id: 2, name: "Deposited", value: "Deposited" },
+        { id: 2, name: "Deposited", value: "deposited" },
       ],
     },
     {
