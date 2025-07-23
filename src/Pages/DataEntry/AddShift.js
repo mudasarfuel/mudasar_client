@@ -17,7 +17,7 @@ import {
   cleardata,
   getAllActiveCustomers,
   getAllEmployees,
-  getAllProducts, 
+  getAllProducts,
   getCurrentReadings,
 } from "../../redux/completeDataSlice/completeDataSlice";
 import {
@@ -432,8 +432,8 @@ const AddShift = () => {
         customerId: "",
         employeeId: "",
         amount: "",
-        description: ""
-      })
+        description: "",
+      });
     } else {
       toast("Fill all the fields of customer advance", {
         position: "top-right",
@@ -524,7 +524,7 @@ const AddShift = () => {
         updated[customerIndex].products.push({
           productId,
           amount,
-          description
+          description,
         });
       } else {
         // New customer, create new entry
@@ -542,7 +542,7 @@ const AddShift = () => {
       ...addCreditProduct,
       productId: "",
       amount: 0,
-      description: ""
+      description: "",
     });
   };
 
@@ -832,8 +832,7 @@ const AddShift = () => {
     // ✅ Round all values to 2 decimal places
     const round = (val) => parseFloat(val.toFixed(2));
 
-    const roundToInteger = value => Math.round(+value || 0);
-
+    const roundToInteger = (value) => Math.round(+value || 0);
 
     //Set Cash in hand
     setState((prevState) => ({
@@ -1031,7 +1030,6 @@ const AddShift = () => {
   };
   let selectedRowId = 0;
 
-  
   return (
     <div>
       <h3>Add Shift Record</h3>
@@ -1056,114 +1054,128 @@ const AddShift = () => {
           <Widgets style={{ marginRight: 10 }} />
           <h3>Products Entry</h3>
         </div>
-        {Object.entries(grouped).map(([productName], index) => (
-          <Box className="readingPanel" key={index}>
-            <Grid container spacing={2}>
-              <Grid
-                item
-                lg={2}
-                md={12}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <div
+        {Object.entries(grouped)
+          .sort(([a], [b]) => {
+            // Ensure petrol comes first, diesel second, others last (if any)
+            if (a.toLowerCase() === "petrol") return -1;
+            if (b.toLowerCase() === "petrol") return 1;
+            if (a.toLowerCase() === "diesel") return -1;
+            if (b.toLowerCase() === "diesel") return 1;
+            return a.localeCompare(b); // fallback alphabetical
+          })
+          .map(([productName], index) => (
+            <Box className="readingPanel" key={index}>
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  lg={2}
+                  md={12}
                   style={{
-                    padding: "1rem",
                     display: "flex",
                     justifyContent: "center",
-                    flexDirection: "column",
                     alignItems: "center",
                   }}
                 >
-                  <span style={{ fontWeight: "bold" }}>
-                    {capitalizeWords(productName)}
-                  </span>
-                  <span>{`Lt. ${getStockByProduct(productName)}`}</span>
-                  <span>
-                    {getPriceByProduct(productName).toLocaleString("en-US", {
-                      style: "currency",
-                      currency: "PKR",
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </span>
-                </div>
-              </Grid>
-              <Grid item lg={10}>
-                {readings.map((item) => {
-                  if (item.product.toLowerCase() === productName) {
-                    return (
-                      <GridForm
-                        key={item.machineId}
-                        title={`Add New Reading`}
-                        inputs={shiftproductsClosingForm(item, totals)}
-                        state={salesEntry}
-                        setState={setSalesEntry}
-                        submit={handleOnSubmit}
-                      />
-                    );
-                  }
-                })}
-                <Grid container style={{ marginTop: 10, alignItems: "center" }}>
-                  <Grid item lg={2}>
+                  <div
+                    style={{
+                      padding: "1rem",
+                      display: "flex",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
                     <span style={{ fontWeight: "bold" }}>
-                      Total Calculations
+                      {capitalizeWords(productName)}
                     </span>
-                  </Grid>
-                  <Grid item lg={3}>
-                    <TextField
-                      label="Total Dispensed Fuel"
-                      size="small"
-                      name={`${productName}`}
-                      disabled
-                      value={parseFloat(totalSaleSum[productName])?.toFixed(2)}
-                      style={{ marginRight: 10 }}
-                    />
-                  </Grid>
-                  <Grid item lg={3}>
-                    <TextField
-                      label="Fuel Test"
-                      size="small"
-                      disabled={
-                        Object.entries(totals).length !== 0 ? true : false
-                      }
-                      name={`${productName}`}
-                      onChange={handleTestEntry}
-                      value={testEntry[productName]}
-                      style={{ marginRight: 7, marginLeft: 7 }}
-                    />
-                  </Grid>
-                  <Grid item lg={2}>
-                    <TextField
-                      label="Total Sale"
-                      disabled
-                      size="small"
-                      name="productTest"
-                      value={netSale[`${productName}Sale`]}
-                      style={{ marginRight: 4, marginLeft: 10 }}
-                    />
-                  </Grid>
-                  <Grid item lg={2} style={{ paddingleft: 20 }}>
-                    <TextField
-                      label="Total Sale Amount"
-                      disabled
-                      size="small"
-                      name="productTest"
-                      value={netSale[`${productName}Amount`]}
-                      style={{ marginRight: 1, marginLeft: 11 }}
-                    />
+                    <span>{`Lt. ${getStockByProduct(productName)}`}</span>
+                    <span>
+                      {getPriceByProduct(productName).toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "PKR",
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                  </div>
+                </Grid>
+                <Grid item lg={10}>
+                  {readings.map((item) => {
+                    if (item.product.toLowerCase() === productName) {
+                      return (
+                        <GridForm
+                          key={item.machineId}
+                          title={`Add New Reading`}
+                          inputs={shiftproductsClosingForm(item, totals)}
+                          state={salesEntry}
+                          setState={setSalesEntry}
+                          submit={handleOnSubmit}
+                        />
+                      );
+                    }
+                  })}
+                  <Grid
+                    container
+                    style={{ marginTop: 10, alignItems: "center" }}
+                  >
+                    <Grid item lg={2}>
+                      <span style={{ fontWeight: "bold" }}>
+                        Total Calculations
+                      </span>
+                    </Grid>
+                    <Grid item lg={3}>
+                      <TextField
+                        label="Total Dispensed Fuel"
+                        size="small"
+                        name={`${productName}`}
+                        disabled
+                        value={parseFloat(totalSaleSum[productName])?.toFixed(
+                          2
+                        )}
+                        style={{ marginRight: 10 }}
+                      />
+                    </Grid>
+                    <Grid item lg={3}>
+                      <TextField
+                        label="Fuel Test"
+                        size="small"
+                        disabled={
+                          Object.entries(totals).length !== 0 ? true : false
+                        }
+                        name={`${productName}`}
+                        onChange={handleTestEntry}
+                        value={testEntry[productName]}
+                        style={{ marginRight: 7, marginLeft: 7 }}
+                      />
+                    </Grid>
+                    <Grid item lg={2}>
+                      <TextField
+                        label="Total Sale"
+                        disabled
+                        size="small"
+                        name="productTest"
+                        value={netSale[`${productName}Sale`]}
+                        style={{ marginRight: 4, marginLeft: 10 }}
+                      />
+                    </Grid>
+                    <Grid item lg={2} style={{ paddingleft: 20 }}>
+                      <TextField
+                        label="Total Sale Amount"
+                        disabled
+                        size="small"
+                        name="productTest"
+                        value={netSale[`${productName}Amount`]}
+                        style={{ marginRight: 1, marginLeft: 11 }}
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid container>
-              <Grid item lg={3}></Grid>
-            </Grid>
-          </Box>
-        ))}
+              <Grid container>
+                <Grid item lg={3}></Grid>
+              </Grid>
+            </Box>
+          ))}
         {/* &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& END OF MACHINE PRODUCTS ENTRY &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& */}
 
         {/* £££££££££££££££££££££££££££££££££££ MOBILE OIL PRODUCTS ENTRY SECTION £££££££££££££££££££££££££££££  */}
@@ -1230,8 +1242,8 @@ const AddShift = () => {
         )}
 
         {/* Employee Debit Dialog Box  */}
-        {
-          employees?.length > 0 && <FormDialog
+        {employees?.length > 0 && (
+          <FormDialog
             openFormDialog={employeeDebitDialog}
             setOpenFormDialog={setEmployeeDebitDialog}
             heading={"STAFF DEBIT ADVANCE"}
@@ -1244,37 +1256,41 @@ const AddShift = () => {
             inputs={activeEmployeeDebitInputFields(employees)}
             icon={<SwitchAccount style={{ marginRight: "10px" }} />}
           />
-        }
+        )}
 
         {/* Employee CREDIT Dialog Box  */}
-         {employees?.length > 0 && <FormDialog
-          openFormDialog={employeeCreditDialog}
-          setOpenFormDialog={setEmployeeCreditDialog}
-          heading={"STAFF CREDIT ADVANCE"}
-          color="#999999"
-          state={addDebit}
-          Id={selectedRowId}
-          setState={setAddDebit}
-          handleOnClose={() => setEmployeeCreditDialog(false)}
-          handleOnSubmit={(e) => handleEmployeeDebitCredit(e, "credit")}
-          inputs={activeEmployeeCreditInputFields(employees)}
-          icon={<SwitchAccount style={{ marginRight: "10px" }} />}
-        />}
+        {employees?.length > 0 && (
+          <FormDialog
+            openFormDialog={employeeCreditDialog}
+            setOpenFormDialog={setEmployeeCreditDialog}
+            heading={"STAFF CREDIT ADVANCE"}
+            color="#999999"
+            state={addDebit}
+            Id={selectedRowId}
+            setState={setAddDebit}
+            handleOnClose={() => setEmployeeCreditDialog(false)}
+            handleOnSubmit={(e) => handleEmployeeDebitCredit(e, "credit")}
+            inputs={activeEmployeeCreditInputFields(employees)}
+            icon={<SwitchAccount style={{ marginRight: "10px" }} />}
+          />
+        )}
 
         {/* Employee CREDIT Dialog Box  */}
-        {customers.length > 0 && <FormDialog
-          openFormDialog={customerAdvanceDialog}
-          setOpenFormDialog={setEmployeeCreditDialog}
-          heading={"CUSTOMER ADVANCE"}
-          color="#999999"
-          state={addDebit}
-          Id={selectedRowId}
-          setState={setAddDebit}
-          handleOnClose={() => setCustomerAdvanceDialog(false)}
-          handleOnSubmit={(e) => handleCustomerAdvance(e)}
-          inputs={activeCustomerAdvanceInputFields(customers)}
-          icon={<SwitchAccount style={{ marginRight: "10px" }} />}
-        />}
+        {customers.length > 0 && (
+          <FormDialog
+            openFormDialog={customerAdvanceDialog}
+            setOpenFormDialog={setEmployeeCreditDialog}
+            heading={"CUSTOMER ADVANCE"}
+            color="#999999"
+            state={addDebit}
+            Id={selectedRowId}
+            setState={setAddDebit}
+            handleOnClose={() => setCustomerAdvanceDialog(false)}
+            handleOnSubmit={(e) => handleCustomerAdvance(e)}
+            inputs={activeCustomerAdvanceInputFields(customers)}
+            icon={<SwitchAccount style={{ marginRight: "10px" }} />}
+          />
+        )}
 
         {/* Expense Dialog Box  */}
         <FormDialog
@@ -1291,23 +1307,25 @@ const AddShift = () => {
           icon={<SwitchAccount style={{ marginRight: "10px" }} />}
         />
 
-        { customers.length > 0 && products.length > 0 && <ShiftDialog
-          openDetailsDialog={customerCreditDialog}
-          heading={"Add Customer Credit"}
-          inputs={activeCustomerCreditInputFields(
-            customers,
-            handleAddCreditProduct,
-            products,
-            addCustomerCreditProduct,
-            addCreditProduct
-          )}
-          data={addCustomerCreditProduct}
-          state={addCreditProduct}
-          products={products}
-          setState={setAddCreditProduct}
-          icon={<Assessment style={{ marginRight: "10px" }} />}
-          handleOnCloseDetails={() => setCustomerCreditDialog(false)}
-        />}
+        {customers.length > 0 && products.length > 0 && (
+          <ShiftDialog
+            openDetailsDialog={customerCreditDialog}
+            heading={"Add Customer Credit"}
+            inputs={activeCustomerCreditInputFields(
+              customers,
+              handleAddCreditProduct,
+              products,
+              addCustomerCreditProduct,
+              addCreditProduct
+            )}
+            data={addCustomerCreditProduct}
+            state={addCreditProduct}
+            products={products}
+            setState={setAddCreditProduct}
+            icon={<Assessment style={{ marginRight: "10px" }} />}
+            handleOnCloseDetails={() => setCustomerCreditDialog(false)}
+          />
+        )}
 
         <div className="headings">
           <Person style={{ marginRight: 10 }} />

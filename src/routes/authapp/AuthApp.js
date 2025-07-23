@@ -1,57 +1,61 @@
-import React, { useContext, useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import React, { useContext, useState, Suspense, lazy } from "react";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 import Navbar from "../../Components/navbar/Navbar";
 import Sidebar from "../../Components/sidebar/Sidebar";
-import Dashboard from "../../Pages/Home/Dashboard";
 import "./authapp.scss";
 import "../../style/dark.scss";
-import Subscription from "../../Pages/Admin/Subscription/Subscription";
-import Features from "../../Pages/Admin/Subscription/Features";
-import NewFeature from "../../Pages/Admin/Subscription/NewFeature";
-import Packages from "../../Pages/Admin/Subscription/Packages/Packages";
-import NewPackage from "../../Pages/Admin/Subscription/Packages/NewPackage";
-import Alert from "../../Components/alert/Alert";
-import Tenants from "../../Pages/Admin/Accounts/Tenants/Tenants";
-import NewTenant from "../../Pages/Admin/Accounts/Tenants/NewTenant";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Users from "../../Pages/Users/Users";
-import Customer from "../../Pages/Customer/Customer";
-import Supplier from "../../Pages/Supplier/Supplier";
-import Employee from "../../Pages/Employee/Employee";
-import Machine from "../../Pages/Machines/Machines";
-import Stock from "../../Pages/Stock/Stock";
-import Products from "../../Pages/Products/Products";
-import Prices from "../../Pages/Prices/Prices";
-import TotalSale from "../../Pages/Customer/TotalSale";
-import Purchase from "../../Pages/Purchase/Purchase";
-import Readings from "../../Pages/Readings/Readings";
-import CustomerPayment from "../../Pages/Customer/CustomerPayment";
-import CustomerAdvance from "../../Pages/Customer/CustomerAdvance";
-import SupplierPayment from "../../Pages/Supplier/SupplierPayment";
-import EmployeeSalary from "../../Pages/Employee/EmployeeSalary";
-import EmployeeAdvance from "../../Pages/Employee/EmployeeAdvance";
-import Expense from "../../Pages/Expense/Expenses";
-import StockWastage from "../../Pages/Stock/StockWastage";
-import StockDip from "../../Pages/Stock/StockDip";
-import Report from "../../Pages/Reports/Report";
+import Alert from "../../Components/alert/Alert";
 import AuthContext from "../../context/auth/AuthContext";
-import TotalSaleClosings from "../../Pages/DataEntry/TotalSaleClosings";
-import AddShift from "../../Pages/DataEntry/AddShift";
-import DailyCash from "../../Pages/Finance/DailyCash";
-import BankTransaction from "../../Pages/Finance/BankTransaction";
-import EmployeePayment from "../../Pages/Employee/EmployeePayment";
-import CustomerReport from "../../Pages/Reports/CustomerReport";
-import PageNotFount from "../../Pages/PageNotFount";
+import Loader from "./Loader";
 
+// Lazily load all route components
+const Dashboard = lazy(() => import("../../Pages/Home/Dashboard"));
+const Subscription = lazy(() => import("../../Pages/Admin/Subscription/Subscription"));
+const Features = lazy(() => import("../../Pages/Admin/Subscription/Features"));
+const NewFeature = lazy(() => import("../../Pages/Admin/Subscription/NewFeature"));
+const Packages = lazy(() => import("../../Pages/Admin/Subscription/Packages/Packages"));
+const NewPackage = lazy(() => import("../../Pages/Admin/Subscription/Packages/NewPackage"));
+const Tenants = lazy(() => import("../../Pages/Admin/Accounts/Tenants/Tenants"));
+const NewTenant = lazy(() => import("../../Pages/Admin/Accounts/Tenants/NewTenant"));
+const Users = lazy(() => import("../../Pages/Users/Users"));
+const Customer = lazy(() => import("../../Pages/Customer/Customer"));
+const Supplier = lazy(() => import("../../Pages/Supplier/Supplier"));
+const Employee = lazy(() => import("../../Pages/Employee/Employee"));
+const Machine = lazy(() => import("../../Pages/Machines/Machines"));
+const Stock = lazy(() => import("../../Pages/Stock/Stock"));
+const Products = lazy(() => import("../../Pages/Products/Products"));
+const Prices = lazy(() => import("../../Pages/Prices/Prices"));
+const TotalSale = lazy(() => import("../../Pages/Customer/TotalSale"));
+const Purchase = lazy(() => import("../../Pages/Purchase/Purchase"));
+const Readings = lazy(() => import("../../Pages/Readings/Readings"));
+const CustomerPayment = lazy(() => import("../../Pages/Customer/CustomerPayment"));
+const CustomerAdvance = lazy(() => import("../../Pages/Customer/CustomerAdvance"));
+const SupplierPayment = lazy(() => import("../../Pages/Supplier/SupplierPayment"));
+const EmployeeSalary = lazy(() => import("../../Pages/Employee/EmployeeSalary"));
+const EmployeeAdvance = lazy(() => import("../../Pages/Employee/EmployeeAdvance"));
+const EmployeePayment = lazy(() => import("../../Pages/Employee/EmployeePayment"));
+const Expense = lazy(() => import("../../Pages/Expense/Expenses"));
+const StockWastage = lazy(() => import("../../Pages/Stock/StockWastage"));
+const StockDip = lazy(() => import("../../Pages/Stock/StockDip"));
+const Report = lazy(() => import("../../Pages/Reports/Report"));
+const CustomerReport = lazy(() => import("../../Pages/Reports/CustomerReport"));
+const TotalSaleClosings = lazy(() => import("../../Pages/DataEntry/TotalSaleClosings"));
+const AddShift = lazy(() => import("../../Pages/DataEntry/AddShift"));
+const DailyCash = lazy(() => import("../../Pages/Finance/DailyCash"));
+const BankTransaction = lazy(() => import("../../Pages/Finance/BankTransaction"));
+const PageNotFount = lazy(() => import("../../Pages/PageNotFount"));
 
 const AuthApp = ({ mode }) => {
-  //Handle use state to control side bar
   const [openSidebar, setOpenSidebar] = useState(false);
-  //Call Auth Context & Extract Logout
   const { logout, user } = useContext(AuthContext);
 
-  console.log("Check for user => ", user);
   return (
     <div className={mode === "dark" ? "authApp dark" : "authApp"}>
       <BrowserRouter>
@@ -67,109 +71,48 @@ const AuthApp = ({ mode }) => {
         <div className="main">
           <Sidebar className="authSidebar" openSidebar={openSidebar} />
           <div className="appContainer">
-            <Routes>
-              <Route exact path="/" element={<Dashboard />} />
-              {/**************** SAIMON TECHNOLOGIES ADMIN PANEL ROUTES ********************/}
-              <Route exact path="/subscriptions" element={<Subscription />} />
-              <Route exact path="/packages" element={<Packages />} />
-              <Route exact path="/packages/new" element={<NewPackage />} />
-              <Route
-                exact
-                path="/packages/update/:id"
-                element={<NewPackage />}
-              />
-              <Route exact path="/features" element={<Features />} />
-              <Route exact path="/features/new" element={<NewFeature />} />
-              {/* CUSTOMER ROUTES  */}
-              <Route exact path="/customers" element={<Customer />} />
-              <Route
-                exact
-                path="/customerpayments"
-                element={<CustomerPayment />}
-              />
-              <Route
-                exact
-                path="/customeradvances"
-                element={<CustomerAdvance />}
-              />
-              {/* SUPPLIER ROUTES  */}
-              <Route exact path="/suppliers" element={<Supplier />} />
-              <Route
-                exact
-                path="/supplierpayments"
-                element={<SupplierPayment />}
-              />
-              {/* EMPLOYEE ROUTES  */}
-              <Route exact path="/employees" element={<Employee />} />
-              <Route
-                exact
-                path="/employeesalary"
-                element={<EmployeeSalary />}
-              />
-              <Route
-                exact
-                path="/employeepayment"
-                element={<EmployeePayment />}
-              />
-              <Route
-                exact
-                path="/employeeadvances"
-                element={<EmployeeAdvance />}
-              />
-              {/* MACHINE ROUTES  */}
-              <Route exact path="/machines" element={<Machine />} />
-              {/* MACHINE READINGS ROUTES  */}
-              <Route exact path="/readings" element={<Readings />} />
-              {/* PRODUCTS ROUTES  */}
-              <Route exact path="/products" element={<Products />} />
-              {/* PRICES ROUTES  */}
-              <Route exact path="/prices" element={<Prices />} />
-              {/* SALES ROUTES  */}
-              <Route exact path="/sales" element={<TotalSale />} />
-              {/* PURCHASE ROUTES  */}
-              <Route exact path="/purchases" element={<Purchase />} />
-              {/* REPORT GENERATIONS ROUTE  */}
-              <Route exact path="/reports" element={<Report />} />
-              <Route
-                exact
-                path="/customerreports"
-                element={<CustomerReport />}
-              />
-              {/* STOCKS ROUTES  */}
-              <Route exact path="/stocks" element={<Stock />} />
-              <Route exact path="/wastages" element={<StockWastage />} />
-              <Route exact path="/dips" element={<StockDip />} />
-              {/* REPORTS ROUTES  */}
-              <Route exact path="/expenses" element={<Expense />} />
-              {/* TENANTS ROUTES  */}
-              <Route exact path="/tenants" element={<Tenants />} />
-              <Route exact path="/tenants/new" element={<NewTenant />} />
-              <Route exact path="/tenants/update/:id" element={<NewTenant />} />
-              {/* USERS ROUTES  */}
-              <Route exact path="/users" element={<Users />} />
-              <Route exact path="/addShift" element={<AddShift />} />
-              <Route
-                exact
-                path="/allclosings"
-                element={<TotalSaleClosings />}
-              />
-
-              {/* FINANCE ROUTES  */}
-              <Route exact path="/dailyCash" element={<DailyCash />} />
-              <Route
-                exact
-                path="/bankTransaction"
-                element={<BankTransaction />}
-              />
-
-               <Route
-                exact
-                path="/pagenotfound"
-                element={<PageNotFount />}
-              />
-
-              <Route path="*" element={<Navigate to="/pagenotfound" replace />} />
-            </Routes>
+            <Suspense fallback={<Loader />}>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/subscriptions" element={<Subscription />} />
+                <Route path="/packages" element={<Packages />} />
+                <Route path="/packages/new" element={<NewPackage />} />
+                <Route path="/packages/update/:id" element={<NewPackage />} />
+                <Route path="/features" element={<Features />} />
+                <Route path="/features/new" element={<NewFeature />} />
+                <Route path="/customers" element={<Customer />} />
+                <Route path="/customerpayments" element={<CustomerPayment />} />
+                <Route path="/customeradvances" element={<CustomerAdvance />} />
+                <Route path="/suppliers" element={<Supplier />} />
+                <Route path="/supplierpayments" element={<SupplierPayment />} />
+                <Route path="/employees" element={<Employee />} />
+                <Route path="/employeesalary" element={<EmployeeSalary />} />
+                <Route path="/employeepayment" element={<EmployeePayment />} />
+                <Route path="/employeeadvances" element={<EmployeeAdvance />} />
+                <Route path="/machines" element={<Machine />} />
+                <Route path="/readings" element={<Readings />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/prices" element={<Prices />} />
+                <Route path="/sales" element={<TotalSale />} />
+                <Route path="/purchases" element={<Purchase />} />
+                <Route path="/reports" element={<Report />} />
+                <Route path="/customerreports" element={<CustomerReport />} />
+                <Route path="/stocks" element={<Stock />} />
+                <Route path="/wastages" element={<StockWastage />} />
+                <Route path="/dips" element={<StockDip />} />
+                <Route path="/expenses" element={<Expense />} />
+                <Route path="/tenants" element={<Tenants />} />
+                <Route path="/tenants/new" element={<NewTenant />} />
+                <Route path="/tenants/update/:id" element={<NewTenant />} />
+                <Route path="/users" element={<Users />} />
+                <Route path="/addShift" element={<AddShift />} />
+                <Route path="/allclosings" element={<TotalSaleClosings />} />
+                <Route path="/dailyCash" element={<DailyCash />} />
+                <Route path="/bankTransaction" element={<BankTransaction />} />
+                <Route path="/pagenotfound" element={<PageNotFount />} />
+                <Route path="*" element={<Navigate to="/pagenotfound" replace />} />
+              </Routes>
+            </Suspense>
           </div>
         </div>
       </BrowserRouter>
