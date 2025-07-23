@@ -39,16 +39,16 @@ const Widget = ({ type, data }) => {
       <div className="right">
         <div className="percentage positive">
           {/* <KeyboardArrowUpIcon /> */}
-          S.P Rs. {data.price.newSellingPrice}
+          Rs. {data.price.newSellingPrice}
         </div>
         <div className="percentage positive" style={{ color: "crimson" }}>
           {/* <KeyboardArrowDown /> */}
-          C.P Rs. {data.price.costPrice}
+          Rs. {data.price.costPrice}
         </div>
-        <Business
+        {/* <Business
           className="icon"
           style={{ color: "crimson", backgroundColor: "rgba(255, 0,0, 0.2)" }}
-        />
+        /> */}
 
       </div>
     </div>
