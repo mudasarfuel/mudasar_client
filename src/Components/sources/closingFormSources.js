@@ -1,3 +1,5 @@
+import { DOMAIN } from "../../backend/API";
+
 //ADD Product GROUP FORM FIELDS
 export const productsClosingForm = (products) => {
     return [
@@ -11,7 +13,7 @@ export const productsClosingForm = (products) => {
             products.map((item) =>
                 // Here we are setup the filter operator items
                 {
-                    return { id: item._id, name: item.name, value: item._id, avatarUrl: `http://localhost:5000/public/products/images/${item.pic}`, avatarAlt: "./img/avatarfile.png" };
+                    return { id: item._id, name: item.name, value: item._id, avatarUrl: `${DOMAIN}/public/products/images/${item.pic}`, avatarAlt: "./img/avatarfile.png" };
                 }
                 ),
             grid: {

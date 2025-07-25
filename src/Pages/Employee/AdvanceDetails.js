@@ -13,6 +13,7 @@ import { Dangerous, Delete } from "@mui/icons-material";
 import Avatar from "react-avatar";
 import { useContext } from "react";
 import ModeContext from "../../context/mode/ModeContext";
+import { DOMAIN } from "../../backend/API";
 
 const AdvanceDetails = ({
     openDetailsDialog,
@@ -111,7 +112,7 @@ const AdvanceDetails = ({
                             paddingBottom: "8px",
                         }}
                     >
-                        <Avatar src={inputs.employee && inputs.employee.pic !== "" ? `http://localhost:5000/public/employees/images/${inputs.employee.pic}`
+                        <Avatar src={inputs.employee && inputs.employee.pic !== "" ? `${DOMAIN}/public/employees/images/${inputs.employee.pic}`
                             : "./img/avatarfile.png"} size={120} round={true} />
                     </div>
                     <Grid container spacing={2}>

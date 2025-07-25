@@ -18,6 +18,7 @@ import {searchEmployeeInput } from "../../Components/sources/employeesFormSource
 import { productInputFields, searchProductFilters } from "../../Components/sources/productsFormSources";
 import { addProduct, clearCurrentProduct, clearProducts, deleteProduct, getProducts, getSingleProduct, updateProduct } from "../../redux/productSlice/productSlice";
 import ProductDetails from "./ProductDetails";
+import { DOMAIN } from "../../backend/API";
 
 const Product = () => {
   //Initializing dispatch function to call redux functions
@@ -102,7 +103,7 @@ const Product = () => {
 
       async function loadFile() {
         const fileGenerated = await urlToFile(
-          `http://localhost:5000/public/products/images/${currentData.pic}`
+          `${DOMAIN}/public/products/images/${currentData.pic}`
         );
 
         //Set file

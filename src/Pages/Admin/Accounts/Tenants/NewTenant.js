@@ -16,6 +16,7 @@ import {
 import { useParams } from "react-router-dom";
 import Avatar from "react-avatar";
 import AvatarInput from "../../../../Components/form/AvatarInput";
+import { DOMAIN } from "../../../../backend/API";
 
 const NewTenant = () => {
   //Initializing dispatch function to call redux functions
@@ -78,7 +79,7 @@ const NewTenant = () => {
 
       async function loadFile() {
         const fileGenerated = await urlToFile(
-          `http://localhost:5000/public/tenants/images/${get_tenant.logo}`
+          `${DOMAIN}/public/tenants/images/${get_tenant.logo}`
         );
 
         //Set file

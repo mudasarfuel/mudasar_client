@@ -1,3 +1,5 @@
+import { DOMAIN } from "../../backend/API";
+
 //Add new Employee Salary form fields
 export const advanceInstallmentsInputFields = (selectedRowId, currentData, employees) => [
   {
@@ -10,7 +12,7 @@ export const advanceInstallmentsInputFields = (selectedRowId, currentData, emplo
     employees.map((item) =>
         // Here we are setup the filter operator items
         {
-          return { id: item._id, name: item.employee.name, date: item.date, amount: item.amount, remAdv: item.remainingAdvance, value: item._id, avatarUrl: `http://localhost:5000/public/employees/images/${item.pic}`, avatarAlt: "./img/avatarfile.png" };
+          return { id: item._id, name: item.employee.name, date: item.date, amount: item.amount, remAdv: item.remainingAdvance, value: item._id, avatarUrl: `${DOMAIN}/public/employees/images/${item.pic}`, avatarAlt: "./img/avatarfile.png" };
         }
       ),
     grid: {

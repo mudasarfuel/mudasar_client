@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ENDPOINTS } from "../../backend/API";
+import { DOMAIN, ENDPOINTS } from "../../backend/API";
 import { toast } from "react-toastify";
 
 //GET ALL CLOSINGS AXIOS CALL USING ASYNC THUNK
@@ -221,7 +221,6 @@ export const closingSlice = createSlice({
       if (action.payload.success === true) {
         const url = action.payload.url;
 
-        const serverUrl = "http://localhost:5000";
         // Normalize backslashes and use RegExp to find exact /backend/ folder
         const normalizedUrl = url.replace(/\\/g, "/");
 
@@ -230,7 +229,7 @@ export const closingSlice = createSlice({
 
         const relativePath = match ? `/${match[1]}` : "";
 
-        const fullUrl = serverUrl + relativePath;
+        const fullUrl = DOMAIN + relativePath;
 
 
         // Open the new PDF in a new tab

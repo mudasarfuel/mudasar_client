@@ -379,7 +379,7 @@ const Purchase = () => {
       {/* Main Card for setup employees Table */}
       <Box className="mainCard">
         {/* Add OR Update Employee Dialog Box  */}
-        <FormDialog
+        {products.length > 0 && suppliers.length > 0 && <FormDialog
           openFormDialog={openFormDialog}
           setOpenFormDialog={setOpenFormDialog}
           heading={
@@ -400,7 +400,7 @@ const Purchase = () => {
             suppliers
           )}
           icon={<SwitchAccount style={{ marginRight: "10px" }} />}
-        />
+        />}
         {/* Employee Details Dialog box  */}
         <DetailsDialog
           openDetailsDialog={openDetailsDialog}

@@ -1,3 +1,5 @@
+import { DOMAIN } from "../../backend/API";
+
 //Add new wastage form fields
 export const wastageInputFields = (selectedRowId, currentData, products) => [
   {
@@ -7,7 +9,7 @@ export const wastageInputFields = (selectedRowId, currentData, products) => [
     name: "productId",
     options: products.length > 0 && products.map(item => 
       // Here we are setup the filter operator items
-     { return { id: item._id, name: item.name, value: item._id,  avatarUrl: `http://localhost:5000/public/products/images/${item.pic}`, avatarAlt: "./img/avatarfile.png"  } }
+     { return { id: item._id, name: item.name, value: item._id,  avatarUrl: `${DOMAIN}/public/products/images/${item.pic}`, avatarAlt: "./img/avatarfile.png"  } }
     ),
     grid: {
       xs: 12,

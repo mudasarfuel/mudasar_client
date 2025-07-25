@@ -37,6 +37,7 @@ import {
   updateCustomer,
 } from "../../redux/customerSlice/customerSlice";
 import AuthContext from "../../context/auth/AuthContext";
+import { DOMAIN } from "../../backend/API";
 
 /**
  * Customer Management Component
@@ -146,7 +147,7 @@ const Customer = () => {
         };
 
         urlToFile(
-          `http://localhost:5000/public/customers/images/${currentCustomer.pic}`
+          `${DOMAIN}/public/customers/images/${currentCustomer.pic}`
         ).then(setFile);
       }
     }

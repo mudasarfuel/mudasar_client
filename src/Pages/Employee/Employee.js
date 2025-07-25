@@ -27,6 +27,7 @@ import {
   searchEmployeeFilters,
   searchEmployeeInput,
 } from "../../Components/sources/employeesFormSources";
+import { DOMAIN } from "../../backend/API";
 
 const Employee = () => {
   //Initializing dispatch function to call redux functions
@@ -117,7 +118,7 @@ const Employee = () => {
 
       async function loadFile() {
         const fileGenerated = await urlToFile(
-          `http://localhost:5000/public/employees/images/${currentData.pic}`
+          `${DOMAIN}/public/employees/images/${currentData.pic}`
         );
 
         //Set file

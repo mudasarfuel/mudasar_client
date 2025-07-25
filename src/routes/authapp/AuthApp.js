@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Alert from "../../Components/alert/Alert";
 import AuthContext from "../../context/auth/AuthContext";
 import Loader from "./Loader";
+import EmployeeReport from "../../Pages/Reports/EmployeeReport";
 
 // Lazily load all route components
 const Dashboard = lazy(() => import("../../Pages/Home/Dashboard"));
@@ -97,6 +98,7 @@ const AuthApp = ({ mode }) => {
                 <Route path="/purchases" element={<Purchase />} />
                 <Route path="/reports" element={<Report />} />
                 <Route path="/customerreports" element={<CustomerReport />} />
+                <Route path="/employeereports" element={<EmployeeReport />} />
                 <Route path="/stocks" element={<Stock />} />
                 <Route path="/wastages" element={<StockWastage />} />
                 <Route path="/dips" element={<StockDip />} />

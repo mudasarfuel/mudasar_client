@@ -20,6 +20,7 @@ import { Dangerous } from "@mui/icons-material";
 import Avatar from "react-avatar";
 import { useContext } from "react";
 import ModeContext from "../../context/mode/ModeContext";
+import { DOMAIN } from "../../backend/API";
 
 const SaleDetails = ({
   openDetailsDialog,
@@ -132,7 +133,7 @@ const SaleDetails = ({
             <Avatar
               src={
                 inputs.pic
-                  ? `http://localhost:5000/public/customers/images/${inputs.pic}`
+                  ? `${DOMAIN}/public/customers/images/${inputs.pic}`
                   : "./img/avatarfile.png"
               }
               size={120}

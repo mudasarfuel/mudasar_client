@@ -5,6 +5,7 @@ import { Box, IconButton } from "@mui/material";
 import { Dangerous } from "@mui/icons-material";
 import DetailsPaper from "../form/DetailsPaper";
 import Avatar from "react-avatar";
+import { DOMAIN } from "../../backend/API";
 
 const DetailsDialog = ({
   openDetailsDialog,
@@ -74,7 +75,7 @@ const DetailsDialog = ({
               <Avatar
                 src={
                   inputs.pic
-                    ? `http://localhost:5000/public/${
+                    ? `${DOMAIN}/public/${
                         inputs.designation
                           ? "employees"
                           : inputs.companyName

@@ -25,6 +25,7 @@ import {
   getSuppliers,
   updateSupplier,
 } from "../../redux/supplierSlice/supplierSlice";
+import { DOMAIN } from "../../backend/API";
 
 const Supplier = () => {
   //Initializing dispatch function to call redux functions
@@ -113,7 +114,7 @@ const Supplier = () => {
 
       async function loadFile() {
         const fileGenerated = await urlToFile(
-          `http://localhost:5000/public/suppliers/images/${currentData.pic}`
+          `${DOMAIN}/public/suppliers/images/${currentData.pic}`
         );
 
         //Set file

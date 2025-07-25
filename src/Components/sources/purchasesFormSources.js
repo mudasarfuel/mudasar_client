@@ -1,3 +1,5 @@
+import { DOMAIN } from "../../backend/API";
+
 //Add new purchase form fields
 export const purchaseInputFields = (
   selectedRowId,
@@ -39,7 +41,7 @@ export const purchaseInputFields = (
             id: item._id,
             name: item.name,
             value: item._id,
-            avatarUrl: `http://localhost:5000/public/suppliers/images/${item.pic}`,
+            avatarUrl: `${DOMAIN}/public/suppliers/images/${item.pic}`,
             avatarAlt: "./img/avatarfile.png",
           };
         }

@@ -1,4 +1,5 @@
 import axios from "axios"
+import { DOMAIN } from "./API"
 // import React, {useContext} from 'react'
 // import AlertContext from '../context/alert/AlertContext';
 
@@ -9,7 +10,7 @@ export const FileUpload = async (file) => {
 //    // Destructing of set Alert function using useContext hook
 //    const { setAlert, alerts } = alertContext;
     try {
-        return await axios.post("http://localhost:5000/api/uploads", file).then(res => res.data)
+        return await axios.post(`${DOMAIN}/api/uploads`, file).then(res => res.data)
     } catch (error) {
         //Return Error to New Packages Component
         return error.response.data

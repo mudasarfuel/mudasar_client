@@ -34,8 +34,15 @@ export const dipColumns = (
   { field: "prevStock", headerName: "Last Stock", width: 150 },
   { field: "dip", headerName: "Dip Reading", width: 100 },
   { field: "stock", headerName: "Stock", width: 150 },
-  { field: "dipDiff", headerName: "Dip Diff:", width: 100 },
-  { field: "stockDiff", headerName: "Stock Diff:", width: 100 },
+  { field: "stockDiff", headerName: "Stock Diff:", width: 100,
+     renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.stockDiff.toFixed(2)}
+        </div>
+     )}
+   },
+  { field: "gain", headerName: "Gain", width: 100 },
   { field: "date", headerName: "Date", width: 130 },
   {
     field: "action",

@@ -36,6 +36,7 @@ import {
   updateUser,
 } from "../../redux/userSlice/userSlice";
 import { userInputFields } from "../../Components/sources/usersFormSources";
+import { DOMAIN } from "../../backend/API";
 
 const Users = () => {
   //Initializing dispatch function to call redux functions
@@ -127,7 +128,7 @@ const Users = () => {
 
       async function loadFile() {
         const fileGenerated = await urlToFile(
-          `http://localhost:5000/public/users/images/${currentData.pic}`
+          `${DOMAIN}/public/users/images/${currentData.pic}`
         );
 
         //Set file

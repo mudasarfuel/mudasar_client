@@ -1,6 +1,6 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import axios from "axios"
-import { ENDPOINTS } from "../../../backend/API"
+import { DOMAIN, ENDPOINTS } from "../../../backend/API"
 // import {store} from "../store"
 // import {addAlert} from "../alertSlice/alertSlice"
  
@@ -101,7 +101,7 @@ export const packageSlice = createSlice({
                return state.data.push({
                     id: item._id,
                     name: item.name,
-                    image: `http://localhost:5000/public/packages/images/${item.image}`, 
+                    image: `${DOMAIN}/public/packages/images/${item.image}`, 
                     features: item.features,
                     group: item.group,
                     price: item.price,

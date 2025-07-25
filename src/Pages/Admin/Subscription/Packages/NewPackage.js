@@ -13,6 +13,7 @@ import { clearFeatures, getFeatures } from '../../../../redux/webAdmin/featuresS
 import { v4 as uuid } from "uuid";
 import Card from '../../../../Components/card/Card';
 import { useParams } from 'react-router-dom';
+import { DOMAIN } from '../../../../backend/API';
 
 const NewPackage = () => {
   
@@ -234,7 +235,7 @@ const NewPackage = () => {
       <Box className="mainCard">
       <Grid container spacing={2}> 
         <Grid item xs={12} sm={4}>
-            <PlanCard style={{marginTop: "10px"}} title={state?.name} color={state?.color} price={state?.price} feature={state?.group} image={file ? URL.createObjectURL(file) : state?.image ? `http://localhost:5000/public/packages/images/${state.image}`: "/img/file_upload.png"}/>
+            <PlanCard style={{marginTop: "10px"}} title={state?.name} color={state?.color} price={state?.price} feature={state?.group} image={file ? URL.createObjectURL(file) : state?.image ? `${DOMAIN}/public/packages/images/${state.image}`: "/img/file_upload.png"}/>
             <Card heading={"Features"} deleteGroup={handleGroupDelete} deleteFeature={handleFeatureDelete} groups={state?.group} features={state?.features} dbfeatures={features}/>
         </Grid>
         <Grid item xs={12} sm={8}>

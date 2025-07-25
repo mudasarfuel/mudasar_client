@@ -253,7 +253,7 @@ export const tenantsColumns = (setOpenDeleteDialog) =>[
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
-          <img src={params.row.logo ? `http://localhost:5000/public/tenants/images/${params.row.logo}`:"./img/avatarfile.png"} alt="" className="cellImg" />
+          <img src={params.row.logo ? `${DOMAIN}/public/tenants/images/${params.row.logo}`:"./img/avatarfile.png"} alt="" className="cellImg" />
           {params.row.ownerName}
         </div>
       );
