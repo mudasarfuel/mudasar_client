@@ -6,7 +6,7 @@
  */
 
 // Base API domain - points to the backend server
-export const DOMAIN = "http://mudasarfuel.qamartech.co/";
+export const DOMAIN = "https://mudasarbackend-production-d0e5.up.railway.app";
 
 // All API endpoints grouped by functional modules
 export const ENDPOINTS = {
