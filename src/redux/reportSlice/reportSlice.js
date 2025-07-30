@@ -16,19 +16,24 @@ export const getReports = createAsyncThunk("getReports", async (initData) => {
   }
 });
 
-export const getCustomerReports = createAsyncThunk("getCustomerReports", async (initData) => {
-  try {
-    const { customerId, startDate, endDate } = initData;
+export const getCustomerReports = createAsyncThunk(
+  "getCustomerReports",
+  async (initData) => {
+    try {
+      const { customerId, startDate, endDate } = initData;
 
-    //Creating API call using ENDPOINTS as Base URL (/api/reports)
-    return await axios
-      .get(`${ENDPOINTS.CUSTOMERREPORT}?startDate=${startDate}&endDate=${endDate}&customerId=${customerId}`)
-      .then((res) => res.data);
-  } catch (error) {
-    //Incase of error catch error
-    return error.response.data.error[0];
+      //Creating API call using ENDPOINTS as Base URL (/api/reports)
+      return await axios
+        .get(
+          `${ENDPOINTS.CUSTOMERREPORT}?startDate=${startDate}&endDate=${endDate}&customerId=${customerId}`
+        )
+        .then((res) => res.data);
+    } catch (error) {
+      //Incase of error catch error
+      return error.response.data.error[0];
+    }
   }
-});
+);
 
 //GET PRINT CLOSING AXIOS CALL USING ASYNC THUNK
 export const getPrintMonthlyReport = createAsyncThunk(
@@ -108,16 +113,17 @@ export const reportSlice = createSlice({
     //@Data         Data stored in state
     builder.addCase(genReport.fulfilled, (state, actions) => {
       // Create a blob from the PDF response
-      const pdfBlob = new Blob([actions.payload], { type: "application/pdf" });
+      // const pdfBlob = new Blob([actions.payload], { type: "application/pdf" });
 
-      // Create a URL for the blob
-      const pdfUrl = window.URL.createObjectURL(pdfBlob);
+      // // Create a URL for the blob
+      // const pdfUrl = window.URL.createObjectURL(pdfBlob);
 
+      console.log("This is the pdf actions => ", actions.payload);
       // Open the new PDF in a new tab
-      window.open(pdfUrl, "_blank");
+      window.open(`${DOMAIN + actions.payload.url}`, "_blank");
 
       // Optionally, revoke the object URL after use (for memory cleanup)
-      window.URL.revokeObjectURL(pdfUrl);
+      // window.URL.revokeObjectURL(pdfUrl);
       //Check for request success
       console.log(actions.payload);
     });
@@ -144,15 +150,14 @@ export const reportSlice = createSlice({
       }
     });
 
-      //@CaseNo       01
+    //@CaseNo       01
     //@Request      GET
     //@Status       Success
     //@Loading      False
     //@used For     GET REPORTS
     //@Data         Data stored in state
     builder.addCase(getCustomerReports.fulfilled, (state, actions) => {
-
-      console.log("Customers Report => ", actions.payload)
+      console.log("Customers Report => ", actions.payload);
       //Check for request success
       if (actions.payload.success === true) {
         //First Removing all the previous page readings
@@ -169,47 +174,53 @@ export const reportSlice = createSlice({
     builder.addCase(getPrintMonthlyReport.fulfilled, (state, action) => {
       //Checking for success
       if (action.payload.success === true) {
-        const url = action.payload.url;
+        // const url = action.payload.url;
 
-        // Normalize backslashes and use RegExp to find exact /backend/ folder
-        const normalizedUrl = url.replace(/\\/g, "/");
+        // // Normalize backslashes and use RegExp to find exact /backend/ folder
+        // const normalizedUrl = url.replace(/\\/g, "/");
 
-        // Match everything after "/backend/"
-        const match = normalizedUrl.match(/\/backend\/(.+)$/);
+        // // Match everything after "/backend/"
+        // const match = normalizedUrl.match(/\/backend\/(.+)$/);
 
-        const relativePath = match ? `/${match[1]}` : "";
+        // const relativePath = match ? `/${match[1]}` : "";
 
-        const fullUrl = DOMAIN + relativePath;
+        // const fullUrl = DOMAIN + relativePath;
 
-        // Open the new PDF in a new tab
-        window.open(fullUrl, "_blank");
+        // // Open the new PDF in a new tab
+        // window.open(fullUrl, "_blank");
 
         // Optionally, revoke the object URL after use (for memory cleanup)
-        window.URL.revokeObjectURL(fullUrl);
+        // window.URL.revokeObjectURL(fullUrl);
+        console.log("This is the pdf actions => ", action.payload);
+        // Open the new PDF in a new tab
+        window.open(`${DOMAIN + action.payload.url}`, "_blank");
       }
     });
 
-     builder.addCase(getPrintCustomerReport.fulfilled, (state, action) => {
+    builder.addCase(getPrintCustomerReport.fulfilled, (state, action) => {
       //Checking for success
       if (action.payload.success === true) {
-        const url = action.payload.url;
+        // const url = action.payload.url;
 
-        
-        // Normalize backslashes and use RegExp to find exact /backend/ folder
-        const normalizedUrl = url.replace(/\\/g, "/");
+        // // Normalize backslashes and use RegExp to find exact /backend/ folder
+        // const normalizedUrl = url.replace(/\\/g, "/");
 
-        // Match everything after "/backend/"
-        const match = normalizedUrl.match(/\/backend\/(.+)$/);
+        // // Match everything after "/backend/"
+        // const match = normalizedUrl.match(/\/backend\/(.+)$/);
 
-        const relativePath = match ? `/${match[1]}` : "";
+        // const relativePath = match ? `/${match[1]}` : "";
 
-        const fullUrl = DOMAIN + relativePath;
+        // const fullUrl = DOMAIN + relativePath;
 
+        // // Open the new PDF in a new tab
+        // window.open(fullUrl, "_blank");
+
+        // // Optionally, revoke the object URL after use (for memory cleanup)
+        // window.URL.revokeObjectURL(fullUrl);
+
+        console.log("This is the pdf actions => ", action.payload);
         // Open the new PDF in a new tab
-        window.open(fullUrl, "_blank");
-
-        // Optionally, revoke the object URL after use (for memory cleanup)
-        window.URL.revokeObjectURL(fullUrl);
+        window.open(`${DOMAIN + action.payload.url}`, "_blank");
       }
     });
   },

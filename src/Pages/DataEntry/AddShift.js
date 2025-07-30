@@ -65,6 +65,8 @@ const AddShift = () => {
   const customers = useSelector((state) => state.completeData.customers);
   //Initializing th useSelector to get active employees
   const employees = useSelector((state) => state.completeData.employees);
+  //Errors log
+  const submitErrors = useSelector((state) => state.closings.errors);
   //Initializing the use Dispatch
   const dispatch = useDispatch();
 
@@ -165,6 +167,9 @@ const AddShift = () => {
   const [addEmployeeDebit, setAddEmployeeDebit] = useState([]);
   const [addEmployeeCredit, setAddEmployeeCredit] = useState([]);
 
+  //set disable on click
+  const [disableClose, setDisableClose] = useState(true)
+
   //Use state for totals
   const [totals, setTotals] = useState({});
 
@@ -194,6 +199,14 @@ const AddShift = () => {
     return finalLitres.toFixed(2);
   };
 
+  // Display submit errors if any
+  useEffect(() => {
+    if (submitErrors?.length > 0) {
+      submitErrors.forEach((item) => {
+        toast(item.msg, { position: "top-right", type: "error" });
+      });
+    }
+  }, [submitErrors]);
   useEffect(() => {
     const petrolLitres = calculateLitres(dip.petrolDip, petrolDipChart);
     const dieselLitres = calculateLitres(dip.dieselDip, dieselDipChart); // use same chart or another for diesel
@@ -935,6 +948,7 @@ const AddShift = () => {
 
       setState(updatedState);
       setTotals(calculateTotals([updatedState]));
+      setDisableClose(false)
     }
   };
 
@@ -1026,8 +1040,13 @@ const AddShift = () => {
   const handleOnSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(addClosing(state));
+    setDisableClose(true)
+    setTimeout(() => {
+      dispatch(addClosing(state));
+    }, 3000);
   };
+
+ 
   let selectedRowId = 0;
 
   return (
@@ -2197,7 +2216,7 @@ const AddShift = () => {
               <Button
                 variant="contained"
                 size="small"
-                disabled={Object.entries(totals).length !== 0 ? false : true}
+                disabled={disableClose ? true : false}
                 onClick={(e) => handleOnSubmit(e)}
               >
                 <EnhancedEncryption />

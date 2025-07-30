@@ -21,7 +21,13 @@ export const stocksColumns = (
       );
     },
   },
-  { field: "stock", headerName: "Quantity", width: 400 },
+  { field: "stock", headerName: "Quantity", width: 400, renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row?.stock && params.row.stock.toFixed(2)}
+        </div>
+      );
+    }, },
   {
     field: "action",
     headerName: "Action",

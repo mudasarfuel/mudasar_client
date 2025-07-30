@@ -5,7 +5,10 @@ import { Receipt } from "@mui/icons-material";
 import GridForm from "../../Components/form/GridForm";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { getPrintMonthlyReport, getReports } from "../../redux/reportSlice/reportSlice";
+import {
+  getPrintMonthlyReport,
+  getReports,
+} from "../../redux/reportSlice/reportSlice";
 
 import "./style.scss";
 //SEARCH USERS INPUTS
@@ -82,7 +85,7 @@ export default function Report() {
   }
 
   const printReport = async () => {
-     const { startDate, endDate } = state;
+    const { startDate, endDate } = state;
 
     if (startDate === "" && endDate === "") {
       toast("Please select date first", {
@@ -176,9 +179,11 @@ export default function Report() {
         groupTotalAmt += roundValue(item.amount);
         groupTestEntry += roundValue(item.testEntry);
 
-        totalProfit += roundValue(roundValue(
-          (roundValue(item.sellingPrice) - roundValue(item.costPrice)) *
-            roundValue(item.quantity))
+        totalProfit += roundValue(
+          roundValue(
+            (roundValue(item.sellingPrice) - roundValue(item.costPrice)) *
+              roundValue(item.quantity)
+          )
         );
 
         return (
@@ -206,7 +211,7 @@ export default function Report() {
         className="bold-row"
       >
         <td>Totals</td>
-        <td>{ roundValue(groupTotalQty)}</td>
+        <td>{roundValue(groupTotalQty)}</td>
         <td></td>
         <td>
           {groupTotalAmt?.toLocaleString("en-US", {
@@ -233,19 +238,18 @@ export default function Report() {
   //Remaining stock
   const remainingStockAmount = () => {
     let stockAmount = 0;
-    reports[0]?.endDateProductStocks.forEach((item) => stockAmount += item.amount)
-                
-        
+    reports[0]?.endDateProductStocks.forEach(
+      (item) => (stockAmount += item.amount)
+    );
+
     return roundValue(stockAmount);
-                  
-  }
+  };
 
-
-  const roundValue = (value, decimals = 2) => { 
-    if (isNaN(value)) return 0; 
-    const factor = Math.pow(10, decimals); 
-    return Math.round(value * factor) / factor; 
-  } 
+  const roundValue = (value, decimals = 2) => {
+    if (isNaN(value)) return 0;
+    const factor = Math.pow(10, decimals);
+    return Math.round(value * factor) / factor;
+  };
   return (
     <Box m="0px 20px 20px 20px">
       {/* Header for subscription page  */}
@@ -287,29 +291,33 @@ export default function Report() {
 
                 {reports.length > 0 && renderGroup(otherGroup).rows}
 
-               
-
                 {/* Gross Total */}
                 <tr className="bold-row">
                   <td colSpan="3">Gross Total</td>
-                  <td> {((
+                  <td>
+                    {" "}
+                    {(
                       renderGroup(fuelGroup).groupTotalAmt +
                       renderGroup(otherGroup).groupTotalAmt
-                    ))?.toLocaleString("en-US", {
+                    )?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "PKR",
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    }) || 0.0 }</td>
-                  <td> {((
+                    }) || 0.0}
+                  </td>
+                  <td>
+                    {" "}
+                    {(
                       renderGroup(fuelGroup).totalProfit +
                       renderGroup(otherGroup).totalProfit
-                    ))?.toLocaleString("en-US", {
+                    )?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "PKR",
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    }) || 0 }</td>
+                    }) || 0}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -481,15 +489,12 @@ export default function Report() {
                 </tr>
               </thead>
               <tbody>
-                {
-                reports[0]?.endDateProductStocks.map((item) => {
+                {reports[0]?.endDateProductStocks.map((item) => {
                   return (
                     <tr key={item.productId}>
                       <td>{item.productName}</td>
                       <td>{roundValue(item.newStock) || 0.0}</td>
-                      <td>
-                        {roundValue(item.amount)}
-                      </td>
+                      <td>{roundValue(item.amount)}</td>
                     </tr>
                   );
                 })}
@@ -498,11 +503,11 @@ export default function Report() {
                   <td colSpan={2}>Total</td>
                   <td>
                     {remainingStockAmount()?.toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "PKR",
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }) || 0.0}
+                      style: "currency",
+                      currency: "PKR",
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }) || 0.0}
                   </td>
                 </tr>
               </tbody>
@@ -525,7 +530,7 @@ export default function Report() {
                   <td>
                     {roundValue(
                       renderGroup(fuelGroup).totalProfit +
-                      renderGroup(otherGroup).totalProfit
+                        renderGroup(otherGroup).totalProfit
                     ) || 0}
                   </td>
                 </tr>
@@ -533,41 +538,95 @@ export default function Report() {
                   <td colSpan={2}>Profit Price Change</td>
                   <td>{roundValue(reports[0]?.priceChangeProfit) || 0}</td>
                 </tr>
-                {reports[0]?.gain.map(item => <tr key={item.productId}>
-                  <td>{item.productName}</td>
-                  <td>{roundValue(item.totalGain)}</td>
-                  <td>{roundValue(item.totalAmount)}</td>
-                </tr>)}
-                 <tr>
+                {reports[0]?.gain.map((item) => (
+                  <tr key={item.productId}>
+                    <td>{item.productName}</td>
+                    <td>{roundValue(item.totalGain)}</td>
+                    <td>{roundValue(item.totalAmount)}</td>
+                  </tr>
+                ))}
+                <tr>
                   <td colSpan={2}>Expense</td>
                   <td>{roundValue(reports[0]?.totalExpenses) || 0}</td>
                 </tr>
                 <tr className="bold-row">
                   <td colSpan={2}>Gross Total Profit</td>
-                  <td>{(((renderGroup(fuelGroup)?.totalProfit || 0) +
-                      (renderGroup(otherGroup)?.totalProfit || 0 ) + (reports[0]?.priceChangeProfit || 0) + (reports[0]?.gain[0]?.totalAmount || 0) + (reports[0]?.gain[1]?.totalAmount || 0))- (reports[0]?.totalExpenses || 0))?.toLocaleString("en-US", {
+                  <td>
+                    {
+                    ((
+                      (renderGroup(fuelGroup)?.totalProfit || 0) +
+                      (renderGroup(otherGroup)?.totalProfit || 0) +
+                      (reports[0]?.priceChangeProfit || 0)
+                    ) > 0 ?
+                    
+                    (
+                      (renderGroup(fuelGroup)?.totalProfit || 0) +
+                      (renderGroup(otherGroup)?.totalProfit || 0) +
+                      (reports[0]?.priceChangeProfit || 0)
+                    )?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "PKR",
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    })  || 0}</td>
+                    }) : 0)}
+                  </td>
                 </tr>
                 <tr>
                   <td colSpan={2}>Zakat (2.5%)</td>
-                  <td>{roundValue((((renderGroup(fuelGroup)?.totalProfit || 0) +
-                      (renderGroup(otherGroup)?.totalProfit || 0 ) + ( reports[0]?.priceChangeProfit || 0) + (reports[0]?.gain[0]?.totalAmount || 0) + (reports[0]?.gain[1]?.totalAmount || 0))- (reports[0]?.totalExpenses || 0))/100 *2.5) || 0}</td>
+                  <td>
+                    {roundValue(
+                      (renderGroup(fuelGroup)?.totalProfit || 0) +
+                        (renderGroup(otherGroup)?.totalProfit || 0) +
+                        (reports[0]?.priceChangeProfit || 0) -
+                        (reports[0]?.totalExpenses || 0) >
+                        0 &&
+                        (((renderGroup(fuelGroup)?.totalProfit || 0) +
+                          (renderGroup(otherGroup)?.totalProfit || 0) +
+                          (reports[0]?.priceChangeProfit || 0) -
+                          (reports[0]?.totalExpenses || 0)) /
+                          100) *
+                          2.5
+                    ) || 0}
+                  </td>
                 </tr>
-               
-                <tr className="bold-row green-text">
+
+                <tr
+                  className={`bold-row ${
+                    (renderGroup(fuelGroup)?.totalProfit || 0) +
+                      (renderGroup(otherGroup)?.totalProfit || 0) +
+                      (reports[0]?.priceChangeProfit || 0) -
+                      (reports[0]?.totalExpenses || 0) >
+                    0
+                      ? "green-text"
+                      : "red-text"
+                  } `}
+                >
                   <td colSpan={2}>Net Profit</td>
-                  <td>{(((( (renderGroup(fuelGroup)?.totalProfit || 0)+
-                      (renderGroup(otherGroup)?.totalProfit || 0) + (reports[0]?.priceChangeProfit || 0) + (reports[0]?.gain[0]?.totalAmount) + (reports[0]?.gain[1]?.totalAmount || 0))- (reports[0]?.totalExpenses || 0)) - ((( (renderGroup(fuelGroup)?.totalProfit || 0) +
-                      (renderGroup(otherGroup)?.totalProfit || 0) + (reports[0]?.priceChangeProfit || 0) + (reports[0]?.gain[0]?.totalAmount || 0) + (reports[0]?.gain[1]?.totalAmount || 0 ))- (reports[0]?.totalExpenses || 0))/100 *2.5)))?.toLocaleString("en-US", {
+                  <td>
+                    {(
+                      (renderGroup(fuelGroup)?.totalProfit || 0) +
+                      (renderGroup(otherGroup)?.totalProfit || 0) +
+                      (reports[0]?.priceChangeProfit || 0) -
+                      (reports[0]?.totalExpenses || 0) -
+                      (((renderGroup(fuelGroup)?.totalProfit || 0) +
+                        (renderGroup(otherGroup)?.totalProfit || 0) +
+                        (reports[0]?.priceChangeProfit || 0) -
+                        (reports[0]?.totalExpenses || 0) >
+                        0 &&
+                        (((renderGroup(fuelGroup)?.totalProfit || 0) +
+                          (renderGroup(otherGroup)?.totalProfit || 0) +
+                          (reports[0]?.priceChangeProfit || 0) -
+                          (reports[0]?.totalExpenses || 0)) /
+                          100) *
+                          2.5) ||
+                        0)
+                    )?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "PKR",
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    })  || 0}</td>
+                    }) || 0}
+                  </td>
                 </tr>
               </tbody>
             </table>

@@ -3,6 +3,7 @@ import axios from "axios";
 import { DOMAIN, ENDPOINTS } from "../../backend/API";
 import { toast } from "react-toastify";
 
+
 //GET ALL CLOSINGS AXIOS CALL USING ASYNC THUNK
 export const getSaleClosings = createAsyncThunk(
   "getSaleClosings",
@@ -164,7 +165,7 @@ export const closingSlice = createSlice({
     builder.addCase(getSaleClosings.fulfilled, (state, actions) => {
       //Check for request success
       if (actions.payload.success === true) {
-        console.log("Checking Payload => ", actions.payload);
+       
         //First Removing all the previous page products
         state.data = [];
         //Using map iterate each item and push into the state
@@ -221,6 +222,8 @@ export const closingSlice = createSlice({
       if (action.payload.success === true) {
         const url = action.payload.url;
 
+        console.log("Check th pdf url => ", url)
+
         // Normalize backslashes and use RegExp to find exact /backend/ folder
         const normalizedUrl = url.replace(/\\/g, "/");
 
@@ -229,14 +232,15 @@ export const closingSlice = createSlice({
 
         const relativePath = match ? `/${match[1]}` : "";
 
-        const fullUrl = DOMAIN + relativePath;
+        // const fullUrl = DOMAIN + relativePath;
+        const fullUrl = DOMAIN + url;
 
 
         // Open the new PDF in a new tab
         window.open(fullUrl, "_blank");
 
         // Optionally, revoke the object URL after use (for memory cleanup)
-        window.URL.revokeObjectURL(fullUrl);
+      // window.URL.revokeObjectURL(fullUrl);
       }
     });
     //@CaseNo       02
@@ -246,6 +250,8 @@ export const closingSlice = createSlice({
     //@used for     Add Closing
     //@Response     Success Alert
     builder.addCase(addClosing.fulfilled, (state, action) => {
+
+     
       //Check for errors
       if (action.payload?.errors?.length > 0) {
         return {
