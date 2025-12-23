@@ -43,7 +43,13 @@ export const dipColumns = (
      )}
    },
   { field: "gain", headerName: "Gain", width: 100 },
-  { field: "date", headerName: "Date", width: 130 },
+  { field: "date", headerName: "Date", width: 130, renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.date?.split("T")[0] || 0}
+        </div>
+      );
+    }, },
   {
     field: "action",
     headerName: "Action",

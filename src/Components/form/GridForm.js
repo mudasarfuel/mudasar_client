@@ -432,23 +432,33 @@ export default function Form({
                 label={input.label}
                 name={input.name}
                 format="DD-MM-YYYY"
-                tabIndex={input.tabIndex}
-                disabled={input.disabled}
                 maxDate={dayjs()}
                 value={
-                  state[input.name] !== ""
-                    ? dayjs(state[input.name], "DD-MM-YYYY")
+                  state[input.name]
+                    ? dayjs(state[input.name]).startOf("day")
                     : null
                 }
                 slotProps={{
-                  textField: { size: "small", fullWidth: true, error: false },
+                  textField: { size: "small", fullWidth: true },
                 }}
-                onChange={(value) =>
+                onChange={(value) => {
+                  if (!value) {
+                    setState({ ...state, [input.name]: null });
+                    return;
+                  }
+
+                  // store local date only (no time drift)
+                  const localDate = new Date(
+                    value.year(),
+                    value.month(),
+                    value.date()
+                  );
+
                   setState({
                     ...state,
-                    [input.name]: dayjs(value.$d).format("DD-MM-YYYY"),
-                  })
-                }
+                    [input.name]: localDate, // JS Date at local midnight
+                  });
+                }}
               />
             </LocalizationProvider>
           </Grid>

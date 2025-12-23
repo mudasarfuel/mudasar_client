@@ -15,6 +15,7 @@ import { DOMAIN } from "../../backend/API";
 import "./style.scss";
 import { getAllActiveCustomers } from "../../redux/completeDataSlice/completeDataSlice";
 import { clearCustomers } from "../../redux/customerSlice/customerSlice";
+import dayjs from "dayjs";
 
 // SEARCH FORM FIELDS
 const searchReportInput = (printReport, customers) => [
@@ -196,7 +197,7 @@ export default function CustomerReport() {
                     <tr key={i}>
                       <td>{item.productName}</td>
                       <td>{item.description}</td>
-                      <td>{item.date}</td>
+                      <td>{dayjs(item?.date).format("DD-MM-YYYY")}</td>
                       <td>
                         {item.amount?.toLocaleString("en-US", {
                           style: "currency",
@@ -250,7 +251,7 @@ export default function CustomerReport() {
 
                       rows.push(
                         <tr key={i}>
-                          <td>{payment?.date || "-"}</td>
+                          <td>{dayjs(payment?.date).format("DD-MM-YYYY") || "-"}</td>
                           <td>
                             {payment?.payingAmount?.toLocaleString("en-US", {
                               style: "currency",
@@ -259,7 +260,7 @@ export default function CustomerReport() {
                               maximumFractionDigits: 2,
                             }) || "-"}
                           </td>
-                          <td>{advance?.date || "-"}</td>
+                          <td>{ (advance?.date && dayjs(advance?.date).format("DD-MM-YYYY")) || "-"}</td>
                           <td>
                             {advance?.amount?.toLocaleString("en-US", {
                               style: "currency",

@@ -78,6 +78,7 @@ const Customer = () => {
     address: "",
     balance: "",
     status: "",
+    date: "",
     pic: "",
   });
 
@@ -275,6 +276,7 @@ const Customer = () => {
       contact: "",
       address: "",
       balance: "",
+      date: "",
       status: "",
     });
     setFile("");
@@ -401,6 +403,7 @@ const Customer = () => {
                 contact: "",
                 address: "",
                 balance: "",
+                date: "",
                 status: "",
               });
               setFile("");

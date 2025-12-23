@@ -115,7 +115,7 @@ export const useLocalHook = () => {
       nested: [
         { itemId: 28, label: "Get Report", icon: <Receipt className="icon" />, url: "/reports" },
         { itemId: 29, label: "Customer Report", icon: <Receipt className="icon" />, url: "/customerreports" },
-        // { itemId: 29, label: "Employee Report", icon: <Receipt className="icon" />, url: "/employeereports" },
+        { itemId: 29, label: "Employee Report", icon: <Receipt className="icon" />, url: "/employeereports" },
         { itemId: 30, label: "Expenses", icon: <Assessment className="icon" />, url: "/expenses" },
       ],
     },

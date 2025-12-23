@@ -14,7 +14,13 @@ export const readingColumns = (setOpenDeleteDialog, setDetailsDialog, setOpenFor
   { field: "type", headerName: "Type", width: 200 },
   { field: "prevReading", headerName: "Previous Reading", width: 200 },
   { field: "newReading", headerName: "Current Reading", width: 200 },
-  { field: "date", headerName: "Date", width: 130 },
+  { field: "date", headerName: "Date", width: 130, renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.date?.split("T")[0] || 0}
+        </div>
+      );
+    }, },
   
 ];
 

@@ -257,6 +257,19 @@ export const activeCustomerInputFields = (customers) => [
   },
   {
     id: 2,
+    label: "Description",
+    tabIndex: 3,
+    type: "text",
+    name: "description",
+    grid: {
+      xs: 12,
+      sm: 12,
+      md: 6,
+      lg: 6,
+    },
+  },
+  {
+    id: 3,
     label: "Balance",
     tabIndex: 3,
     type: "number",
@@ -264,8 +277,8 @@ export const activeCustomerInputFields = (customers) => [
     grid: {
       xs: 12,
       sm: 12,
-      md: 12,
-      lg: 12,
+      md: 6,
+      lg: 6,
     },
   },
 
@@ -428,6 +441,19 @@ export const activeEmployeeDebitInputFields = (employees) => [
   },
   {
     id: 2,
+    label: "Description",
+    tabIndex: 3,
+    type: "text",
+    name: "description",
+    grid: {
+      xs: 12,
+      sm: 12,
+      md: 6,
+      lg: 6,
+    },
+  },
+  {
+    id: 3,
     label: "Amount",
     tabIndex: 3,
     type: "number",
@@ -435,13 +461,13 @@ export const activeEmployeeDebitInputFields = (employees) => [
     grid: {
       xs: 12,
       sm: 12,
-      md: 12,
-      lg: 12,
+      md: 6,
+      lg: 6,
     },
   },
 
   {
-    id: 7,
+    id: 4,
     label: "ADD Staff AdvANCE",
     type: "button",
     tabIndex: 6,

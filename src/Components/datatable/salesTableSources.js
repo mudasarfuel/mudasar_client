@@ -13,6 +13,13 @@ export const salesColumns = (
     field: "date",
     headerName: "Date",
     width: 100,
+    renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.date?.split("T")[0] || 0}
+        </div>
+      );
+    },
   },
   { field: "receiptNo", headerName: "Receipt No", width: 90 },
   {

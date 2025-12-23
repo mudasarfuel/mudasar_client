@@ -56,10 +56,10 @@ export const customerInputFields =(selectedRowId, currentCustomer) => [
     
     {
       id: 5,
-      label: "Address",
+      label: "Date",
       tabIndex: 4,
-      type: "text",
-      name: "address",
+      type: "date",
+      name: "date",
       grid: {
         xs: 12,
         sm: 6,
@@ -88,7 +88,20 @@ export const customerInputFields =(selectedRowId, currentCustomer) => [
       ],
     },
     {
-        id: 7,
+      id: 7,
+      label: "Address",
+      tabIndex: 4,
+      type: "text",
+      name: "address",
+      grid: {
+        xs: 12,
+        sm: 12,
+        md: 12,
+        lg: 12
+      }
+    },
+    {
+        id: 8,
         label: selectedRowId !== null && Object.keys(currentCustomer).length !== 0 ? "Update Customer":"ADD CUSTOMER",
         type: "button",
         tabIndex: 6,

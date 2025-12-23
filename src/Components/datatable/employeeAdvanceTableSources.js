@@ -69,7 +69,11 @@ export const employeeAdvanceColumns = (
     headerName: "Date",
     width: 150,
     renderCell: (params) => {
-      return <div className="cellAction">{params.row.date}</div>;
+      return (
+        <div className="cellAction">
+          {params.row.date?.split("T")[0] || 0}
+        </div>
+      );
     },
   },
 

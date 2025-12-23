@@ -37,6 +37,13 @@ export const salesClosingsColumns = (
     field: "date",
     headerName: "Date",
     width: 250,
+    renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.date?.split("T")[0] || 0}
+        </div>
+      );
+    },
   },
   {
     field: "status",

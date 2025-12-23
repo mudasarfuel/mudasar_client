@@ -102,8 +102,12 @@ export const priceColumns = (
     field: "date",
     headerName: "Date",
     width: 120,
-    renderCell: (params) => {
-      return <div>{params.row.date}</div>;
+   renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.date?.split("T")[0] || 0}
+        </div>
+      );
     },
   },
   {

@@ -87,6 +87,13 @@ export const employeePaymentColumns = (
     field: "date",
     headerName: "Date",
     width: 100,
+    renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.date?.split("T")[0] || 0}
+        </div>
+      );
+    },
   },
   {
     field: "action",

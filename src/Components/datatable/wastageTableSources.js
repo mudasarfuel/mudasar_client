@@ -31,7 +31,13 @@ export const wastageColumns = (
     },
   },
   { field: "quantity", headerName: "Quantity", width: 250 },
-  { field: "date", headerName: "Date", width: 250 },
+  { field: "date", headerName: "Date", width: 250, renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.date?.split("T")[0] || 0}
+        </div>
+      );
+    }, },
   {
     field: "action",
     headerName: "Action",

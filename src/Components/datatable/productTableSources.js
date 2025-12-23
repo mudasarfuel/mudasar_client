@@ -71,8 +71,12 @@ export const productColumns = (
     field: "date",
     headerName: "Last Updated",
     width: 120,
-    renderCell: (params) => {
-      return <div>{params.row.prices.date}</div>;
+     renderCell: (params) => {
+      return (
+        <div className="cellAction">
+          {params.row.prices.date?.split("T")[0] || 0}
+        </div>
+      );
     },
   },
   {
